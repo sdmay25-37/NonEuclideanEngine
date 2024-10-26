@@ -15,6 +15,7 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+#include "engine/Input.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -57,6 +58,8 @@ int main() {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
+
+    Input input(window);
 
     unsigned int texture;
     glGenTextures(1, &texture);
@@ -202,7 +205,10 @@ int main() {
     glBindTexture(GL_TEXTURE_2D, texture);
 
     int count = 0;
+
     glm::vec3 camera_pos(0.0, 0.0, 1.0);
+    glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
+    float camera_speed = 0.05f;
 
     float fov = glm::radians(45.0f);
     float nearPlane = 0.1f;
@@ -214,6 +220,25 @@ int main() {
 
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
+
+        if(input.isKeyPressed(GLFW_KEY_W)) {
+            camera_pos.y += camera_speed;
+        }
+        if(input.isKeyPressed(GLFW_KEY_S)) {
+            camera_pos.y -= camera_speed;
+        }
+        if(input.isKeyPressed(GLFW_KEY_A)) {
+            camera_pos.x -= camera_speed;
+        }
+        if(input.isKeyPressed(GLFW_KEY_D)) {
+            camera_pos.x += camera_speed;
+        }
+        if(input.isKeyPressed(GLFW_KEY_Q)) {
+            camera_pos.z += camera_speed;
+        }
+        if(input.isKeyPressed(GLFW_KEY_E)) {
+            camera_pos.z -= camera_speed;
+        }
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -239,11 +264,7 @@ int main() {
 
         }
 
-        camera_pos.x = 0.5 * std::sin(glfwGetTime());
-        camera_pos.y = 0.5 * std::cos(glfwGetTime());
-        camera_pos.z = std::sin(glfwGetTime()) * 0.5 + 2.0;
-
-        glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), glm::vec3(0.0, 1.0, 0.0));
+        glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
         shaders.setUniformMat4("proj_view_mat", proj_view_mat);
 
         glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, sprites.size());

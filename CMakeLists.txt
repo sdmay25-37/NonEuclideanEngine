@@ -19,9 +19,7 @@ set(ENGINE_EXECUTABLE "engine")
 
 file(GLOB_RECURSE SOURCES "src/*.cpp" "src/*.h")
 
-add_executable(${ENGINE_EXECUTABLE} ${SOURCES}
-        src/engine/Engine.cpp
-        src/engine/Engine.h)
+add_executable(${ENGINE_EXECUTABLE} ${SOURCES})
 
 target_include_directories(${ENGINE_EXECUTABLE} PUBLIC "../include/public" PRIVATE "../include/private")
 
