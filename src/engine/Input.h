@@ -1,10 +1,15 @@
 #ifndef INPUTHANDLER_H
 #define INPUTHANDLER_H
 
+#include <functional>
+#include <string>
+#include <unordered_map>
 #include <GLFW/glfw3.h>
 
 class Input {
 public:
+	using ActionCallback = std::function<void()>;
+
 	Input(GLFWwindow* window);
 
 	// Keyboard
@@ -15,8 +20,13 @@ public:
 	bool isMouseButtonPressed(int button) const;
 	void getMousePosition(double& x, double& y) const;
 
+	 void bindAction(const std::string& action, int key, const ActionCallback& callback);
+
 private:
-  GLFWwindow* _window;
+	GLFWwindow* _window;
+
+	std::unordered_map<std::string, std::vector<ActionCallback>> _action_callback_map;
+	std::pmr::unordered_map<int, std::string> _key_action_map;
 };
 
 

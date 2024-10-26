@@ -24,3 +24,8 @@ bool Input::isMouseButtonPressed(int button) const {
 void Input::getMousePosition(double &x, double &y) const {
 	glfwGetCursorPos(_window, &x, &y);
 }
+
+void Input::bindAction(const std::string &action, int key, const ActionCallback& callback) {
+	_action_callback_map[action].push_back(callback);
+	_key_action_map[key] = action;
+}
