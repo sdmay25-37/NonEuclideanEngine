@@ -1,5 +1,8 @@
 #version 330 core
 
+// Uniforms
+uniform mat4 proj_view_mat;
+
 // Vertex specifc
 layout(location = 0) in vec3 pos;
 layout(location = 1) in vec2 vert_uv;
@@ -18,6 +21,6 @@ void main() {
         model_mat_vecs[3]
     );
 
-    gl_Position = model_mat * vec4(pos, 1.0);
+    gl_Position = proj_view_mat * model_mat * vec4(pos, 1.0);
     frag_uv = mix(sprite_uv.xy, sprite_uv.zw, vert_uv);
 }

@@ -97,15 +97,13 @@ int main() {
     int map_width = 20;
     int map_height = map_width * ASPECT_RATIO;
 
-    float rect_size = 2.0 / map_width;
+    float rect_size = 2.0 / (map_width - 1);
 
     std::vector<glm::mat4> model_mats;
     std::vector<glm::vec4> uv_ranges;
 
     std::vector<Sprite> sprites;
-    for(int i = 0; i < 1000; i++) {
-        // int x = rand() % map_width;
-        // int y = rand() % map_height;
+    for(int i = 0; i < map_width * map_height; i++) {
 
         int x = i % map_width;
         int y = i / map_width;
@@ -177,6 +175,7 @@ int main() {
     glVertexAttribDivisor(2, 1);
 
     // model matrix attribute
+
     glBindBuffer(GL_ARRAY_BUFFER, MODEL_MAT_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_mats.size(), model_mats.data(), GL_DYNAMIC_DRAW);
 
@@ -185,6 +184,8 @@ int main() {
         glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4) * i));
         glVertexAttribDivisor(3 + i, 1);
     }
+
+    // index buffer
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
@@ -201,17 +202,24 @@ int main() {
     glBindTexture(GL_TEXTURE_2D, texture);
 
     int count = 0;
+    glm::vec3 camera_pos(0.0, 0.0, 1.0);
+
+    float fov = glm::radians(45.0f);
+    float nearPlane = 0.1f;
+    float farPlane = 100.0f;
+
+    glm::mat4 proj_mat = glm::perspective(fov, ASPECT_RATIO, nearPlane, farPlane);
+
+    glDisable(GL_DEPTH_TEST);
 
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
 
-        glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         count++;
-        if(count % 20 == 0) {
-            std::cout << "hi" << std::endl;
-
+        if(count % 25 == 0) {
             uv_ranges.clear();
             for(int i = 0; i < sprites.size(); i++) {
                 int tile_x = rand() % tile_width;
@@ -230,6 +238,13 @@ int main() {
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
 
         }
+
+        camera_pos.x = 0.5 * std::sin(glfwGetTime());
+        camera_pos.y = 0.5 * std::cos(glfwGetTime());
+        camera_pos.z = std::sin(glfwGetTime()) * 0.5 + 2.0;
+
+        glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), glm::vec3(0.0, 1.0, 0.0));
+        shaders.setUniformMat4("proj_view_mat", proj_view_mat);
 
         glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, sprites.size());
 
