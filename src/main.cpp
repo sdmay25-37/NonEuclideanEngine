@@ -19,7 +19,6 @@
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-void processInput(GLFWwindow *window);
 
 // settings
 constexpr unsigned int SCREEN_WIDTH = 800;
@@ -216,10 +215,11 @@ int main() {
 
     glm::mat4 proj_mat = glm::perspective(fov, ASPECT_RATIO, nearPlane, farPlane);
 
-    glDisable(GL_DEPTH_TEST);
+    input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]() {
+        glfwSetWindowShouldClose(window, true);
+    });
 
     while (!glfwWindowShouldClose(window)) {
-        processInput(window);
 
         if(input.isKeyPressed(GLFW_KEY_W)) {
             camera_pos.y += camera_speed;
@@ -282,11 +282,6 @@ int main() {
 
     glfwTerminate();
     return 0;
-}
-
-void processInput(GLFWwindow *window) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {

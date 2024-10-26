@@ -20,12 +20,15 @@ public:
 	bool isMouseButtonPressed(int button) const;
 	void getMousePosition(double& x, double& y) const;
 
-	 void bindAction(const std::string& action, int key, const ActionCallback& callback);
+	 void bindKeyPress(const std::string& action, int key, const ActionCallback& callback);
+
+	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 private:
 	GLFWwindow* _window;
 
 	std::unordered_map<std::string, std::vector<ActionCallback>> _action_callback_map;
+
 	std::pmr::unordered_map<int, std::string> _key_action_map;
 };
 
