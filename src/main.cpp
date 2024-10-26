@@ -99,68 +99,95 @@ int main() {
 
     float rect_size = 2.0 / map_width;
 
-    std::vector<Vertex> vertices;
-    std::vector<unsigned int> indices;
+    std::vector<glm::mat4> model_mats;
+    std::vector<glm::vec4> uv_ranges;
 
-    for(int x = 0; x < map_width; x++) {
-        for(int y = 0; y < map_height; y++) {
-            int i = x * map_height + y;
+    std::vector<Sprite> sprites;
+    for(int i = 0; i < 1000; i++) {
+        // int x = rand() % map_width;
+        // int y = rand() % map_height;
 
-            float rect_x = x * rect_size - 1.0;
-            float rect_y = y * rect_size - 1.0;
+        int x = i % map_width;
+        int y = i / map_width;
 
-            int tile_x = rand() % tile_width;
-            int tile_y = rand() % tile_height;
+        float rect_x = x * rect_size - 1.0;
+        float rect_y = y * rect_size - 1.0;
 
-            float u = tile_x * uv_width;
-            float v = tile_y * uv_height;
+        int tile_x = rand() % tile_width;
+        int tile_y = rand() % tile_height;
 
-            vertices.push_back(Vertex {
-                rect_x + rect_size, rect_y + rect_size, 0.0,
-                u + uv_width, v + uv_height
-            });
-            vertices.push_back(Vertex {
-                rect_x + rect_size, rect_y, 0.0,
-                u + uv_width, v
-            });
-            vertices.push_back(Vertex {
-                rect_x, rect_y, 0.0,
-                u, v
-            });
-            vertices.push_back(Vertex {
-                rect_x, rect_y + rect_size, 0.0,
-                u, v + uv_height
-            });
+        float u = tile_x * uv_width;
+        float v = tile_y * uv_height;
 
-            indices.push_back(i * 4 + 0);
-            indices.push_back(i * 4 + 1);
-            indices.push_back(i * 4 + 3);
-            indices.push_back(i * 4 + 1);
-            indices.push_back(i * 4 + 2);
-            indices.push_back(i * 4 + 3);
-        }
+        glm::vec3 position(rect_x, rect_y, 0.0);
+        glm::vec3 scale(rect_size, rect_size, 1.0);
+        glm::vec2 uv_min(u, v);
+        glm::vec2 uv_max(u + uv_width, v + uv_height);
+
+        glm::mat4 model_mat(1.0);
+        model_mat = glm::translate(model_mat, position);
+        model_mat = glm::scale(model_mat, scale);
+        model_mats.push_back(model_mat);
+
+        uv_ranges.emplace_back(uv_min.x, uv_min.y, uv_max.x, uv_max.y);
+
+        sprites.emplace_back(position, scale, uv_min, uv_max);
     }
 
-    unsigned int VBO, VAO, EBO;
+    std::vector<Vertex> vertices = {
+        Vertex {  0.5,  0.5, 0.0, 1.0, 1.0 },
+        Vertex {  0.5, -0.5, 0.0, 1.0, 0.0 },
+        Vertex { -0.5, -0.5, 0.0, 0.0, 0.0 },
+        Vertex { -0.5,  0.5, 0.0, 0.0, 1.0 }
+    };
+
+    std::vector<unsigned int> indices = {
+        0, 1, 3,
+        1, 2, 3
+    };
+
+    unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);
+    glGenBuffers(1, &UV_VBO);
+    glGenBuffers(1, &MODEL_MAT_VBO);
     glGenBuffers(1, &EBO);
 
     glBindVertexArray(VAO);
 
+    // position attribute
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
-
-    // position attribute
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    // texture coords attribute
+    // vertex texture coords attribute
+
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
+
+    // sprite texture coords attribute
+
+    glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glEnableVertexAttribArray(2);
+    glVertexAttribDivisor(2, 1);
+
+    // model matrix attribute
+    glBindBuffer(GL_ARRAY_BUFFER, MODEL_MAT_VBO);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_mats.size(), model_mats.data(), GL_DYNAMIC_DRAW);
+
+    for(int i = 0; i < 4; i++) {
+        glEnableVertexAttribArray(3 + i);
+        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4) * i));
+        glVertexAttribDivisor(3 + i, 1);
+    }
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -173,13 +200,38 @@ int main() {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, texture);
 
+    int count = 0;
+
     while (!glfwWindowShouldClose(window)) {
         processInput(window);
 
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+        count++;
+        if(count % 20 == 0) {
+            std::cout << "hi" << std::endl;
+
+            uv_ranges.clear();
+            for(int i = 0; i < sprites.size(); i++) {
+                int tile_x = rand() % tile_width;
+                int tile_y = rand() % tile_height;
+
+                float u = tile_x * uv_width;
+                float v = tile_y * uv_height;
+
+                glm::vec2 uv_min(u, v);
+                glm::vec2 uv_max(u + uv_width, v + uv_height);
+
+                uv_ranges.emplace_back(uv_min.x, uv_min.y, uv_max.x, uv_max.y);
+            }
+
+            glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
+
+        }
+
+        glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, sprites.size());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -188,6 +240,8 @@ int main() {
 	shaders.cleanup();
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
+    glDeleteBuffers(1, &UV_VBO);
+    glDeleteBuffers(1, &MODEL_MAT_VBO);
     glDeleteBuffers(1, &EBO);
 
     glfwTerminate();
