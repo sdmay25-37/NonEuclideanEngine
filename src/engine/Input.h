@@ -20,7 +20,7 @@ public:
 	bool isMouseButtonPressed(int button) const;
 	void getMousePosition(double& x, double& y) const;
 
-	 void bindKeyPress(const std::string& action, int key, const ActionCallback& callback);
+	void bindKeyPress(const std::string& action, int key, const ActionCallback& callback);
 
 	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
