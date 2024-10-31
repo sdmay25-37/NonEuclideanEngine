@@ -4,6 +4,7 @@
 //
 
 #include "InputManager.h"
+#include <fstream>
 
 /*
 Rambling Notes:
@@ -16,32 +17,68 @@ Rambling Notes:
     Currently, we can probably handle this in the Input Manager class itself
 */
 
+//
+//  PROTOTYPES
+//
+bool contextExists (int contextId, std::unordered_map<short int, Input> map);
+std::vector<Input> parseJSON(std::string filepath);
+
 // Initialize --> for each of the Inputs, we'll have to create 
 InputManager::InputManager(GLFWwindow *window) {
     _window = window;
 }
 
-bool InputManager::setContextInput(short int contextId, int key, int actiondId) {
+bool InputManager::setContextInput(short int contextId, int key, std::string action, const ActionCallback& callback) {
+    Input newInput(_window);
+
+    if (!contextExists(contextId, _context_input_map)) {
+        _context_input_map[contextId] = newInput;
+    } else {
+        Input newInput = _context_input_map[contextId];    // Fix eventually
+    }
+
+    newInput.bindKeyPress(action, key, callback);
     return true;
 }
 
-// Set inputs based on vectors
-bool InputManager::setContextInput(short int contextId, std::vector<int> keys, std::vector<int> actions) {
-    if (keys.size() != actions.size()) return false;
+// Set inputs based on vectors --> This is going to be either batch input during 
+// startup or flushing more than 1 changed key bindings (e.g. changing a bunch of callbacks in menu)
+bool InputManager::setContextInput(short int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<const ActionCallback&> callback) {
+    if (keys.size() != actions.size() || keys.size() != callback.size()) return false;
 
+    Input newInput(_window);
 
-    
+    if (!contextExists(contextId, _context_input_map)) {
+        _context_input_map[contextId] = newInput;
+    } else {
+        newInput = _context_input_map[contextId];    // Fix eventually
+    }
+
+    for (int i = 0; i < keys.size(); i++) {
+        newInput.bindKeyPress(actions.at(i), keys.at(i), callback.at(i));
+    }
+
     return true;
 }
 
-// Set based on XML file
-bool InputManager::setContextInput(std::string xmlFilePath) {
+// Set based on JSON file
+bool InputManager::setContextInput(std::string jsonFilePath) {
     return true;
 }                                         
 
 // Get action from Inputs.
 bool getAction(short int contextId, int key);
 
-bool contextExists (int contextId) {
-    return _context_input_map.find(contextId) != NULL;
+bool contextExists (int contextId, std::unordered_map<short int, Input> map) {
+    return (map.find(contextId) != map.end());
+}
+
+// Process configuration information found in JSON file
+std::vector<Input> parseJSON(const char* filepath) {
+    std::ifstream jsonFile(filepath);
+}
+
+// Write configurations to JSON file
+void flushConfigurations() {
+
 }
