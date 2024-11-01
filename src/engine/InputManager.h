@@ -7,13 +7,17 @@
 #define INPUTMANAGER_H
 
 #include "Input.h"
+
 #include <GLFW/glfw3.h>
+#include <nlohmann/json.hpp>
+
 #include <vector>
 #include <string>
 
 class InputManager {
 public:
 	using ActionCallback = std::function<void()>;
+    using json = nlohmann::json;
 
     InputManager(GLFWwindow *window);
     
@@ -28,6 +32,7 @@ public:
 
 private:
     GLFWwindow* _window;
+    json _configurations;
 
     // Map of Contexts to Inputs --> Idea is that we find the active context first, 
     // then find the action, then return.

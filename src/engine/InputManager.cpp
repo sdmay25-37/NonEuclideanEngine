@@ -5,6 +5,9 @@
 
 #include "InputManager.h"
 #include <fstream>
+#include <nlohmann/json.hpp>
+
+using json = nlohmann::json;
 
 /*
 Rambling Notes:
@@ -12,9 +15,11 @@ Rambling Notes:
     that's associated with each of the contexts
     so the access is 
     key press --> context access --> key mapping --> action
-.                                                       |
+    .                                                   |
     Return action associated <--------------------------|
     Currently, we can probably handle this in the Input Manager class itself
+
+    Try to store states for polling (game design team queries state)
 */
 
 //
@@ -26,6 +31,7 @@ std::vector<Input> parseJSON(std::string filepath);
 // Initialize --> for each of the Inputs, we'll have to create 
 InputManager::InputManager(GLFWwindow *window) {
     _window = window;
+    _configurations = json::array();
 }
 
 bool InputManager::setContextInput(short int contextId, int key, std::string action, const ActionCallback& callback) {
@@ -63,6 +69,12 @@ bool InputManager::setContextInput(short int contextId, std::vector<int> keys, s
 
 // Set based on JSON file
 bool InputManager::setContextInput(std::string jsonFilePath) {
+    try {
+
+    } catch (_exception e) { /* Do Nothing Lmao*/  }
+
+    json configurations = json::parse(std::ifstream(jsonFilePath));
+
     return true;
 }                                         
 
@@ -74,8 +86,8 @@ bool contextExists (int contextId, std::unordered_map<short int, Input> map) {
 }
 
 // Process configuration information found in JSON file
-std::vector<Input> parseJSON(const char* filepath) {
-    std::ifstream jsonFile(filepath);
+json processJSON(const char* filepath) {
+    return json::parse(std::ifstream(filepath));
 }
 
 // Write configurations to JSON file
