@@ -18,6 +18,8 @@ set(SOURCES
     "main.cpp"
 )
 
+set(VS_DEBUGGER_WORKING_DIRECTORY "..")
+
 foreach(SOURCE ${SOURCES})
 
     get_filename_component(SOURCE_NAME ${SOURCE} NAME_WE)

@@ -3,6 +3,7 @@ add_library(
 
     "public/src/Sprite.cpp"
     "public/src/ShaderProgram.cpp"
+    "public/src/Engine.cpp"
 )
 
 target_include_directories(ne_engine PUBLIC public/include PRIVATE private/include)
