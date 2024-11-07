@@ -1,0 +1,15 @@
+{
+    "cmake.sourceDirectory": "/home/jsoccerd/Coding/NonEuclideanEngine",
+    "files.associations": {
+        "glfw3.h": "c",
+        "*.frag": "glsl",
+        "cmath": "cpp"
+    },
+    "vim.useSystemClipboard": true,
+    "vim.handleKeys": {
+        "<C-d>": true,
+        "<C-s>": false,
+        "<C-z>": false,
+        "<C-p>": false
+    },
+}

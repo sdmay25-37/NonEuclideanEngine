@@ -9,7 +9,7 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "engine/Sprite.h"
+#include "Sprite.h"
 
 #include "ShaderProgram.h"
 
