@@ -1,0 +1,18 @@
+{
+    "cmake.sourceDirectory": "${workspaceFolder}/tests",
+    "cmake.buildBeforeRun": true,
+    "cmake"
+    "files.associations": {
+        "glfw3.h": "c",
+        "*.frag": "glsl",
+        "cmath": "cpp",
+        "fstream": "cpp"
+    },
+    "vim.useSystemClipboard": true,
+    "vim.handleKeys": {
+        "<C-d>": true,
+        "<C-s>": false,
+        "<C-z>": false,
+        "<C-p>": false
+    },
+}
