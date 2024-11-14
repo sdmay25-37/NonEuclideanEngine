@@ -29,7 +29,7 @@
             "camera_pos.z += camera_speed;",
             "camera_pos.z -= camera_speed;"
         ],
-        "pritority" : "1"
+        "priority" : 1
     },
     {
         "contextId" : 2,
@@ -61,6 +61,38 @@
             "camera_pos.z += camera_speed;",
             "camera_pos.z -= camera_speed;"
         ],
-        "pritority" : "3"
+        "priority" : 3
+    },
+    {
+        "contextId" : 3,
+        "actions" : [
+            "quit",
+            "interact",
+            "move_up",
+            "move_down",
+            "move_left",
+            "move_right"
+        ],
+        "keys" : [
+            "GLFW_KEY_ESCAPE",
+            "GLFW_KEY_E",
+            "GLFW_KEY_W",
+            "GLFW_KEY_S",
+            "GLFW_KEY_A",
+            "GLFW_KEY_D",
+            "GLFW_KEY_Q",
+            "GLFW_KEY_E"
+        ],
+        "ActionCallbacks" : [
+            "glfwSetWindowShouldClose(window, true);",
+            "DO SOMETHING;",
+            "camera_pos.y += camera_speed;",
+            "camera_pos.y -= camera_speed;",
+            "camera_pos.x -= camera_speed;",
+            "camera_pos.x += camera_speed;",
+            "camera_pos.z += camera_speed;",
+            "camera_pos.z -= camera_speed;"
+        ],
+        "priority" : 2
     }
 ]

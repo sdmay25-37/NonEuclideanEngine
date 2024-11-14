@@ -7,8 +7,6 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 
-using json = nlohmann::json;
-
 /*
 Rambling Notes:
     When we're gathering input, the input manager will likely also dispatch the actions
@@ -31,7 +29,7 @@ std::vector<Input> parseJSON(std::string filepath);
 // Initialize --> for each of the Inputs, we'll have to create 
 InputManager::InputManager(GLFWwindow *window) {
     _window = window;
-    _configurations = json::array();
+    _configurations = nlohmann::json::array();
 }
 
 bool InputManager::setContextInput(short int contextId, int key, std::string action, const ActionCallback& callback) {
@@ -68,12 +66,26 @@ bool InputManager::setContextInput(short int contextId, std::vector<int> keys, s
 }
 
 // Set based on JSON file
-bool InputManager::setContextInput(std::string jsonFilePath) {
-    try {
+bool InputManager::setContextInput() {
+    nlohmann::json configurations = processJSON(_jsonFilePath);
 
-    } catch (_exception e) { /* Do Nothing Lmao*/  }
+    for (int i = 0; i < configurations.size(); i++) {
+        nlohmann::json obj = configurations[i];
+        
+        // Grab Fields for each context
+        int contextId = obj["contextId"];
+        std::vector<std::string> keys = obj["keys"];
+        std::vector<std::string> actions = obj["actions"];
+        std::vector<std::string> callbacks = obj["ActionCallbacks"];
+        
+        // Create Input class to bind to ContextID
+        Input newIn(_window);
+        for (int j = 0; j < keys.size(); j++) {
+            
+        }
 
-    json configurations = json::parse(std::ifstream(jsonFilePath));
+        _context_input_map.emplace(contextId, newIn);
+    } 
 
     return true;
 }                                         
@@ -86,8 +98,8 @@ bool contextExists (int contextId, std::unordered_map<short int, Input> map) {
 }
 
 // Process configuration information found in JSON file
-json processJSON(const char* filepath) {
-    return json::parse(std::ifstream(filepath));
+inline nlohmann::json processJSON(std::string filepath) {
+    return nlohmann::json::parse(std::ifstream(filepath));
 }
 
 // Write configurations to JSON file
