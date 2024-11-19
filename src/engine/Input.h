@@ -11,6 +11,7 @@ public:
 	using ActionCallback = std::function<void()>;
 
 	Input(GLFWwindow* window);
+	Input(GLFWwindow* window, uint8_t contextId);
 
 	// Keyboard
 	bool isKeyPressed(int key) const;
@@ -26,6 +27,7 @@ public:
 
 private:
 	GLFWwindow* _window;
+	uint8_t _contextId;
 
 	std::unordered_map<std::string, std::vector<ActionCallback>> _action_callback_map;
 

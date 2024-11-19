@@ -12,6 +12,13 @@ Input::Input(GLFWwindow *window) {
 	glfwSetKeyCallback(window, key_callback);
 }
 
+Input::Input(GLFWwindow *window, uint8_t contextId) {
+	_window = window;
+	_contextId = contextId;
+	glfwSetWindowUserPointer(window, this);
+	glfwSetKeyCallback(window, key_callback);
+}
+
 bool Input::isKeyPressed(int key) const {
 	return glfwGetKey(_window, key) == GLFW_PRESS;
 }

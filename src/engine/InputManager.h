@@ -34,6 +34,9 @@ private:
     nlohmann::json _configurations;
     std::string _jsonFilePath = "../bindings/example_bindings.json";
 
+    std::unordered_map <int, std::string> _enumToString;
+    std::unordered_map <std::string, int> _stringToEnum;
+
     // Map of Contexts to Inputs --> Idea is that we find the active context first, 
     // then find the action, then return.
     std::unordered_map<short int, Input> _context_input_map;
