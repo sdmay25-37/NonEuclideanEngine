@@ -95,8 +95,8 @@ bool InputManager::setContextInput() {
 }                                         
 
 // Get action from Inputs.
-bool getAction(short int contextId, int key) {
-    return _context_input_map.find(contextId).find()
+bool InputManager::getAction(short int contextId, int key) {
+    return _context_input_map.find(contextId).find();
 }
 
 bool contextExists (int contextId, std::unordered_map<short int, Input> map) {
