@@ -8,6 +8,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 Input::Input(GLFWwindow *window) {
 	_window = window;
+	_priority = -1;
 	glfwSetWindowUserPointer(window, this);
 	glfwSetKeyCallback(window, key_callback);
 }
@@ -15,6 +16,15 @@ Input::Input(GLFWwindow *window) {
 Input::Input(GLFWwindow *window, uint8_t contextId) {
 	_window = window;
 	_contextId = contextId;
+	_priority = -1;
+	glfwSetWindowUserPointer(window, this);
+	glfwSetKeyCallback(window, key_callback);
+}
+
+Input::Input(GLFWwindow *window, uint8_t contextId, int priority) {
+	_window = window;
+	_contextId = contextId;
+	_priority = priority;
 	glfwSetWindowUserPointer(window, this);
 	glfwSetKeyCallback(window, key_callback);
 }

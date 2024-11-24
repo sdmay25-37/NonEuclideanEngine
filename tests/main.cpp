@@ -219,11 +219,12 @@ int main() {
         glfwSetWindowShouldClose(window, true);
     });
 
+    input.bindKeyPress("up", GLFW_KEY_W, [&window]() {
+        camera_pos.y += camera_speed;
+    });
+
     while (!glfwWindowShouldClose(window)) {
 
-        if(input.isKeyPressed(GLFW_KEY_W)) {
-            camera_pos.y += camera_speed;
-        }
         if(input.isKeyPressed(GLFW_KEY_S)) {
             camera_pos.y -= camera_speed;
         }

@@ -76,12 +76,13 @@ bool InputManager::setContextInput() {
         
         // Grab Fields for each context
         uint8_t contextId = obj["contextId"];                           // TODO: TBD, maybe use strings instead?
+        int priority = obj["priority"];
         std::vector<std::string> keys = obj["keys"];
         std::vector<std::string> actions = obj["actions"];
         std::vector<std::string> callbacks = obj["ActionCallbacks"];
         
         // Create Input class to bind to ContextID
-        Input newIn(_window, contextId);
+        Input newIn(_window, contextId, priority);
         for (int j = 0; j < keys.size(); j++) {
             // TODO: Fix
             // Might have to consider just using strings in the lookup for a or lambda function declarations
@@ -96,7 +97,8 @@ bool InputManager::setContextInput() {
 
 // Get action from Inputs.
 bool InputManager::getAction(short int contextId, int key) {
-    return _context_input_map.find(contextId).find();
+    // return _context_input_map.find(contextId).find();
+    return;
 }
 
 bool contextExists (int contextId, std::unordered_map<short int, Input> map) {
@@ -110,12 +112,28 @@ inline nlohmann::json processJSON(std::string filepath) {
 }
 
 // Write configurations to JSON file
-void flushConfigurations() {
+void flushConfigurations(std::unordered_map<short int, Input> _context_input_map) {
 
+    nlohmann::json output;
+    int outObjCtr = 0;
+
+    for (auto& [key, value] : _context_input_map) {
+        
+        output[outObjCtr]["contextId"] = key;
+        
+        for (auto& [key1, val1] : value.)
+
+        outObjCtr++;
+    }
+
+    // Write out output json to file
+    std::ofstream out("../src/bindings/bindings.json");
 }
 
 // Ignore this abysmall coding, I have no other idea as to how to do this.
 void initializeMaps(std::unordered_map <int, std::string> _enumToString, std::unordered_map <std::string, int> _stringToEnum) {
+    
+
     // Initialize maps from strings to enums
     _stringToEnum = {
         {"SPACE",  32},
