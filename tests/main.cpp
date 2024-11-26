@@ -15,7 +15,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "engine/Input.h"
+#include "../src/engine/Input.h"
+#include "../src/engine/Camera.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -205,7 +206,7 @@ int main() {
 
     int count = 0;
 
-    Camera cam();
+    Camera cam = Camera();
     glm::vec3 camera_pos(0.0, 0.0, 1.0);
     glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
     float camera_speed = 0.05f;
@@ -220,9 +221,9 @@ int main() {
         glfwSetWindowShouldClose(window, true);
     });
 
-    input.bindKeyPress("up", GLFW_KEY_W, [&window]() {
-        camera_pos.y += camera_speed;
-    });
+    // input.bindKeyPress("up", GLFW_KEY_W, [&window]() {
+    //     camera_pos.y += camera_speed;
+    // });
 
     while (!glfwWindowShouldClose(window)) {
 

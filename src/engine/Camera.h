@@ -29,4 +29,4 @@ private:
     float _camera_speed;
 };
 
-#endif; // CAMERA_H
+#endif // CAMERA_H
