@@ -1,7 +1,6 @@
 {
-    "C_Cpp.default.compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe",///usr/bin/g++",
-    // "C_Cpp.default.compilerPath": "/usr/bin/g++",
-    "C_Cpp.errorSquiggles": "disabled",
+    "cmake.sourceDirectory": "${workspaceFolder}/tests",
+    "cmake.buildBeforeRun": true,
     "files.associations": {
         "glfw3.h": "c",
         "*.frag": "glsl",
@@ -79,16 +78,9 @@
         "thread": "cpp",
         "cinttypes": "cpp",
         "typeinfo": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "complex": "cpp"
     },
-    "cmake.sourceDirectory": "${workspaceFolder}/tests",
-    "cmake.buildBeforeRun": true,
-    // "files.associations": {
-    //     "glfw3.h": "c",
-    //     "*.frag": "glsl",
-    //     "cmath": "cpp",
-    //     "fstream": "cpp"
-    // },
     "vim.useSystemClipboard": true,
     "vim.handleKeys": {
         "<C-d>": true,
