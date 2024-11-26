@@ -10,6 +10,7 @@ class Input {
 public:
 	using ActionCallback = std::function<void()>;
 
+	Input();
 	Input(GLFWwindow* window);
 	Input(GLFWwindow* window, uint8_t contextId);
 	Input(GLFWwindow* window, uint8_t contextId, int priority);
@@ -28,6 +29,10 @@ public:
 	std::pmr::unordered_map<int, std::string> getKeyActionMap();
 
 	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+	uint8_t getContextId();
+	int getPriority();
+
 
 private:
 	GLFWwindow* _window;

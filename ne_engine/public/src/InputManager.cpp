@@ -23,9 +23,9 @@ Rambling Notes:
 //
 //  PROTOTYPES
 //
-bool contextExists (int contextId, std::unordered_map<short int, Input> map);
+bool contextExists (int contextId, std::unordered_map<int, Input> map);
 void initializeMaps(std::unordered_map <int, std::string> _enumToString, std::unordered_map <std::string, int> _stringToEnum);
-std::vector<Input> parseJSON(std::string filepath);
+inline nlohmann::json processJSON(std::string filepath);
 
 // Initialize --> for each of the Inputs, we'll have to create 
 InputManager::InputManager(GLFWwindow *window) {
@@ -34,7 +34,7 @@ InputManager::InputManager(GLFWwindow *window) {
     initializeMaps(_enumToString, _stringToEnum);
 }
 
-bool InputManager::setContextInput(short int contextId, int key, std::string action, const ActionCallback& callback) {
+bool InputManager::setContextInput(int contextId, int key, std::string action, const ActionCallback& callback) {
     Input newInput(_window);
 
     if (!contextExists(contextId, _context_input_map)) {
@@ -49,7 +49,7 @@ bool InputManager::setContextInput(short int contextId, int key, std::string act
 
 // Set inputs based on vectors --> This is going to be either batch input during 
 // startup or flushing more than 1 changed key bindings (e.g. changing a bunch of callbacks in menu)
-bool InputManager::setContextInput(short int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<const ActionCallback&> callback) {
+bool InputManager::setContextInput(int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<const ActionCallback&> callback) {
     if (keys.size() != actions.size() || keys.size() != callback.size()) return false;
 
     Input newInput(_window);
@@ -71,7 +71,7 @@ bool InputManager::setContextInput(short int contextId, std::vector<int> keys, s
 bool InputManager::setContextInput() {
     nlohmann::json configurations = processJSON(_jsonFilePath);
 
-    for (int i = 0; i < configurations.size(); i++) {sdad
+    for (int i = 0; i < configurations.size(); i++) {
         nlohmann::json obj = configurations[i];
         
         // Grab Fields for each context
@@ -85,29 +85,23 @@ bool InputManager::setContextInput() {
         Input newIn(_window, contextId, priority);
         for (int j = 0; j < keys.size(); j++) {
             // For now, we just bind the key to the action string, need to figure out how to link this later
-            newIn.bindsKeyPress(actions.at(j), _stringToEnum.find(actions.at(j)));
+            // newIn.bindKeyPress(actions.at(j), _stringToEnum.find(actions.at(j)));
         }
 
         _context_input_map.emplace(contextId, newIn);
     } 
 
     return true;
-}                                         
+}   
+
+std::unordered_map<int, Input> InputManager::getContextInputMap() {
+    return _context_input_map;
+}
 
 // Get action from Inputs.
-bool InputManager::getAction(short int contextId, int key) {
+bool InputManager::getAction(int contextId, int key) {
     // return _context_input_map.find(contextId).find();
-    return;
-}
-
-bool contextExists (int contextId, std::unordered_map<short int, Input> map) {
-    return (map.find(contextId) != map.end());
-}
-
-// Process configuration information found in JSON file
-// Specified as a function to improve readability 
-inline nlohmann::json processJSON(std::string filepath) {
-    return nlohmann::json::parse(std::ifstream(filepath));
+    return false;
 }
 
 // Write configurations to JSON file
@@ -115,18 +109,18 @@ void InputManager::flushConfigurations() {
     nlohmann::json outputJson;
     int indexCtr = 0;
 
-    for (Input i : _context_input_map) {
-        std::pmr::unordered_map<int, std::string> keyActionMap = i.getKeyActionMap();
+    for (auto& [key, i] : this->getContextInputMap()) {
+        std::pmr::unordered_map<int, std::string> keyActionMap = ((Input) i).getKeyActionMap();
         std::vector <std::string> actions;
         std::vector <int> keys;
 
         for (auto& [key, value] : keyActionMap) {
-            actions.push_back(value);
-            keys.push_back(key);
+            actions.push_back((std::string) value);
+            keys.push_back((int) key);
         }
 
-        outputJson[indexCtr]["contextId"] = i.contextId;
-        outputJson[indexCtr]["priority"] = i.priority;
+        outputJson[indexCtr]["contextId"] = i.getContextId();
+        outputJson[indexCtr]["priority"] = i.getPriority();
         outputJson[indexCtr]["actions"] = actions;
         outputJson[indexCtr]["keys"] = keys;
 
@@ -136,6 +130,16 @@ void InputManager::flushConfigurations() {
     // Write out to JSON
     std::ofstream out("src/bindings/bindings.json");
     out << std::setw(4) << outputJson << std::endl;
+}
+
+bool contextExists (int contextId, std::unordered_map<int, Input> map) {
+    return (map.find(contextId) != map.end());
+}
+
+// Process configuration information found in JSON file
+// Specified as a function to improve readability 
+inline nlohmann::json processJSON(std::string filepath) {
+    return nlohmann::json::parse(std::ifstream(filepath));
 }
 
 // Ignore this abysmall coding, I have no other idea as to how to do this.

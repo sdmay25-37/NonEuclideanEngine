@@ -10,4 +10,4 @@ add_library(
 )
 
 target_include_directories(ne_engine PUBLIC public/include PRIVATE private/include)
-target_link_libraries(ne_engine glad glfw glm json)
+target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json)

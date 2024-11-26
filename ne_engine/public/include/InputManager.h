@@ -22,13 +22,15 @@ public:
     
     // Changing Key/Mouse Bindings
     // currently using ints for associating with action, prolly change later
-    bool setContextInput(short int contextId, int key, std::string action, const ActionCallback& callback);
-    bool setContextInput(short int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<const ActionCallback&> callback); // Set inputs based on vectors
+    bool setContextInput(int contextId, int key, std::string action, const ActionCallback& callback);
+    bool setContextInput(int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<const ActionCallback&> callback); // Set inputs based on vectors
     bool setContextInput(); // Set based on XML file
+
+    std::unordered_map<int, Input> getContextInputMap();
 
     void flushConfigurations(); 
     // Get action from Inputs.
-    bool getAction(short int contextId, int key);
+    bool getAction(int contextId, int key);
 
 private:
     GLFWwindow* _window;
@@ -40,7 +42,7 @@ private:
 
     // Map of Contexts to Inputs --> Idea is that we find the active context first, 
     // then find the action, then return.
-    std::unordered_map<short int, Input> _context_input_map;
+    std::unordered_map<int, Input> _context_input_map;
 };
 
-#endif; // INPUTMANAGER_H
+#endif // INPUTMANAGER_H

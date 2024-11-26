@@ -6,8 +6,15 @@
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
+Input::Input() {
+	_window = NULL;
+	_priority = -1;
+	_contextId = -1;
+}
+
 Input::Input(GLFWwindow *window) {
 	_window = window;
+	_contextId = -1;
 	_priority = -1;
 	glfwSetWindowUserPointer(window, this);
 	glfwSetKeyCallback(window, key_callback);
@@ -63,7 +70,15 @@ void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
     }
 }
 
-std::pmr::unordered_map<int, std::string> getKeyActionMap() {
+uint8_t Input::getContextId() {
+	return _contextId;
+}
+
+int Input::getPriority() {
+	return _priority;
+}
+
+std::pmr::unordered_map<int, std::string> Input::getKeyActionMap() {
 	return _key_action_map;
 }
 
