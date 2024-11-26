@@ -15,8 +15,8 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
-#include "../src/engine/Input.h"
-#include "../src/engine/Camera.h"
+#include "Input.h"
+#include "Camera.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);

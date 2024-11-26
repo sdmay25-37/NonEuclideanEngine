@@ -3,37 +3,39 @@
 //  Date: 11/26/24
 //
 
+#include "Camera.h"
+
 Camera::Camera() {
-    _camera_pos = (0.0, 0.0, 1.0);
+    _camera_pos = glm::vec3 (0.0, 0.0, 1.0);
     _camera_speed = 0.05f;
-    _camera_up = (0.0, 1.0, 0.0, 1.0);
+    _camera_up = glm::vec4 (0.0, 1.0, 0.0, 1.0);
 }
 
 Camera::Camera(GLFWwindow* window) {
-    _camera_pos = (0.0, 0.0, 1.0);
+    _camera_pos = glm::vec3 (0.0, 0.0, 1.0);
     _camera_speed = 0.05f;
 }
 
-Camera::moveCameraUp() {
+void Camera::moveCameraUp() {
     _camera_pos.y += _camera_speed;
 }
 
-Camera::moveCameraDown() {
+void Camera::moveCameraDown() {
     _camera_pos.y -= _camera_speed;
 }
 
-Camera::moveCameraLeft() {
+void Camera::moveCameraLeft() {
     _camera_pos.z += _camera_speed;
 }
 
-Camera::moveCameraRight() {
+void Camera::moveCameraRight() {
     _camera_pos.z -= _camera_speed;
 }
 
-Camera::getCameraPos() {
+glm::vec3 Camera::getCameraPos() {
     return _camera_pos;
 }
 
-Camera::getCameraUp() {
+glm::vec4 Camera::getCameraUp() {
     return _camera_up;
 }

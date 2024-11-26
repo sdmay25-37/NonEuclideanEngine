@@ -14,13 +14,13 @@ public:
     Camera();
     Camera(GLFWwindow* window);
 
-    static void moveCameraUp();
-    static void moveCameraDown();
-    static void moveCameraLeft();
-    static void moveCameraRight();
+    void moveCameraUp();
+    void moveCameraDown();
+    void moveCameraLeft();
+    void moveCameraRight();
 
-    static glm::vec3 getCameraPos();
-    static glm::vec4 getCameraUp();
+    glm::vec3 getCameraPos();
+    glm::vec4 getCameraUp();
 
 private:
     GLFWwindow* window;
