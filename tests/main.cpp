@@ -205,6 +205,7 @@ int main() {
 
     int count = 0;
 
+    Camera cam();
     glm::vec3 camera_pos(0.0, 0.0, 1.0);
     glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
     float camera_speed = 0.05f;
@@ -264,7 +265,7 @@ int main() {
 
         }
 
-        glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
+        glm::mat4 proj_view_mat = proj_mat * glm::lookAt(cam.getCameraPos(), glm::vec3(cam.getCameraPos().x, cam.getCameraPos().y, 0.0), xyz(camera_up));
         shaders.setUniformMat4("proj_view_mat", proj_view_mat);
 
         glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, sprites.size());
@@ -286,4 +287,8 @@ int main() {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
+}
+
+void shiftCameraLeft() {
+
 }

@@ -22,10 +22,11 @@ public:
     
     // Changing Key/Mouse Bindings
     // currently using ints for associating with action, prolly change later
-    bool InputManager::setContextInput(short int contextId, int key, std::string action, const ActionCallback& callback);
-    bool InputManager::setContextInput(short int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<const ActionCallback&> callback); // Set inputs based on vectors
+    bool setContextInput(short int contextId, int key, std::string action, const ActionCallback& callback);
+    bool setContextInput(short int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<const ActionCallback&> callback); // Set inputs based on vectors
     bool setContextInput(); // Set based on XML file
 
+    void flushConfigurations(); 
     // Get action from Inputs.
     bool getAction(short int contextId, int key);
 

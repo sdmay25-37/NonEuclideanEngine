@@ -22,12 +22,16 @@ public:
 	void getMousePosition(double& x, double& y) const;
 
 	void bindKeyPress(const std::string& action, int key, const ActionCallback& callback);
+	void bindKeyPress(const std::string& action, int key);
+
+	std::pmr::unordered_map<int, std::string> getKeyActionMap();
 
 	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 private:
 	GLFWwindow* _window;
 	uint8_t _contextId;
+	int _priority;
 
 	std::unordered_map<std::string, std::vector<ActionCallback>> _action_callback_map;
 

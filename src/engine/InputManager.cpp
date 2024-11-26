@@ -71,21 +71,20 @@ bool InputManager::setContextInput(short int contextId, std::vector<int> keys, s
 bool InputManager::setContextInput() {
     nlohmann::json configurations = processJSON(_jsonFilePath);
 
-    for (int i = 0; i < configurations.size(); i++) {
+    for (int i = 0; i < configurations.size(); i++) {sdad
         nlohmann::json obj = configurations[i];
         
         // Grab Fields for each context
         uint8_t contextId = obj["contextId"];                           // TODO: TBD, maybe use strings instead?
         std::vector<std::string> keys = obj["keys"];
         std::vector<std::string> actions = obj["actions"];
-        std::vector<std::string> callbacks = obj["ActionCallbacks"];
+        // std::vector<std::string> callbacks = obj["ActionCallbacks"];
         
         // Create Input class to bind to ContextID
         Input newIn(_window, contextId);
         for (int j = 0; j < keys.size(); j++) {
-            // TODO: Fix
-            // Might have to consider just using strings in the lookup for a or lambda function declarations
-            newIn.bindKeyPress(actions.at(j), _stringToEnum.find(actions.at(j)), static_cast<ActionCallback>(callbacks.at(j)));
+            // For now, we just bind the key to the action string, need to figure out how to link this later
+            newIn.bindsKeyPress(actions.at(j), _stringToEnum.find(actions.at(j)));
         }
 
         _context_input_map.emplace(contextId, newIn);
@@ -110,8 +109,31 @@ inline nlohmann::json processJSON(std::string filepath) {
 }
 
 // Write configurations to JSON file
-void flushConfigurations() {
+void InputManager::flushConfigurations() {
+    nlohmann::json outputJson;
+    int indexCtr = 0;
 
+    for (Input i : _context_input_map) {
+        std::pmr::unordered_map<int, std::string> keyActionMap = i.getKeyActionMap();
+        std::vector <std::string> actions;
+        std::vector <int> keys;
+
+        for (auto& [key, value] : keyActionMap) {
+            actions.push_back(value);
+            keys.push_back(key);
+        }
+
+        outputJson[indexCtr]["contextId"] = i.contextId;
+        outputJson[indexCtr]["priority"] = i.priority;
+        outputJson[indexCtr]["actions"] = actions;
+        outputJson[indexCtr]["keys"] = keys;
+
+        indexCtr++;
+    }
+
+    // Write out to JSON
+    std::ofstream out("src/bindings/bindings.json");
+    out << std::setw(4) << outputJson << std::endl;
 }
 
 // Ignore this abysmall coding, I have no other idea as to how to do this.
