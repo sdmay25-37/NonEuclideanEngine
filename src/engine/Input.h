@@ -12,6 +12,7 @@ public:
 
 	Input(GLFWwindow* window);
 	Input(GLFWwindow* window, uint8_t contextId);
+	Input(GLFWwindow* window, uint8_t contextId, int priority);
 
 	// Keyboard
 	bool isKeyPressed(int key) const;
