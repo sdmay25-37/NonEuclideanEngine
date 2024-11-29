@@ -24,7 +24,8 @@ public:
     // Changing Key/Mouse Bindings
     // currently using ints for associating with action, prolly change later
     bool setContextInput(int contextId, int key, std::string action, const ActionCallback& callback);
-    bool setContextInput(int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<const ActionCallback&> callback); // Set inputs based on vectors
+    // bool setContextInput(int contextId, std::vector<int> keys, std::vector<std::string> actions); // Set inputs based on vectors
+    bool setContextInput(int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<ActionCallback> callback); // Set inputs based on vectors
     bool setContextInput(); // Set based on XML file
 
     std::unordered_map<int, Input> getContextInputMap();

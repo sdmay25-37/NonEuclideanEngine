@@ -49,8 +49,8 @@ bool InputManager::setContextInput(int contextId, int key, std::string action, c
 
 // Set inputs based on vectors --> This is going to be either batch input during 
 // startup or flushing more than 1 changed key bindings (e.g. changing a bunch of callbacks in menu)
-bool InputManager::setContextInput(int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<const ActionCallback&> callback) {
-    if (keys.size() != actions.size() || keys.size() != callback.size()) return false;
+bool InputManager::setContextInput(int contextId, std::vector<int> keys, std::vector<std::string> actions, std::vector<ActionCallback> callback) {
+    if (keys.size() != actions.size() || keys.size() != callback.size()) return false; //) return false;//
 
     Input newInput(_window);
 
@@ -61,7 +61,7 @@ bool InputManager::setContextInput(int contextId, std::vector<int> keys, std::ve
     }
 
     for (int i = 0; i < keys.size(); i++) {
-        newInput.bindKeyPress(actions.at(i), keys.at(i), callback.at(i));
+        newInput.bindKeyPress(actions.at(i), keys.at(i), NULL);//callback.at(i));
     }
 
     return true;
