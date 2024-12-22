@@ -5,6 +5,8 @@
 
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
+
+#include <vector>
   
 struct Vertex {
     float x, y, z;
@@ -12,17 +14,19 @@ struct Vertex {
 };
 
 class Triangle {
-public :
+public:
     Triangle();
-    Triangle(Vertex[3] startVert);
-    Triangle(Vertex[3] startVert, float sensitivity);
+    Triangle(std::vector<struct Vertex> vertices);
+    Triangle(std::vector<struct Vertex> vertices, float sensitivity);
 
-    void moveRight():
-    void moveLeft():
-    void moveUp():
-    void moveDown():
+    void moveRight();
+    void moveLeft();
+    void moveUp();
+    void moveDown();
+
+    std::vector<struct Vertex> getVerts();
 private:
-    Vertex[3] vertices;
+    std::vector<struct Vertex> vertices;
     float sensitivity;
 };
 

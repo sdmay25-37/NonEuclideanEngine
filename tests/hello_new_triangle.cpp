@@ -6,16 +6,17 @@
 #include "ShaderProgram.h"
 #include "Input.h"
 #include "Camera.h"
+#include "Triangle.h"
 
 static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods);
 
 int constexpr WIDTH = 900;
 int constexpr HEIGHT = 1600;
 
-struct Vertex {
-    float x, y, z;
-    float r, g, b;
-};
+// struct Vertex {
+//     float x, y, z;
+//     float r, g, b;
+// };
 
 int main() {
     // GLFW Init
@@ -45,11 +46,13 @@ int main() {
     glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
     float camera_speed = 0.05f;
 
-    struct Vertex vertArr[3] = {
+    std::vector<struct Vertex> vertArr= {
         {-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f},
         {0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f},
         {0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f}
     };
+
+    Triangle triangle(vertArr);
 
     ShaderProgram shaders (
         "shaders/color.vert",
@@ -60,7 +63,7 @@ int main() {
     glGenBuffers(1, &vertBuff);
     glBindBuffer(GL_ARRAY_BUFFER, vertBuff);    
     // Assign buffer data
-    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex), vertArr, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex), triangle.getVerts().data(), GL_STATIC_DRAW);
 
     GLuint vao = 0;
     glGenVertexArrays(1, &vao);
