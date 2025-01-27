@@ -5,6 +5,7 @@
 
 #include "ShaderProgram.h"
 #include "Input.h"
+#include "InputManager.h"
 #include "Camera.h"
 #include "Triangle.h"
 
@@ -32,14 +33,13 @@ int main() {
 
     // Before using OpenGL, must make the window the current opengl context
     glfwMakeContextCurrent(window);
-    glfwSetKeyCallback(window, key_callback);
+    // glfwSetKeyCallback(window, key_callback);
 
     gladLoadGL();
     // std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
     // TODO: OPENGL STUFF HERE
 
-    Input input(window);
     Camera cam = Camera();
     glm::vec3 camera_pos(0.0, 0.0, 1.0);
     glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
@@ -80,13 +80,20 @@ int main() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*) (4 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]() {
-        glfwSetWindowShouldClose(window, true);
-    });
+    InputManager manager(window);
+    Input input(window);
 
-    input.bindKeyPress("MOVE_LEFT", GLFW_KEY_A, [&window]() {
-        triangle.moveLeft();
-    });
+    if (!manager.setContextInput(0, GLFW_KEY_ESCAPE, "quit", [&window]() {glfwSetWindowShouldClose(window, true);})) {
+        std::cout << "Shit Brokey" << std::endl;
+    }
+
+    if (!manager.setContextInput(0, GLFW_KEY_A, "MOVE_LEFT", [&window]() {triangle.moveLeft();})) {
+        std::cout << "Shit Brokey" << std::endl;
+    }
+
+    // input.bindKeyPress("MOVE_LEFT", GLFW_KEY_A, [&window]() {
+    //     triangle.moveLeft();
+    // });
     input.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D, [&window]() {
         triangle.moveRight();
     });
@@ -101,7 +108,7 @@ int main() {
                 
         glfwWaitEvents();
         glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
-        glBufferSubData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), triangle.getVerts().data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), triangle.getVerts().data(), GL_STATIC_DRAW);
 
         glClear(GL_COLOR_BUFFER_BIT);
         glBindVertexArray(vao);

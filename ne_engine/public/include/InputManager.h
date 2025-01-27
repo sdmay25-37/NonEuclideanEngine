@@ -19,8 +19,10 @@ class InputManager {
 public:
 	using ActionCallback = std::function<void()>;
 
+    InputManager();
     InputManager(GLFWwindow *window);
-    
+    InputManager(GLFWwindow *window, std::string filepath);
+
     // Changing Key/Mouse Bindings
     // currently using ints for associating with action, prolly change later
     bool setContextInput(int contextId, int key, std::string action, const ActionCallback& callback);
@@ -37,7 +39,7 @@ public:
 private:
     GLFWwindow* _window;
     nlohmann::json _configurations;
-    std::string _jsonFilePath = "../bindings/example_bindings.json";
+    std::string _jsonFilePath;
 
     std::unordered_map <int, std::string> _enumToString;
     std::unordered_map <std::string, int> _stringToEnum;

@@ -4,6 +4,7 @@
 //
 
 #include "InputManager.h"
+
 #include <fstream>
 #include <nlohmann/json.hpp>
 
@@ -27,11 +28,24 @@ bool contextExists (int contextId, std::unordered_map<int, Input> map);
 void initializeMaps(std::unordered_map <int, std::string> _enumToString, std::unordered_map <std::string, int> _stringToEnum);
 inline nlohmann::json processJSON(std::string filepath);
 
+InputManager::InputManager() {
+    _window = NULL;
+    _configurations = NULL;
+    initializeMaps(_enumToString, _stringToEnum);
+}
+
 // Initialize --> for each of the Inputs, we'll have to create 
 InputManager::InputManager(GLFWwindow *window) {
     _window = window;
     _configurations = nlohmann::json::array();
     initializeMaps(_enumToString, _stringToEnum);
+}
+
+InputManager::InputManager(GLFWwindow *window, std::string filepath) {
+    _window = window;
+    _configurations = nlohmann::json::array();
+    initializeMaps(_enumToString, _stringToEnum);
+    _jsonFilePath = filepath;
 }
 
 bool InputManager::setContextInput(int contextId, int key, std::string action, const ActionCallback& callback) {
@@ -142,7 +156,7 @@ inline nlohmann::json processJSON(std::string filepath) {
     return nlohmann::json::parse(std::ifstream(filepath));
 }
 
-// Ignore this abysmall coding, I have no other idea as to how to do this.
+// Ignore this abysmal coding, I have no other idea as to how to do this.
 void initializeMaps(std::unordered_map <int, std::string> _enumToString, std::unordered_map <std::string, int> _stringToEnum) {
     
 

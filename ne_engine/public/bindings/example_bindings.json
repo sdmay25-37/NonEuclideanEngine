@@ -19,16 +19,6 @@
             "GLFW_KEY_Q",
             "GLFW_KEY_E"
         ],
-        "ActionCallbacks" : [
-            "glfwSetWindowShouldClose(window, true);",
-            "DO SOMETHING;",
-            "camera_pos.y += camera_speed;",
-            "camera_pos.y -= camera_speed;",
-            "camera_pos.x -= camera_speed;",
-            "camera_pos.x += camera_speed;",
-            "camera_pos.z += camera_speed;",
-            "camera_pos.z -= camera_speed;"
-        ],
         "priority" : 1
     }
 ]
