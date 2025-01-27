@@ -7,6 +7,7 @@ add_library(
     "public/src/Input.cpp"
     "public/src/Camera.cpp"
     "public/src/InputManager.cpp"
+    "public/src/Triangle.cpp"
 )
 
 target_include_directories(ne_engine PUBLIC public/include PRIVATE private/include)
