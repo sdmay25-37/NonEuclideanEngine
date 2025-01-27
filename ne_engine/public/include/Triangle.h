@@ -20,7 +20,7 @@ public:
 
     Triangle();
     Triangle(std::vector<struct Vertex> vertices);
-    Triangle(std::vector<struct Vertex> vertices, float sensitivity);
+    Triangle(std::vector<struct Vertex> vertices, float sensIn);
 
     void moveRight();
     void moveLeft();

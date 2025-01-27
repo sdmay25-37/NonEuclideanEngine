@@ -16,7 +16,7 @@ public:
 	Input(GLFWwindow* window, uint8_t contextId, int priority);
 
 	// Keyboard
-	bool isKeyPressed(int key) const;
+	bool isKeyPressed(int key);
 	bool isKeyReleased(int key) const;
 
 	// Mouse

@@ -4,6 +4,8 @@
 
 #include "Input.h"
 
+#include <iostream>
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 Input::Input() {
@@ -36,7 +38,7 @@ Input::Input(GLFWwindow *window, uint8_t contextId, int priority) {
 	glfwSetKeyCallback(window, key_callback);
 }
 
-bool Input::isKeyPressed(int key) const {
+bool Input::isKeyPressed(int key) {
 	return glfwGetKey(_window, key) == GLFW_PRESS;
 }
 
@@ -59,8 +61,9 @@ void Input::bindKeyPress(const std::string &action, int key, const ActionCallbac
 }
 
 void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
+	if (!action) return; 
 	auto action_it = _key_action_map.find(key);
-	if(action_it == _key_action_map.end() || action != GLFW_PRESS) return;
+	if(action_it == _key_action_map.end() || action != GLFW_PRESS || action == GLFW_RELEASE) return;
 
 	auto callback_it = _action_callback_map.find(action_it->second);
 	if(callback_it == _action_callback_map.end()) return;

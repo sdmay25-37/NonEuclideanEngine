@@ -13,6 +13,10 @@ static void key_callback (GLFWwindow *window, int key, int scancode, int action,
 int constexpr WIDTH = 900;
 int constexpr HEIGHT = 1600;
 
+Triangle triangle;
+
+unsigned int vertBuff;
+
 int main() {
     // GLFW Init
     if (!glfwInit()) {
@@ -42,22 +46,22 @@ int main() {
     float camera_speed = 0.05f;
 
     std::vector<Triangle::Vertex> vertArr;
-    Triangle::Vertex vert0 = {-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f};
-    Triangle::Vertex vert1 = {0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f};
-    Triangle::Vertex vert2 = {0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f};
+    Triangle::Vertex vert0 = {-0.05f, -0.05f, 0.0f, 1.0f, 0.0f, 0.0f};
+    Triangle::Vertex vert1 = {0.0f, 0.05f, 0.0f, 0.0f, 1.0f, 0.0f};
+    Triangle::Vertex vert2 = {0.05f, -0.05f, 0.0f, 0.0f, 0.0f, 1.0f};
     
     vertArr.push_back(vert0);
     vertArr.push_back(vert1);
     vertArr.push_back(vert2);
 
-    Triangle triangle(vertArr);
+    Triangle newTriangle(vertArr, 0.05f);
+    triangle = newTriangle;
 
     ShaderProgram shaders (
         "shaders/color.vert",
         "shaders/color.frag"
-    );
+    );  
 
-    unsigned int vertBuff;
     glGenBuffers(1, &vertBuff);
     glBindBuffer(GL_ARRAY_BUFFER, vertBuff);    
     // Assign buffer data
@@ -73,30 +77,31 @@ int main() {
 
     // glBindBuffer(GL_ARRAY_BUFFER, colorId);
     // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid*) (3 * sizeof(float)));
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*) (3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*) (4 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]() {
         glfwSetWindowShouldClose(window, true);
     });
 
-    while (!glfwWindowShouldClose(window)) {
+    input.bindKeyPress("MOVE_LEFT", GLFW_KEY_A, [&window]() {
+        triangle.moveLeft();
+    });
+    input.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D, [&window]() {
+        triangle.moveRight();
+    });
+    input.bindKeyPress("MOVE_UP", GLFW_KEY_W, [&window]() {
+        triangle.moveUp();
+    });
+    input.bindKeyPress("MOVE_DOWN", GLFW_KEY_S, [&window]() {
+        triangle.moveDown();
+    });
 
-        if(input.isKeyPressed(GLFW_KEY_S)) {
-            camera_pos.y -= camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_A)) {
-            camera_pos.x -= camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_D)) {
-            camera_pos.x += camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_Q)) {
-            camera_pos.z += camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_E)) {
-            camera_pos.z -= camera_speed;
-        }        
+    while (!glfwWindowShouldClose(window)) {
+                
+        glfwWaitEvents();
+        glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
+        glBufferSubData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), triangle.getVerts().data(), GL_STATIC_DRAW);
 
         glClear(GL_COLOR_BUFFER_BIT);
         glBindVertexArray(vao);
@@ -113,8 +118,34 @@ int main() {
     glfwTerminate();
 }
 
+
 static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods) {
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    }
+    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
+        switch (key) {
+            case (GLFW_KEY_ESCAPE) :
+                glfwSetWindowShouldClose(window, GLFW_TRUE);
+                break;
+            case (GLFW_KEY_W) :
+                std::cout << "HIT W" << std::endl;
+                triangle.moveUp();
+                break;
+            case (GLFW_KEY_S) :
+                std::cout << "HIT S" << std::endl;
+                triangle.moveDown();
+                break;
+            case (GLFW_KEY_A) :
+                std::cout << "HIT A" << std::endl;
+                triangle.moveLeft();
+                break;
+            case (GLFW_KEY_D) :
+                std::cout << "HIT D" << std::endl;
+                triangle.moveRight();
+                break;
+            default :
+                break;
+        }
+    } 
+
+    glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), triangle.getVerts().data(), GL_STATIC_DRAW);
 }
