@@ -7,11 +7,6 @@
 
 #include <vector>
 
-struct Vertex {
-    float x, y, z;
-    float r, g, b;
-};
-
 Triangle::Triangle() {
     this.vertices = {
         {0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
@@ -21,14 +16,14 @@ Triangle::Triangle() {
     sensitivity = 0.1;
 }
 
-Triangle::Triangle(std::vector<struct Vertex> vertices) {
-    this.vertices = vertices;
+Triangle::Triangle(std::vector<struct Vertex> listVert) {
+    vertices = listVert;
     sensitivity = 0.1;
 }
 
-Triangle::Triangle(std::vector<struct Vertex> vertices, float sensitivity) {
-    this.vertices = vertices;
-    sensitivity = sensitivity;
+Triangle::Triangle(std::vector<struct Vertex> listVert, float sensitivity) {
+    vertices = listVert;
+    this.sensitivity = sensitivity;
 }
 
 void Triangle::moveRight() {

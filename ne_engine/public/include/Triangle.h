@@ -8,13 +8,15 @@
 
 #include <vector>
   
-struct Vertex {
-    float x, y, z;
-    float r, g, b;
-};
+
 
 class Triangle {
 public:
+    struct Vertex {
+        float pos[3];
+        float color[3];
+    };
+
     Triangle();
     Triangle(std::vector<struct Vertex> vertices);
     Triangle(std::vector<struct Vertex> vertices, float sensitivity);

@@ -13,11 +13,6 @@ static void key_callback (GLFWwindow *window, int key, int scancode, int action,
 int constexpr WIDTH = 900;
 int constexpr HEIGHT = 1600;
 
-// struct Vertex {
-//     float x, y, z;
-//     float r, g, b;
-// };
-
 int main() {
     // GLFW Init
     if (!glfwInit()) {
@@ -46,11 +41,32 @@ int main() {
     glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
     float camera_speed = 0.05f;
 
-    std::vector<struct Vertex> vertArr= {
-        {-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f},
-        {0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f},
-        {0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f}
-    };
+    std::vector<struct Vertex> vertArr;
+
+    for (int i = 0; i < 3; i++) {
+        struct Vertex vert;
+        float position[3];
+        float color[3];
+        switch (i) {
+            case (0) :
+                position = {    -0.5f, -0.5f, 0.0f};
+                color = {1.0f, 0.0f, 0.0f};
+                break;
+            case (1) :
+                position = {0.0f, 0.5f, 0.0f};
+                color = {0.0f, 1.0f, 0.0f};
+                break;
+            case(2) :
+                position = {0.5f, -0.5f, 0.0f};
+                color = {0.0f, 0.0f, 1.0f};
+                break;
+            default :
+                break;
+        }
+        vert.pos = position;
+        vert.color = color;
+        vertArr.push_back(vert);
+    }
 
     Triangle triangle(vertArr);
 
