@@ -7,7 +7,8 @@
         "*.frag": "glsl",
         "cmath": "cpp",
         "fstream": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "vector": "cpp"
     },
     "cmake.sourceDirectory": "${workspaceFolder}/tests",
     "cmake.buildBeforeRun": true,

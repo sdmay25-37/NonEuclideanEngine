@@ -8,7 +8,7 @@
 #include <vector>
 
 Triangle::Triangle() {
-    this.vertices = {
+    vertices = {
         {0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
         {0.0, 0.0, 0.0, 0.0, 0.0, 0.0},
         {0.0, 0.0, 0.0, 0.0, 0.0, 0.0}
@@ -23,33 +23,33 @@ Triangle::Triangle(std::vector<struct Vertex> listVert) {
 
 Triangle::Triangle(std::vector<struct Vertex> listVert, float sensitivity) {
     vertices = listVert;
-    this.sensitivity = sensitivity;
+    sensitivity = sensitivity;
 }
 
 void Triangle::moveRight() {
     for (int i = 0; i < 3; i++) {
-        vert.x += sensitivity;
+        vertices[i].pos[0] += sensitivity;
     }
 }
 
 void Triangle::moveLeft() {
     for (int i = 0; i < 3; i++) {
-        vert.x -= sensitivity;
+        vertices[i].pos[0] -= sensitivity;
     }
 }
 
 void Triangle::moveUp() {
     for (int i = 0; i < 3; i++) {
-        vert.y += sensitivity;
+        vertices[i].pos[1] += sensitivity;
     }
 }
 
 void Triangle::moveDown() {
     for (int i = 0; i < 3; i++) {
-        vert.y -= sensitivity;
+        vertices[i].pos[1] -= sensitivity;
     }
 }
 
-std::vector<struct Vertex> Triangle::getVerts() {
+std::vector<Triangle::Vertex> Triangle::getVerts() {
     return vertices;
 }

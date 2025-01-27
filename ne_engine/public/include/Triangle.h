@@ -7,8 +7,6 @@
 #define TRIANGLE_H
 
 #include <vector>
-  
-
 
 class Triangle {
 public:
@@ -16,6 +14,9 @@ public:
         float pos[3];
         float color[3];
     };
+
+    std::vector<struct Vertex> vertices;
+    float sensitivity;
 
     Triangle();
     Triangle(std::vector<struct Vertex> vertices);
@@ -26,10 +27,7 @@ public:
     void moveUp();
     void moveDown();
 
-    std::vector<struct Vertex> getVerts();
-private:
-    std::vector<struct Vertex> vertices;
-    float sensitivity;
+    std::vector<Triangle::Vertex> getVerts();
 };
 
 #endif // TRIANGLE_H

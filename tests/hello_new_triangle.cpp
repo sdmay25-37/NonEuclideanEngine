@@ -41,32 +41,14 @@ int main() {
     glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
     float camera_speed = 0.05f;
 
-    std::vector<struct Vertex> vertArr;
-
-    for (int i = 0; i < 3; i++) {
-        struct Vertex vert;
-        float position[3];
-        float color[3];
-        switch (i) {
-            case (0) :
-                position = {    -0.5f, -0.5f, 0.0f};
-                color = {1.0f, 0.0f, 0.0f};
-                break;
-            case (1) :
-                position = {0.0f, 0.5f, 0.0f};
-                color = {0.0f, 1.0f, 0.0f};
-                break;
-            case(2) :
-                position = {0.5f, -0.5f, 0.0f};
-                color = {0.0f, 0.0f, 1.0f};
-                break;
-            default :
-                break;
-        }
-        vert.pos = position;
-        vert.color = color;
-        vertArr.push_back(vert);
-    }
+    std::vector<Triangle::Vertex> vertArr;
+    Triangle::Vertex vert0 = {-0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f};
+    Triangle::Vertex vert1 = {0.0f, 0.5f, 0.0f, 0.0f, 1.0f, 0.0f};
+    Triangle::Vertex vert2 = {0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f};
+    
+    vertArr.push_back(vert0);
+    vertArr.push_back(vert1);
+    vertArr.push_back(vert2);
 
     Triangle triangle(vertArr);
 
@@ -79,18 +61,19 @@ int main() {
     glGenBuffers(1, &vertBuff);
     glBindBuffer(GL_ARRAY_BUFFER, vertBuff);    
     // Assign buffer data
-    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Vertex), triangle.getVerts().data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), triangle.getVerts().data(), GL_STATIC_DRAW);
 
     GLuint vao = 0;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vertBuff);  
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(struct Vertex), (GLvoid*) 0);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid*) 0);
+    glEnableVertexAttribArray(0);
 
     // glBindBuffer(GL_ARRAY_BUFFER, colorId);
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(struct Vertex), (GLvoid*) offsetof(Vertex, r));
-
-    glEnableVertexAttribArray(0);
+    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid*) (3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*) (3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]() {
@@ -119,8 +102,6 @@ int main() {
         glBindVertexArray(vao);
         // Use for non-indexed buffers
         glDrawArrays(GL_TRIANGLES, 0, 3);
-
-
         
         // glDrawElements draws on an indexed buffer
 
