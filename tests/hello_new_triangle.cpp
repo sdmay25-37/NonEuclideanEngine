@@ -10,12 +10,13 @@
 #include "CharWrapper.h"
 
 static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods);
-// static void moveLeftWrapper();
+static void bindWrap();
 
 int constexpr WIDTH = 900;
 int constexpr HEIGHT = 1600;
 
 Triangle triangle;
+// Input charInput;
 
 unsigned int vertBuff;
 
@@ -79,17 +80,20 @@ int main() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*) (4 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    Input input(window);
+    Input charInput(window);
+    // charInput = newcharInput;
     CharWrapper wrapper(triangle);
 
-    input.bindKeyPress("QUIT", GLFW_KEY_ESCAPE, [&window]() {
+    charInput.bindKeyPress("QUIT", GLFW_KEY_ESCAPE, [&window]() {
         glfwSetWindowShouldClose(window, true);
     });
 
-    input.bindKeyPress("MOVE_LEFT", GLFW_KEY_A, std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
-    input.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D, std::bind(&CharWrapper::moveRightWrapper, &wrapper));
-    input.bindKeyPress("MOVE_UP", GLFW_KEY_W, std::bind(&CharWrapper::moveUpWrapper, &wrapper));
-    input.bindKeyPress("MOVE_Down", GLFW_KEY_S, std::bind(&CharWrapper::moveDownWrapper, &wrapper));
+    charInput.bindKeyPress("MOVE_LEFT", GLFW_KEY_A, std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
+    charInput.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D, std::bind(&CharWrapper::moveRightWrapper, &wrapper));
+    charInput.bindKeyPress("MOVE_UP", GLFW_KEY_W, std::bind(&CharWrapper::moveUpWrapper, &wrapper));
+    charInput.bindKeyPress("MOVE_DOWN", GLFW_KEY_S, std::bind(&CharWrapper::moveDownWrapper, &wrapper));
+
+    bool set = false;
 
     while (!glfwWindowShouldClose(window)) {
                 
@@ -102,7 +106,6 @@ int main() {
         // Use for non-indexed buffers
         glDrawArrays(GL_TRIANGLES, 0, 3);
         
-        // glDrawElements draws on an indexed buffer
 
         glfwSwapBuffers(window);
 
@@ -112,9 +115,9 @@ int main() {
     glfwTerminate();
 }
 
-// static void moveLeftWrapper() {
-//     triangle.moveLeft();
-// }
+static void bindWrap() {
+    // charInput.bindKeyPress("MOVE_LEFT", GLFW_KEY_Q);
+}
 
 
 static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods) {

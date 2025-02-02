@@ -26,7 +26,6 @@ void CharWrapper::moveDownWrapper() {
 }
 
 Triangle CharWrapper::getTriangle() {
-    std::cout << "Returning Character with coords: (" << character.getVerts().at(0).pos[0] << ", " <<  character.getVerts().at(0).pos[1] << ")" << std::endl;
     return character;
 }
 

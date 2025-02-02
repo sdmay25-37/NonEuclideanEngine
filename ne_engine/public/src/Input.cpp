@@ -60,6 +60,20 @@ void Input::bindKeyPress(const std::string &action, int key, const ActionCallbac
 	_key_action_map[key] = action;
 }
 
+void Input::bindKeyPress(const std::string& action, int key) {
+	int formerKey = 0;
+
+	for (const auto& [oldkey, value] : _key_action_map) {
+		if (value == action) {
+			formerKey = oldkey;
+		}
+	}
+	if (formerKey != 0) {
+		_key_action_map[key] = _key_action_map[formerKey];
+		_key_action_map.erase(formerKey);
+	}
+}
+
 void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (!action) return; 
 	auto action_it = _key_action_map.find(key);
