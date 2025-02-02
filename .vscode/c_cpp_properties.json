@@ -16,7 +16,7 @@
             "intelliSenseMode": "windows-gcc-x64", // Add this if done in windows
             "compileCommands": "${workspaceFolder}/build/compile_commands.json",
             "includePath": [
-                
+                "${workspaceFolder}/lib/glad/include/glad"
             ]
         }
     ],

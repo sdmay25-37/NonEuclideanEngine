@@ -67,5 +67,6 @@ void Triangle::moveDown() {
 }
 
 std::vector<Triangle::Vertex> Triangle::getVerts() {
+    std::cout << "return verts: " << vertices.at(0).pos[0] << ", " << vertices.at(0).pos[0] << std::endl;
     return vertices;
 }

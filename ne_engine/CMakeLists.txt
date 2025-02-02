@@ -6,7 +6,7 @@ add_library(
     "public/src/Engine.cpp"
     "public/src/Input.cpp"
     "public/src/Camera.cpp"
-    "public/src/InputManager.cpp"
+    "public/src/CharWrapper.cpp"
     "public/src/Triangle.cpp"
 )
 

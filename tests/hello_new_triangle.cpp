@@ -5,11 +5,12 @@
 
 #include "ShaderProgram.h"
 #include "Input.h"
-#include "InputManager.h"
 #include "Camera.h"
 #include "Triangle.h"
+#include "CharWrapper.h"
 
 static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods);
+// static void moveLeftWrapper();
 
 int constexpr WIDTH = 900;
 int constexpr HEIGHT = 1600;
@@ -58,8 +59,8 @@ int main() {
     triangle = newTriangle;
 
     ShaderProgram shaders (
-        "shaders/color.vert",
-        "shaders/color.frag"
+        "../shaders/color.vert",
+        "../shaders/color.frag"
     );  
 
     glGenBuffers(1, &vertBuff);
@@ -75,40 +76,26 @@ int main() {
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid*) 0);
     glEnableVertexAttribArray(0);
 
-    // glBindBuffer(GL_ARRAY_BUFFER, colorId);
-    // glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid*) (3 * sizeof(float)));
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*) (4 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    InputManager manager(window);
     Input input(window);
+    CharWrapper wrapper(triangle);
 
-    if (!manager.setContextInput(0, GLFW_KEY_ESCAPE, "quit", [&window]() {glfwSetWindowShouldClose(window, true);})) {
-        std::cout << "Shit Brokey" << std::endl;
-    }
+    input.bindKeyPress("QUIT", GLFW_KEY_ESCAPE, [&window]() {
+        glfwSetWindowShouldClose(window, true);
+    });
 
-    if (!manager.setContextInput(0, GLFW_KEY_A, "MOVE_LEFT", [&window]() {triangle.moveLeft();})) {
-        std::cout << "Shit Brokey" << std::endl;
-    }
-
-    // input.bindKeyPress("MOVE_LEFT", GLFW_KEY_A, [&window]() {
-    //     triangle.moveLeft();
-    // });
-    input.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D, [&window]() {
-        triangle.moveRight();
-    });
-    input.bindKeyPress("MOVE_UP", GLFW_KEY_W, [&window]() {
-        triangle.moveUp();
-    });
-    input.bindKeyPress("MOVE_DOWN", GLFW_KEY_S, [&window]() {
-        triangle.moveDown();
-    });
+    input.bindKeyPress("MOVE_LEFT", GLFW_KEY_A, std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
+    input.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D, std::bind(&CharWrapper::moveRightWrapper, &wrapper));
+    input.bindKeyPress("MOVE_UP", GLFW_KEY_W, std::bind(&CharWrapper::moveUpWrapper, &wrapper));
+    input.bindKeyPress("MOVE_Down", GLFW_KEY_S, std::bind(&CharWrapper::moveDownWrapper, &wrapper));
 
     while (!glfwWindowShouldClose(window)) {
                 
         glfwWaitEvents();
         glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
-        glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), triangle.getVerts().data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), wrapper.getTriangle().getVerts().data(), GL_STATIC_DRAW);
 
         glClear(GL_COLOR_BUFFER_BIT);
         glBindVertexArray(vao);
@@ -119,11 +106,15 @@ int main() {
 
         glfwSwapBuffers(window);
 
-        glfwPollEvents();
+        // glfwPollEvents();
     }
 
     glfwTerminate();
 }
+
+// static void moveLeftWrapper() {
+//     triangle.moveLeft();
+// }
 
 
 static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods) {
@@ -134,19 +125,19 @@ static void key_callback (GLFWwindow *window, int key, int scancode, int action,
                 break;
             case (GLFW_KEY_W) :
                 std::cout << "HIT W" << std::endl;
-                triangle.moveUp();
+                // triangle.moveUp();
                 break;
             case (GLFW_KEY_S) :
                 std::cout << "HIT S" << std::endl;
-                triangle.moveDown();
+                // triangle.moveDown();
                 break;
             case (GLFW_KEY_A) :
                 std::cout << "HIT A" << std::endl;
-                triangle.moveLeft();
+                // triangle.moveLeft();
                 break;
             case (GLFW_KEY_D) :
                 std::cout << "HIT D" << std::endl;
-                triangle.moveRight();
+                // triangle.moveRight();
                 break;
             default :
                 break;

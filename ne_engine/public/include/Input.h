@@ -12,8 +12,8 @@ public:
 
 	Input();
 	Input(GLFWwindow* window);
-	Input(GLFWwindow* window, uint8_t contextId);
-	Input(GLFWwindow* window, uint8_t contextId, int priority);
+	Input(GLFWwindow* window, int contextId);
+	Input(GLFWwindow* window, int contextId, int priority);
 
 	// Keyboard
 	bool isKeyPressed(int key);
@@ -36,7 +36,7 @@ public:
 
 private:
 	GLFWwindow* _window;
-	uint8_t _contextId;
+	int _contextId;
 	int _priority;
 
 	std::unordered_map<std::string, std::vector<ActionCallback>> _action_callback_map;

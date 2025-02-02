@@ -22,7 +22,7 @@ Input::Input(GLFWwindow *window) {
 	glfwSetKeyCallback(window, key_callback);
 }
 
-Input::Input(GLFWwindow *window, uint8_t contextId) {
+Input::Input(GLFWwindow *window, int contextId) {
 	_window = window;
 	_contextId = contextId;
 	_priority = -1;
@@ -30,7 +30,7 @@ Input::Input(GLFWwindow *window, uint8_t contextId) {
 	glfwSetKeyCallback(window, key_callback);
 }
 
-Input::Input(GLFWwindow *window, uint8_t contextId, int priority) {
+Input::Input(GLFWwindow *window, int contextId, int priority) {
 	_window = window;
 	_contextId = contextId;
 	_priority = priority;
