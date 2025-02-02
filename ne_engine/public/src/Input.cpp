@@ -67,11 +67,18 @@ void Input::bindKeyPress(const std::string& action, int key) {
 		if (value == action) {
 			formerKey = oldkey;
 		}
+
 	}
 	if (formerKey != 0) {
-		_key_action_map[key] = _key_action_map[formerKey];
 		_key_action_map.erase(formerKey);
+		_key_action_map[key] = _key_action_map[formerKey];
+	} else {
+		_key_action_map[key] = action; 
 	}
+}
+
+void Input::bindKeyPress(const std::string& action, const ActionCallback& callback) {
+	_action_callback_map[action].push_back(callback);
 }
 
 void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {

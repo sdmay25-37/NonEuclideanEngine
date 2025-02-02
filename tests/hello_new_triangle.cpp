@@ -88,10 +88,20 @@ int main() {
         glfwSetWindowShouldClose(window, true);
     });
 
-    charInput.bindKeyPress("MOVE_LEFT", GLFW_KEY_A, std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
-    charInput.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D, std::bind(&CharWrapper::moveRightWrapper, &wrapper));
-    charInput.bindKeyPress("MOVE_UP", GLFW_KEY_W, std::bind(&CharWrapper::moveUpWrapper, &wrapper));
-    charInput.bindKeyPress("MOVE_DOWN", GLFW_KEY_S, std::bind(&CharWrapper::moveDownWrapper, &wrapper));
+    // charInput.bindKeyPress("MOVE_LEFT", GLFW_KEY_A, std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
+    // charInput.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D, std::bind(&CharWrapper::moveRightWrapper, &wrapper));
+    // charInput.bindKeyPress("MOVE_UP", GLFW_KEY_W, std::bind(&CharWrapper::moveUpWrapper, &wrapper));
+    // charInput.bindKeyPress("MOVE_DOWN", GLFW_KEY_S, std::bind(&CharWrapper::moveDownWrapper, &wrapper));
+
+    charInput.bindKeyPress("MOVE_LEFT", std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
+    charInput.bindKeyPress("MOVE_RIGHT", std::bind(&CharWrapper::moveRightWrapper, &wrapper));
+    charInput.bindKeyPress("MOVE_UP", std::bind(&CharWrapper::moveUpWrapper, &wrapper));
+    charInput.bindKeyPress("MOVE_DOWN", std::bind(&CharWrapper::moveDownWrapper, &wrapper));
+
+    charInput.bindKeyPress("MOVE_LEFT", GLFW_KEY_A);
+    charInput.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D);
+    charInput.bindKeyPress("MOVE_UP", GLFW_KEY_W);
+    charInput.bindKeyPress("MOVE_DOWN", GLFW_KEY_S);
 
     bool set = false;
 
@@ -105,7 +115,6 @@ int main() {
         glBindVertexArray(vao);
         // Use for non-indexed buffers
         glDrawArrays(GL_TRIANGLES, 0, 3);
-        
 
         glfwSwapBuffers(window);
 

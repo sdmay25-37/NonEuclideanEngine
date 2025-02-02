@@ -25,6 +25,7 @@ public:
 
 	void bindKeyPress(const std::string& action, int key, const ActionCallback& callback);
 	void bindKeyPress(const std::string& action, int key);
+	void bindKeyPress(const std::string& action, const ActionCallback& callback);
 
 	std::pmr::unordered_map<int, std::string> getKeyActionMap();
 
