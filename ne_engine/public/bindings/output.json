@@ -1,0 +1,16 @@
+{
+    "actions": [
+        "MOVE_RIGHT",
+        "MOVE_LEFT",
+        "MOVE_DOWN",
+        "MOVE_UP",
+        "QUIT"
+    ],
+    "keys": [
+        "D",
+        "A",
+        "S",
+        "W",
+        "ESCAPE"
+    ]
+}

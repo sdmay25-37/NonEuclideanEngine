@@ -18,6 +18,7 @@ public:
     JSONLoader(std::string filepath);
 
     std::vector <std::pair <std::string, int>> processFile();
+    void outputBindings(std::vector <std::pair <std::string, int>> bindings);
 
 
 private:

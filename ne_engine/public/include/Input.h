@@ -27,6 +27,10 @@ public:
 	void bindKeyPress(const std::string& action, int key);
 	void bindKeyPress(const std::string& action, const ActionCallback& callback);
 
+	void bindKeyPress(std::vector<std::pair <std::string, int>> bindings);
+
+	std::vector<std::pair <std::string, int>> getBindings();
+
 	std::pmr::unordered_map<int, std::string> getKeyActionMap();
 
 	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);

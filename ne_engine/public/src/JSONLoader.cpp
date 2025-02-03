@@ -8,14 +8,14 @@
 #include <fstream>
 #include <iostream>
 
-static void initializeMaps(); // std::unordered_map <int, std::string> _enumToString, std::unordered_map <std::string, int> _stringToEnum);
+static void initializeMaps();
 
 JSONLoader::JSONLoader() {
-    initializeMaps(); // _enumToString, _stringToEnum);
+    initializeMaps();
 }
 
 JSONLoader::JSONLoader(std::string filepath) {
-    initializeMaps(); // _enumToString, _stringToEnum);
+    initializeMaps();
     _filepath = filepath;
 }
 
@@ -27,12 +27,17 @@ std::vector <std::pair <std::string, int>> JSONLoader::processFile() {
     if (jsonData.size() == 0) {
         // JSON File is empty
         std::cerr << "JSON File empty" << std::endl;
+        throw std::length_error("JSON File empty");
+    }
+
+    if (jsonData["actions"].size() != jsonData["keys"].size()) {
+        std::cerr << "Action and Key arrays are not of equivalent size" << std::endl;
+        throw std::length_error("Mismatching action/key sizes");
     }
 
     std::vector <std::pair <std::string, int>> action_key_bindings;
      
     for (int i = 0; i < jsonData["actions"].size(); i++) {
-        // if (_stringToEnum.find(jsonData[]))
         std::pair bind((std::string) (jsonData["actions"].at(i)), _stringToEnum.find(jsonData["keys"].at(i))->second);
         action_key_bindings.push_back(bind);
         
@@ -41,9 +46,27 @@ std::vector <std::pair <std::string, int>> JSONLoader::processFile() {
     return action_key_bindings;
 }
 
+void JSONLoader::outputBindings(std::vector <std::pair <std::string, int>> bindings) {
+    nlohmann::json output;
+
+    std::vector <std::string> actions;
+    std::vector <std::string> keys;
+    
+    for (int i = 0; i < bindings.size(); i++) {
+        actions.push_back(bindings.at(i).first);
+        keys.push_back(_enumToString.find(bindings.at(i).second)->second);
+    }
+
+    output["actions"] = actions;
+    output["keys"] = keys;
+
+    // std::ofstream out(_filepath);
+    std::ofstream out("../ne_engine/public/bindings/output.json");
+    out << std::setw(4) << output << std::endl;
+}
 
 // Ignore this abysmal coding, I have no other idea as to how to do this.
-void JSONLoader::initializeMaps() { //std::unordered_map <int, std::string> enumToString, std::unordered_map <std::string, int> stringToEnum) {
+void JSONLoader::initializeMaps() {
     // Initialize maps from strings to enums
     _stringToEnum = {
         {"SPACE",  32},

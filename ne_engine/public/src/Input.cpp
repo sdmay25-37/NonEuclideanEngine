@@ -81,6 +81,17 @@ void Input::bindKeyPress(const std::string& action, const ActionCallback& callba
 	_action_callback_map[action].push_back(callback);
 }
 
+void Input::bindKeyPress(std::vector<std::pair <std::string, int>> bindings) {
+	if (bindings.size() == 0) {
+		std::cerr << "Empty bindings vector." << std::endl;
+		return;
+	}
+
+	for (int i = 0; i < bindings.size(); i++) {
+        this->bindKeyPress(bindings.at(i).first, bindings.at(i).second);
+    }
+}
+
 void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (!action) return; 
 	auto action_it = _key_action_map.find(key);
@@ -92,6 +103,16 @@ void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, i
 	for(const auto& callback : callback_it->second) {
         callback();
     }
+}
+
+std::vector<std::pair <std::string, int>> Input::getBindings() {
+	std::vector<std::pair <std::string, int>> bindings;
+
+	for (auto element : _key_action_map) {
+		bindings.push_back(std::make_pair(element.second, element.first));
+	}
+
+	return bindings;
 }
 
 uint8_t Input::getContextId() {

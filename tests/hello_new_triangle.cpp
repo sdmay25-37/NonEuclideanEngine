@@ -102,10 +102,11 @@ int main() {
     charInput.bindKeyPress("MOVE_UP", std::bind(&CharWrapper::moveUpWrapper, &wrapper));
     charInput.bindKeyPress("MOVE_DOWN", std::bind(&CharWrapper::moveDownWrapper, &wrapper));
 
-    charInput.bindKeyPress("MOVE_LEFT", GLFW_KEY_A);
-    charInput.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D);
-    charInput.bindKeyPress("MOVE_UP", GLFW_KEY_W);
-    charInput.bindKeyPress("MOVE_DOWN", GLFW_KEY_S);
+    charInput.bindKeyPress(bindings);
+    // for (int i = 0; i < bindings.size(); i++) {
+    //     charInput.bindKeyPress(bindings.at(i).first, bindings.at(i).second);
+    // }
+
 
     bool set = false;
 
@@ -122,8 +123,9 @@ int main() {
 
         glfwSwapBuffers(window);
 
-        // glfwPollEvents();
     }
+
+    loading.outputBindings(charInput.getBindings());
 
     glfwTerminate();
 }
