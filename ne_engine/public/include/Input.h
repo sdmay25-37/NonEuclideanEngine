@@ -34,7 +34,6 @@ public:
 	uint8_t getContextId();
 	int getPriority();
 
-
 private:
 	GLFWwindow* _window;
 	int _contextId;

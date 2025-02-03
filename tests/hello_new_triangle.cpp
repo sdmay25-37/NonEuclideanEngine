@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "Triangle.h"
 #include "CharWrapper.h"
+#include "JSONLoader.h"
 
 static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods);
 static void bindWrap();
@@ -83,6 +84,9 @@ int main() {
     Input charInput(window);
     // charInput = newcharInput;
     CharWrapper wrapper(triangle);
+    JSONLoader loading("../ne_engine/public/bindings/example_bindings.json");
+
+    std::vector <std::pair <std::string, int>> bindings = loading.processFile();
 
     charInput.bindKeyPress("QUIT", GLFW_KEY_ESCAPE, [&window]() {
         glfwSetWindowShouldClose(window, true);

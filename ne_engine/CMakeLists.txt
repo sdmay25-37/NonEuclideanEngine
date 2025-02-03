@@ -8,6 +8,7 @@ add_library(
     "public/src/Camera.cpp"
     "public/src/CharWrapper.cpp"
     "public/src/Triangle.cpp"
+    "public/src/JSONLoader.cpp"
 )
 
 target_include_directories(ne_engine PUBLIC public/include PRIVATE private/include)

@@ -1,24 +1,14 @@
-[
-    {
-        "contextId" : 1,
+{
         "actions" : [
-            "quit",
-            "interact",
-            "move_up",
-            "move_down",
-            "move_left",
-            "move_right"
+            "MOVE_UP",
+            "MOVE_DOWN",
+            "MOVE_LEFT",
+            "MOVE_RIGHT"
         ],
         "keys" : [
-            "ESCAPE",
-            "GLFW_KEY_E",
-            "GLFW_KEY_W",
-            "GLFW_KEY_S",
-            "GLFW_KEY_A",
-            "GLFW_KEY_D",
-            "GLFW_KEY_Q",
-            "GLFW_KEY_E"
-        ],
-        "priority" : 1
-    }
-]
+            "W",
+            "S",
+            "A",
+            "D"
+        ]
+}
