@@ -36,6 +36,7 @@ public:
 	void switchBindings(); // int targetContext);
 
 	std::vector<std::pair <std::string, int>> getBindings();
+	std::vector<std::vector<std::pair <std::string, int>>> getBindingsArray();
 
 	std::pmr::unordered_map<int, std::string> getKeyActionMap();
 

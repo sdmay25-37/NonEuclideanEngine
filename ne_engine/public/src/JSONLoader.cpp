@@ -104,23 +104,29 @@ void JSONLoader::outputBindings(std::vector <std::pair <std::string, int>> bindi
     out << std::setw(4) << output << std::endl;
 }
 
-// void JSONLoader::outputBindingsArray(std::vector <std::vector <std::pair <std::string, int>>> bindings) {
-//     nlohmann::json output;
+void JSONLoader::outputBindingsArray(std::vector <std::vector <std::pair <std::string, int>>> bindings) {
+    nlohmann::json output;
 
-//     std::vector <std::string> actions;
-//     std::vector <std::string> keys;
-    
-//     for (int i = 0; i < bindings.size(); i++) {
-//         actions.push_back(bindings.at(i).first);
-//         keys.push_back(_enumToString.find(bindings.at(i).second)->second);
-//     }
+    for (int i = 0; i < bindings.size(); i++) {
+        nlohmann::json obj;
 
-//     output["actions"] = actions;
-//     output["keys"] = keys;
+        std::vector <std::string> actions;
+        std::vector <std::string> keys;
+        
+        for (int j = 0; j < bindings.at(i).size(); j++) {
+            actions.push_back(bindings.at(i).at(j).first);
+            keys.push_back(_enumToString.find(bindings.at(i).at(j).second)->second);
+        }
 
-//     std::ofstream out(_filepath);
-//     out << std::setw(4) << output << std::endl;
-// }
+        obj["actions"] = actions;
+        obj["keys"] = keys;
+
+        output.push_back(obj);
+    }
+
+    std::ofstream out(_filepath);
+    out << std::setw(4) << output << std::endl;
+}
 
 // Ignore this abysmal coding, I have no other idea as to how to do this.
 void JSONLoader::initializeMaps() {

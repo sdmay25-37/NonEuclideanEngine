@@ -118,15 +118,10 @@ int main() {
 
     }
 
-    // loading.outputBindings(charInput.getBindings());
+    loading.outputBindingsArray(charInput.getBindingsArray());
 
     glfwTerminate();
 }
-
-static void bindWrap() {
-    // charInput.bindKeyPress("MOVE_LEFT", GLFW_KEY_Q);
-}
-
 
 static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods) {
     if (action == GLFW_PRESS || action == GLFW_REPEAT) {

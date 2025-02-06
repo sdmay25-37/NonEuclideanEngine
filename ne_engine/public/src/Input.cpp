@@ -70,7 +70,7 @@ void Input::bindKeyPress(std::vector<std::pair <std::string, int>> bindings, int
 	for (int i = 0; i < bindings.size(); i++) {
         this->bindKeyPress(bindings.at(i).first, bindings.at(i).second);
     }
-	
+
 	if (newBinding) {
 		_binding_contexts.push_back(bindings);
 	}
@@ -113,6 +113,10 @@ std::vector<std::pair <std::string, int>> Input::getBindings() {
 	}
 
 	return bindings;
+}
+
+std::vector<std::vector<std::pair <std::string, int>>> Input::getBindingsArray() {
+	return _binding_contexts;
 }
 
 
