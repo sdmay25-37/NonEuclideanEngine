@@ -53,8 +53,6 @@ std::vector <std::vector <std::pair <std::string, int>>> JSONLoader::processFile
 
     nlohmann::json jsonData = nlohmann::json::parse(f);
 
-    std::cout << "\n" << jsonData.dump(4) << std::endl;
-
     if (jsonData.size() == 0) {
         // JSON File is empty
         std::cerr << "JSON File empty" << std::endl;
@@ -65,8 +63,6 @@ std::vector <std::vector <std::pair <std::string, int>>> JSONLoader::processFile
 
     for (int j = 0; j < jsonData.size(); j++) {
         nlohmann::json single_set = jsonData.at(j);
-
-        std::cout << "\n" << single_set.dump() << std::endl;
 
         if (single_set["actions"].size() != single_set["keys"].size()) {
             std::cerr << "Action and Key arrays are not of equivalent size" << std::endl;

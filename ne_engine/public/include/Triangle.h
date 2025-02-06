@@ -4,6 +4,8 @@
 //
 
 /*
+    TODO: REMOVE WHEN NECESSARY
+
     This is an example object class that I used for testing the Input stuff (JSON, rebinding, etc)
 */
 

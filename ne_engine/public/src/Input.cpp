@@ -87,7 +87,6 @@ void Input::bindContexts(std::vector<std::vector<std::pair <std::string, int>>> 
 }
 
 void Input::switchBindings() {
-	std::cout << _currentContext << " " << _currentContext + 1 << std::endl;
 	bindKeyPress(_binding_contexts.at((_currentContext + 1) % _binding_contexts.size()), 0);
 	_currentContext = (_currentContext + 1) % _binding_contexts.size();
 }

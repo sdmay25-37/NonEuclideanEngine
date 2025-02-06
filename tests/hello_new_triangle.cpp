@@ -38,8 +38,7 @@ int main() {
 
     gladLoadGL();
 
-    // TODO: OPENGL STUFF HERE
-
+    // Set up a dummy triangle for triangling (testing)
     std::vector<Triangle::Vertex> vertArr;
     Triangle::Vertex vert0 = {-0.05f, -0.05f, 0.0f, 1.0f, 0.0f, 0.0f};
     Triangle::Vertex vert1 = {0.0f, 0.05f, 0.0f, 0.0f, 1.0f, 0.0f};
@@ -74,32 +73,26 @@ int main() {
     glEnableVertexAttribArray(1);
 
     Input charInput(window);
-    // charInput = newcharInput;
     CharWrapper wrapper(triangle);
     JSONLoader loading("../ne_engine/public/bindings/example_bindings.json");
 
+    // Process a json array of bindings that has multiple contexts 
+    // --> see ne_engine/public/bindings/example_bindings.json for the example
     std::vector<std::vector <std::pair <std::string, int>>> bindings = loading.processFileArray();
 
     charInput.bindKeyPress("QUIT", [&window]() {
         glfwSetWindowShouldClose(window, true);
     });
 
-    // charInput.bindKeyPress("MOVE_LEFT", GLFW_KEY_A, std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
-    // charInput.bindKeyPress("MOVE_RIGHT", GLFW_KEY_D, std::bind(&CharWrapper::moveRightWrapper, &wrapper));
-    // charInput.bindKeyPress("MOVE_UP", GLFW_KEY_W, std::bind(&CharWrapper::moveUpWrapper, &wrapper));
-    // charInput.bindKeyPress("MOVE_DOWN", GLFW_KEY_S, std::bind(&CharWrapper::moveDownWrapper, &wrapper));
-
+    // Bind a ton of functions to the action string
     charInput.bindKeyPress("MOVE_LEFT", std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
     charInput.bindKeyPress("MOVE_RIGHT", std::bind(&CharWrapper::moveRightWrapper, &wrapper));
     charInput.bindKeyPress("MOVE_UP", std::bind(&CharWrapper::moveUpWrapper, &wrapper));
     charInput.bindKeyPress("MOVE_DOWN", std::bind(&CharWrapper::moveDownWrapper, &wrapper));
     charInput.bindKeyPress("SWITCH", std::bind(&Input::switchBindings, &charInput));
 
+    // Bind keys to the action strings through a list of list of pairs <string -> key>
     charInput.bindContexts(bindings);
-    // for (int i = 0; i < bindings.size(); i++) {
-    //     charInput.bindKeyPress(bindings.at(i).first, bindings.at(i).second);
-    // }
-
 
     bool set = false;
 
@@ -121,35 +114,4 @@ int main() {
     loading.outputBindingsArray(charInput.getBindingsArray());
 
     glfwTerminate();
-}
-
-static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods) {
-    if (action == GLFW_PRESS || action == GLFW_REPEAT) {
-        switch (key) {
-            case (GLFW_KEY_ESCAPE) :
-                glfwSetWindowShouldClose(window, GLFW_TRUE);
-                break;
-            case (GLFW_KEY_W) :
-                std::cout << "HIT W" << std::endl;
-                // triangle.moveUp();
-                break;
-            case (GLFW_KEY_S) :
-                std::cout << "HIT S" << std::endl;
-                // triangle.moveDown();
-                break;
-            case (GLFW_KEY_A) :
-                std::cout << "HIT A" << std::endl;
-                // triangle.moveLeft();
-                break;
-            case (GLFW_KEY_D) :
-                std::cout << "HIT D" << std::endl;
-                // triangle.moveRight();
-                break;
-            default :
-                break;
-        }
-    } 
-
-    glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
-    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), triangle.getVerts().data(), GL_STATIC_DRAW);
 }

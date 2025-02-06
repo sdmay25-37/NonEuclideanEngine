@@ -21,6 +21,11 @@ public:
 	bool isMouseButtonPressed(int button) const;
 	void getMousePosition(double& x, double& y) const;
 
+	/*
+		If this is confusing, I can change the function names to make it more clear 
+				vvv
+	*/
+
 	// Bind Action, key, and Callback in 1 call
 	void bindKeyPress(const std::string& action, int key, const ActionCallback& callback);
 	// Bind Action to a key
@@ -33,7 +38,9 @@ public:
 	// Add a list of bindings to _binding_contexts
 	void bindContexts(std::vector<std::vector<std::pair <std::string, int>>> bindings);
 
-	void switchBindings(); // int targetContext);
+	// If want to switch directly to a set instead of cycling, could consider having a target variable to set
+	// using a helper method since we can't pass values through functions if we want to use the input class
+	void switchBindings();
 
 	std::vector<std::pair <std::string, int>> getBindings();
 	std::vector<std::vector<std::pair <std::string, int>>> getBindingsArray();
@@ -45,6 +52,7 @@ public:
 private:
 	GLFWwindow* _window;
 
+	// Keeps track of which set of bindings from _binding_contexts is currently bound
 	int _currentContext;
 
 	// An Array of bindings that can be switched (e.g. _binding_contexts[0] is a set that's different from _binding_contexts[1])
