@@ -4,13 +4,17 @@
             "MOVE_UP",
             "MOVE_DOWN",
             "MOVE_LEFT",
-            "MOVE_RIGHT"
+            "MOVE_RIGHT",
+            "QUIT",
+            "SWITCH"
         ],
         "keys": [
             "W",
             "S",
             "A",
-            "D"
+            "D",
+            "ESCAPE",
+            "Q"
         ]
     },
     {
@@ -18,13 +22,17 @@
             "MOVE_UP",
             "MOVE_DOWN",
             "MOVE_LEFT",
-            "MOVE_RIGHT"
+            "MOVE_RIGHT",
+            "QUIT",
+            "SWITCH"
         ],
         "keys": [
             "UP",
             "DOWN",
             "LEFT",
-            "RIGHT"
+            "RIGHT",
+            "ESCAPE",
+            "Q"
         ]
     }
 ]

@@ -21,7 +21,7 @@ public:
     std::vector <std::vector <std::pair <std::string, int>>> processFileArray();
     
     void outputBindings(std::vector <std::pair <std::string, int>> bindings);
-    void outputBindingsArray(std::vector <std::vector <std::pair <std::string, int>>> bindings)
+    void outputBindingsArray(std::vector <std::vector <std::pair <std::string, int>>> bindings);
 
 private:
 	std::unordered_map <int, std::string> _enumToString;

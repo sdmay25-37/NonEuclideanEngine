@@ -48,10 +48,12 @@ std::vector <std::pair <std::string, int>> JSONLoader::processFile() {
     return action_key_bindings;
 }
 
-std::vector <std::vector <std::pair <std::string, int>>> processFileArray() {
+std::vector <std::vector <std::pair <std::string, int>>> JSONLoader::processFileArray() {
     std::ifstream f (_filepath);
 
     nlohmann::json jsonData = nlohmann::json::parse(f);
+
+    std::cout << "\n" << jsonData.dump(4) << std::endl;
 
     if (jsonData.size() == 0) {
         // JSON File is empty
@@ -64,6 +66,8 @@ std::vector <std::vector <std::pair <std::string, int>>> processFileArray() {
     for (int j = 0; j < jsonData.size(); j++) {
         nlohmann::json single_set = jsonData.at(j);
 
+        std::cout << "\n" << single_set.dump() << std::endl;
+
         if (single_set["actions"].size() != single_set["keys"].size()) {
             std::cerr << "Action and Key arrays are not of equivalent size" << std::endl;
             throw std::length_error("Mismatching action/key sizes");
@@ -72,7 +76,7 @@ std::vector <std::vector <std::pair <std::string, int>>> processFileArray() {
         std::vector<std::pair<std::string, int>> single_binding;
 
         for (int i = 0; i < single_set["actions"].size(); i++) {
-            std::pair bind((std::string)(jsonData["actions"].at(i)), _stringToEnum.find(single_set["keys"].at(i))->second);
+            std::pair bind((std::string)(single_set["actions"].at(i)), _stringToEnum.find(single_set["keys"].at(i))->second);
             single_binding.push_back(bind);
         }
 
@@ -100,23 +104,23 @@ void JSONLoader::outputBindings(std::vector <std::pair <std::string, int>> bindi
     out << std::setw(4) << output << std::endl;
 }
 
-void JSONLoader::outputBindingsArray(std::vector <std::pair <std::string, int>> bindings) {
-    nlohmann::json output;
+// void JSONLoader::outputBindingsArray(std::vector <std::vector <std::pair <std::string, int>>> bindings) {
+//     nlohmann::json output;
 
-    std::vector <std::string> actions;
-    std::vector <std::string> keys;
+//     std::vector <std::string> actions;
+//     std::vector <std::string> keys;
     
-    for (int i = 0; i < bindings.size(); i++) {
-        actions.push_back(bindings.at(i).first);
-        keys.push_back(_enumToString.find(bindings.at(i).second)->second);
-    }
+//     for (int i = 0; i < bindings.size(); i++) {
+//         actions.push_back(bindings.at(i).first);
+//         keys.push_back(_enumToString.find(bindings.at(i).second)->second);
+//     }
 
-    output["actions"] = actions;
-    output["keys"] = keys;
+//     output["actions"] = actions;
+//     output["keys"] = keys;
 
-    std::ofstream out(_filepath);
-    out << std::setw(4) << output << std::endl;
-}
+//     std::ofstream out(_filepath);
+//     out << std::setw(4) << output << std::endl;
+// }
 
 // Ignore this abysmal coding, I have no other idea as to how to do this.
 void JSONLoader::initializeMaps() {

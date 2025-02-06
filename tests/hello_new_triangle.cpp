@@ -5,7 +5,6 @@
 
 #include "ShaderProgram.h"
 #include "Input.h"
-#include "Camera.h"
 #include "Triangle.h"
 #include "CharWrapper.h"
 #include "JSONLoader.h"
@@ -79,9 +78,9 @@ int main() {
     CharWrapper wrapper(triangle);
     JSONLoader loading("../ne_engine/public/bindings/example_bindings.json");
 
-    std::vector <std::pair <std::string, int>> bindings = loading.processFile();
+    std::vector<std::vector <std::pair <std::string, int>>> bindings = loading.processFileArray();
 
-    charInput.bindKeyPress("QUIT", GLFW_KEY_ESCAPE, [&window]() {
+    charInput.bindKeyPress("QUIT", [&window]() {
         glfwSetWindowShouldClose(window, true);
     });
 
@@ -94,8 +93,9 @@ int main() {
     charInput.bindKeyPress("MOVE_RIGHT", std::bind(&CharWrapper::moveRightWrapper, &wrapper));
     charInput.bindKeyPress("MOVE_UP", std::bind(&CharWrapper::moveUpWrapper, &wrapper));
     charInput.bindKeyPress("MOVE_DOWN", std::bind(&CharWrapper::moveDownWrapper, &wrapper));
+    charInput.bindKeyPress("SWITCH", std::bind(&Input::switchBindings, &charInput));
 
-    charInput.bindKeyPress(bindings);
+    charInput.bindContexts(bindings);
     // for (int i = 0; i < bindings.size(); i++) {
     //     charInput.bindKeyPress(bindings.at(i).first, bindings.at(i).second);
     // }
@@ -118,7 +118,7 @@ int main() {
 
     }
 
-    loading.outputBindings(charInput.getBindings());
+    // loading.outputBindings(charInput.getBindings());
 
     glfwTerminate();
 }

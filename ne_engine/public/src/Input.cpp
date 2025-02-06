@@ -44,14 +44,14 @@ void Input::bindKeyPress(const std::string& action, int key) {
 	int formerKey = 0;
 
 	for (const auto& [oldkey, value] : _key_action_map) {
-		if (value == action) {
+		if (value == action && oldkey != key) {
 			formerKey = oldkey;
 		}
 
 	}
 	if (formerKey != 0) {
-		_key_action_map.erase(formerKey);
 		_key_action_map[key] = _key_action_map[formerKey];
+		_key_action_map.erase(formerKey);
 	} else {
 		_key_action_map[key] = action; 
 	}
@@ -61,7 +61,7 @@ void Input::bindKeyPress(const std::string& action, const ActionCallback& callba
 	_action_callback_map[action].push_back(callback);
 }
 
-void Input::bindKeyPress(std::vector<std::pair <std::string, int>> bindings) {
+void Input::bindKeyPress(std::vector<std::pair <std::string, int>> bindings, int newBinding) {
 	if (bindings.size() == 0) {
 		std::cerr << "Empty bindings vector." << std::endl;
 		return;
@@ -70,6 +70,26 @@ void Input::bindKeyPress(std::vector<std::pair <std::string, int>> bindings) {
 	for (int i = 0; i < bindings.size(); i++) {
         this->bindKeyPress(bindings.at(i).first, bindings.at(i).second);
     }
+	
+	if (newBinding) {
+		_binding_contexts.push_back(bindings);
+	}
+}
+
+
+void Input::bindContexts(std::vector<std::vector<std::pair <std::string, int>>> bindings) {
+	for (int i = 0; i < bindings.size(); i++) {
+		_binding_contexts.push_back(bindings.at(i));
+	}
+
+	_currentContext = 0;
+	bindKeyPress(_binding_contexts.at(0), 0);
+}
+
+void Input::switchBindings() {
+	std::cout << _currentContext << " " << _currentContext + 1 << std::endl;
+	bindKeyPress(_binding_contexts.at((_currentContext + 1) % _binding_contexts.size()), 0);
+	_currentContext = (_currentContext + 1) % _binding_contexts.size();
 }
 
 void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {

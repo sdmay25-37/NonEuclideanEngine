@@ -5,7 +5,6 @@ add_library(
     "public/src/ShaderProgram.cpp"
     "public/src/Engine.cpp"
     "public/src/Input.cpp"
-    "public/src/Camera.cpp"
     "public/src/CharWrapper.cpp"
     "public/src/Triangle.cpp"
     "public/src/JSONLoader.cpp"
