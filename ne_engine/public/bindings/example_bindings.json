@@ -1,14 +1,30 @@
-{
-    "actions" : [
-        "MOVE_UP",
-        "MOVE_DOWN",
-        "MOVE_LEFT",
-        "MOVE_RIGHT"
-    ],
-    "keys" : [
-        "W",
-        "S",
-        "A",
-        "D"
-    ]
-}
+[
+    {
+        "actions": [
+            "MOVE_UP",
+            "MOVE_DOWN",
+            "MOVE_LEFT",
+            "MOVE_RIGHT"
+        ],
+        "keys": [
+            "W",
+            "S",
+            "A",
+            "D"
+        ]
+    },
+    {
+        "actions": [
+            "MOVE_UP",
+            "MOVE_DOWN",
+            "MOVE_LEFT",
+            "MOVE_RIGHT"
+        ],
+        "keys": [
+            "UP",
+            "DOWN",
+            "LEFT",
+            "RIGHT"
+        ]
+    }
+]

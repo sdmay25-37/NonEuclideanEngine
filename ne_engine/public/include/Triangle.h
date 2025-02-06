@@ -3,6 +3,10 @@
 //  Date: 12/22/24
 //
 
+/*
+    This is an example object class that I used for testing the Input stuff (JSON, rebinding, etc)
+*/
+
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 

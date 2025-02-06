@@ -12,8 +12,6 @@ public:
 
 	Input();
 	Input(GLFWwindow* window);
-	Input(GLFWwindow* window, int contextId);
-	Input(GLFWwindow* window, int contextId, int priority);
 
 	// Keyboard
 	bool isKeyPressed(int key);
@@ -23,10 +21,13 @@ public:
 	bool isMouseButtonPressed(int button) const;
 	void getMousePosition(double& x, double& y) const;
 
+	// Bind Action, key, and Callback in 1 call
 	void bindKeyPress(const std::string& action, int key, const ActionCallback& callback);
+	// Bind Action to a key
 	void bindKeyPress(const std::string& action, int key);
+	// Bind Action to a callback
 	void bindKeyPress(const std::string& action, const ActionCallback& callback);
-
+	// Bind actions to keys in a list
 	void bindKeyPress(std::vector<std::pair <std::string, int>> bindings);
 
 	std::vector<std::pair <std::string, int>> getBindings();
@@ -35,16 +36,12 @@ public:
 
 	void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
 
-	uint8_t getContextId();
-	int getPriority();
-
 private:
 	GLFWwindow* _window;
-	int _contextId;
-	int _priority;
+
+	std::vector <std::vector <std::pair <std::string, int>>> _key_action_contexts;
 
 	std::unordered_map<std::string, std::vector<ActionCallback>> _action_callback_map;
-
 	std::pmr::unordered_map<int, std::string> _key_action_map;
 };
 

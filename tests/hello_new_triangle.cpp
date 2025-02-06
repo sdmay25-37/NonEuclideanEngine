@@ -36,17 +36,10 @@ int main() {
 
     // Before using OpenGL, must make the window the current opengl context
     glfwMakeContextCurrent(window);
-    // glfwSetKeyCallback(window, key_callback);
 
     gladLoadGL();
-    // std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << std::endl;
 
     // TODO: OPENGL STUFF HERE
-
-    Camera cam = Camera();
-    glm::vec3 camera_pos(0.0, 0.0, 1.0);
-    glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
-    float camera_speed = 0.05f;
 
     std::vector<Triangle::Vertex> vertArr;
     Triangle::Vertex vert0 = {-0.05f, -0.05f, 0.0f, 1.0f, 0.0f, 0.0f};

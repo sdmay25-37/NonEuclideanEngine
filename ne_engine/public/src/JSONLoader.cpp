@@ -19,6 +19,8 @@ JSONLoader::JSONLoader(std::string filepath) {
     _filepath = filepath;
 }
 
+// Use for processing a single file
+// E.g. one file has one set of bindings (or is 1 json object)
 std::vector <std::pair <std::string, int>> JSONLoader::processFile() {
     std::ifstream f (_filepath);
 
@@ -46,6 +48,40 @@ std::vector <std::pair <std::string, int>> JSONLoader::processFile() {
     return action_key_bindings;
 }
 
+std::vector <std::vector <std::pair <std::string, int>>> processFileArray() {
+    std::ifstream f (_filepath);
+
+    nlohmann::json jsonData = nlohmann::json::parse(f);
+
+    if (jsonData.size() == 0) {
+        // JSON File is empty
+        std::cerr << "JSON File empty" << std::endl;
+        throw std::length_error("JSON File empty");
+    }
+
+    std::vector <std::vector <std::pair <std::string, int>>> action_key_bindings;
+
+    for (int j = 0; j < jsonData.size(); j++) {
+        nlohmann::json single_set = jsonData.at(j);
+
+        if (single_set["actions"].size() != single_set["keys"].size()) {
+            std::cerr << "Action and Key arrays are not of equivalent size" << std::endl;
+            throw std::length_error("Mismatching action/key sizes");
+        }
+
+        std::vector<std::pair<std::string, int>> single_binding;
+
+        for (int i = 0; i < single_set["actions"].size(); i++) {
+            std::pair bind((std::string)(jsonData["actions"].at(i)), _stringToEnum.find(single_set["keys"].at(i))->second);
+            single_binding.push_back(bind);
+        }
+
+        action_key_bindings.push_back(single_binding);
+    }
+
+    return action_key_bindings;
+}
+
 void JSONLoader::outputBindings(std::vector <std::pair <std::string, int>> bindings) {
     nlohmann::json output;
 
@@ -60,8 +96,25 @@ void JSONLoader::outputBindings(std::vector <std::pair <std::string, int>> bindi
     output["actions"] = actions;
     output["keys"] = keys;
 
-    // std::ofstream out(_filepath);
-    std::ofstream out("../ne_engine/public/bindings/output.json");
+    std::ofstream out(_filepath);
+    out << std::setw(4) << output << std::endl;
+}
+
+void JSONLoader::outputBindingsArray(std::vector <std::pair <std::string, int>> bindings) {
+    nlohmann::json output;
+
+    std::vector <std::string> actions;
+    std::vector <std::string> keys;
+    
+    for (int i = 0; i < bindings.size(); i++) {
+        actions.push_back(bindings.at(i).first);
+        keys.push_back(_enumToString.find(bindings.at(i).second)->second);
+    }
+
+    output["actions"] = actions;
+    output["keys"] = keys;
+
+    std::ofstream out(_filepath);
     out << std::setw(4) << output << std::endl;
 }
 
