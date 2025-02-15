@@ -1,6 +1,6 @@
-#ifndef ENGINE_H
-#define ENGINE_H
-#include "Sprite.h"
+#ifndef ENGINE_HPP
+#define ENGINE_HPP
+#include "Sprite.hpp"
 
 
 class Engine {
@@ -17,4 +17,4 @@ private:
 
 
 
-#endif //ENGINE_H
+#endif //ENGINE_HPP

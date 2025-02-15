@@ -5,7 +5,6 @@
 
 #include <glm>
 
-#include "Sha"
 
 struct RowInf {
     int startRow;

@@ -15,9 +15,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(.. ne_engine)
 
 set(SOURCES
-    # "hello_new_triangle.cpp"    
-    # "main.cpp"
-    "SpriteTesting.cpp"
+    # "input_test.cpp"
+    "point_square_demo.cpp"
 )
 
 set(VS_DEBUGGER_WORKING_DIRECTORY "..")
@@ -36,6 +35,6 @@ foreach(SOURCE ${SOURCES})
         "-g"
     )
 
-    target_link_libraries(${EXECUTABLE} ne_engine stb_image)
+    target_link_libraries(${EXECUTABLE} ne_engine)
 
 endforeach(SOURCE ${SOURCES})

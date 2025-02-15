@@ -7,8 +7,8 @@
     TODO : Think about maybe removing some of the extra methods (like the first outputBindings for example => Will we need it really?)
 */
 
-#ifndef JSONLOADER_H
-#define JSONLOADER_H
+#ifndef JSONLOADER_HPP
+#define JSONLOADER_HPP
 
 #include <nlohmann/json.hpp>
 
@@ -23,7 +23,7 @@ public:
 
     std::vector <std::pair <std::string, int>> processFile();
     std::vector <std::vector <std::pair <std::string, int>>> processFileArray();
-    
+
     void outputBindings(std::vector <std::pair <std::string, int>> bindings);
     void outputBindingsArray(std::vector <std::vector <std::pair <std::string, int>>> bindings);
 
@@ -37,4 +37,4 @@ private:
 
 
 
-#endif //JSONLOADER_H
+#endif //JSONLOADER_HPP

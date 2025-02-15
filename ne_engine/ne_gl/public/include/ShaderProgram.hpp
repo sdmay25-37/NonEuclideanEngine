@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SHADERPROGRAM_HPP
+#define SHADERPROGRAM_HPP
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -17,3 +18,5 @@ public:
 	void setUniform3f(const char* name, const glm::vec3& vec);
 	void setUniformMat4(const char* name, const glm::mat4& matrix);
 };
+
+#endif
