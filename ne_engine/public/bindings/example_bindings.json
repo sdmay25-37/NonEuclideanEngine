@@ -5,6 +5,8 @@
             "MOVE_DOWN",
             "MOVE_LEFT",
             "MOVE_RIGHT",
+            "ZOOM_IN",
+            "ZOOM_OUT",
             "QUIT",
             "SWITCH"
         ],
@@ -13,8 +15,10 @@
             "S",
             "A",
             "D",
+            "Q",
+            "E",
             "ESCAPE",
-            "Q"
+            "SPACE"
         ]
     },
     {

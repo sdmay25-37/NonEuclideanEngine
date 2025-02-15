@@ -15,8 +15,8 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(.. ne_engine)
 
 set(SOURCES
-    "hello_new_triangle.cpp"    
-# "main.cpp"
+    "hello_new_triangle.cpp"
+    "main.cpp"
 )
 
 set(VS_DEBUGGER_WORKING_DIRECTORY "..")

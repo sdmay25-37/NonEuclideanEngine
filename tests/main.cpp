@@ -14,9 +14,10 @@
 #include <entt/entt.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
+#include <JSONLoader.h>
+
 #include "stb_image.h"
 #include "Input.h"
-#include "Camera.h"
 
 
 
@@ -69,8 +70,6 @@ int main() {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
-
-    Input input(window);
 
     unsigned int texture;
     glGenTextures(1, &texture);
@@ -219,7 +218,6 @@ int main() {
 
     int count = 0;
 
-    Camera cam = Camera();
     glm::vec3 camera_pos(0.0, 0.0, 1.0);
     glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
     float camera_speed = 0.05f;
@@ -230,31 +228,42 @@ int main() {
 
     glm::mat4 proj_mat = glm::perspective(fov, ASPECT_RATIO, nearPlane, farPlane);
 
-    input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]() {
+    Input charInput(window);
+    JSONLoader loader("ne_engine/public/bindings/example_bindings.json");
+
+    std::vector<std::vector<std::pair<std::string, int>>> bindings = loader.processFileArray();
+
+    charInput.bindKeyPress("QUIT", [&window]() {
         glfwSetWindowShouldClose(window, true);
     });
 
-    // input.bindKeyPress("up", GLFW_KEY_W, [&window]() {
-    //     camera_pos.y += camera_speed;
-    // });
+    charInput.bindKeyPress("MOVE_UP", [&camera_pos, camera_speed]() {
+        camera_pos.y += camera_speed;
+    });
+
+    charInput.bindKeyPress("MOVE_DOWN", [&camera_pos, camera_speed]() {
+        camera_pos.y -= camera_speed;
+    });
+
+    charInput.bindKeyPress("MOVE_LEFT", [&camera_pos, camera_speed]() {
+        camera_pos.x -= camera_speed;
+    });
+
+    charInput.bindKeyPress("MOVE_RIGHT", [&camera_pos, camera_speed]() {
+        camera_pos.x += camera_speed;
+    });
+
+    charInput.bindKeyPress("ZOOM_IN", [&camera_pos, camera_speed]() {
+        camera_pos.z += camera_speed;
+    });
+
+    charInput.bindKeyPress("ZOOM_OUT", [&camera_pos, camera_speed]() {
+        camera_pos.z -= camera_speed;
+    });
+
+    charInput.bindContexts(bindings);
 
     while (!glfwWindowShouldClose(window)) {
-
-        if(input.isKeyPressed(GLFW_KEY_S)) {
-            camera_pos.y -= camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_A)) {
-            camera_pos.x -= camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_D)) {
-            camera_pos.x += camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_Q)) {
-            camera_pos.z += camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_E)) {
-            camera_pos.z -= camera_speed;
-        }
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -282,7 +291,7 @@ int main() {
 
         }
 
-        glm::mat4 proj_view_mat = proj_mat * glm::lookAt(cam.getCameraPos(), glm::vec3(cam.getCameraPos().x, cam.getCameraPos().y, 0.0), xyz(camera_up));
+        glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
         shaders.setUniformMat4("proj_view_mat", proj_view_mat);
 
         glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, num_sprites);

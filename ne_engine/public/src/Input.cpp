@@ -94,7 +94,7 @@ void Input::switchBindings() {
 void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
 	if (!action) return; 
 	auto action_it = _key_action_map.find(key);
-	if(action_it == _key_action_map.end() || action != GLFW_PRESS || action == GLFW_RELEASE) return;
+	if(action_it == _key_action_map.end() || action != GLFW_PRESS) return;
 
 	auto callback_it = _action_callback_map.find(action_it->second);
 	if(callback_it == _action_callback_map.end()) return;
