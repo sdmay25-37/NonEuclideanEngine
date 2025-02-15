@@ -8,7 +8,7 @@ add_library(
     "public/src/CharWrapper.cpp"
     "public/src/Triangle.cpp"
     "public/src/JSONLoader.cpp"
-    # "public/src/SpriteRenderer.cpp"
+    "public/src/SpriteRenderer.cpp"
 )
 
 target_include_directories(ne_engine PUBLIC public/include PRIVATE private/include)

@@ -16,7 +16,8 @@ add_subdirectory(.. ne_engine)
 
 set(SOURCES
     # "hello_new_triangle.cpp"    
-    "main.cpp"
+    # "main.cpp"
+    "SpriteTesting.cpp"
 )
 
 set(VS_DEBUGGER_WORKING_DIRECTORY "..")

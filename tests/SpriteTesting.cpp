@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <chrono>
+#include <thread>
 
 #include "Sprite.h"
 
@@ -61,6 +62,8 @@ int main() {
 
     Input input(window);
 
+
+    // Set up Textures
     unsigned int texture;
     glGenTextures(1, &texture);
     glBindTexture(GL_TEXTURE_2D, texture);
@@ -72,7 +75,7 @@ int main() {
 
     stbi_set_flip_vertically_on_load(true);
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("../res/tiles.png", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("../res/Slime.png", &width, &height, &nrChannels, 0);
     if (data) {
         GLenum format = (nrChannels == 3) ? GL_RGB : GL_RGBA;
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -89,10 +92,45 @@ int main() {
 			"../shaders/sprite.frag"
 	);
 
+    // std::vector <Sprite> giratinaSprites;
+    // 24 Frames
+    // Width / 24
+    // Height
+
     std::srand(std::time(nullptr));
 
-    int tile_width = width / 16;
-    int tile_height = height / 16;
+    // float uv_width = 1.0;
+    // float uv_height = 1.0;
+
+    // int map_width = 2;
+    // int map_height = map_width * ASPECT_RATIO;
+
+    // float rect_size = 2.0 / (map_width - 1);
+
+    std::vector<glm::mat4> model_mats;
+    std::vector<glm::vec4> uv_ranges;
+
+    glm::vec3 position(0.0, 0.0, 0.0);
+    glm::vec3 scale(0.3, 0.3, 1.0);
+    glm::vec2 uv_min(0.0, 0.0);
+    glm::vec2 uv_max(1.0, 0.5);
+
+    glm::mat4 model_mat(1.0);
+    model_mat = glm::translate(model_mat, position);
+    model_mat = glm::scale(model_mat, scale);
+    model_mats.push_back(model_mat);
+
+    float frames = 33.0;
+    float startRow = 0.0; // 3.0 / 4.0;
+
+    uv_ranges.emplace_back(0.0, .75, 1.0 / frames, 1.0);    // 33 Frames
+    // uv_ranges.emplace_back(0.0, 0.0, 1.0 / 24.0, 1.0);       // 24 frames
+
+    /*
+    std::srand(std::time(nullptr));
+
+    int tile_width = width;
+    int tile_height = height / 2;
 
     float uv_width = 1.0 / tile_width;
     float uv_height = 1.0 / tile_height;
@@ -134,6 +172,7 @@ int main() {
 
         sprites.emplace_back(position, scale, uv_min, uv_max);
     }
+    */
 
     std::vector<Vertex> vertices = {
         Vertex {  0.5,  0.5, 0.0, 1.0, 1.0 },
@@ -182,7 +221,7 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, MODEL_MAT_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_mats.size(), model_mats.data(), GL_DYNAMIC_DRAW);
 
-    for(int i = 0; i < 4; i++) {
+        for(int i = 0; i < 4; i++) {
         glEnableVertexAttribArray(3 + i);
         glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4) * i));
         glVertexAttribDivisor(3 + i, 1);
@@ -220,9 +259,7 @@ int main() {
         glfwSetWindowShouldClose(window, true);
     });
 
-    // input.bindKeyPress("up", GLFW_KEY_W, [&window]() {
-    //     camera_pos.y += camera_speed;
-    // });
+    int ctr = 0;
 
     while (!glfwWindowShouldClose(window)) {
 
@@ -245,35 +282,23 @@ int main() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        count++;
-        if(count % 2500 == 0) {
-            uv_ranges.clear();
-            for(int i = 0; i < sprites.size(); i++) {
-                int tile_x = rand() % tile_width;
-                int tile_y = rand() % tile_height;
+        uv_ranges.clear();
+        uv_ranges.emplace_back(ctr / frames, 0.75, (ctr + 1.0) / frames, 1.0);
 
-                float u = tile_x * uv_width;
-                float v = tile_y * uv_height;
-
-                glm::vec2 uv_min(u, v);
-                glm::vec2 uv_max(u + uv_width, v + uv_height);
-
-                uv_ranges.emplace_back(uv_min.x, uv_min.y, uv_max.x, uv_max.y);
-            }
-
-            glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
-
-
-        }
+        glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
 
         glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
         shaders.setUniformMat4("proj_view_mat", proj_view_mat);
 
-        glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, sprites.size());
+        glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, 1);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
+
+        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+        ctr = (ctr + 1) % ((int) frames);
     }
 
 	shaders.cleanup();
