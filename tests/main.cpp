@@ -15,11 +15,10 @@
 
 #define STB_IMAGE_IMPLEMENTATION
 #include <JSONLoader.h>
+#include <Render.h>
 
 #include "stb_image.h"
 #include "Input.h"
-
-
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -28,19 +27,25 @@ constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;
 constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 
-struct Vertex {
-	float x, y, z;
-    float u, v;
-};
-
-struct Sprite {
-    glm::vec3 position;
-    glm::vec3 scale;
-    glm::vec2 uv_min, uv_max;
-};
-
 float rand_float() {
     return (float)rand() / RAND_MAX;
+}
+
+void sprite_update(entt::registry &registry, std::vector<glm::vec4> &uv_ranges, unsigned int UV_VBO) {
+    auto view = registry.view<Sprite>();
+
+    uv_ranges.clear();
+    for(auto [entity, sprite]: view.each()) {
+        uv_ranges.emplace_back(
+            sprite.uv_min.x,
+            sprite.uv_min.y,
+            sprite.uv_max.x,
+            sprite.uv_max.y
+        );
+    }
+
+    glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
 }
 
 int main() {
@@ -50,8 +55,6 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     entt::registry registry;
-
-
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -144,72 +147,11 @@ int main() {
         uv_ranges.emplace_back(uv_min.x, uv_min.y, uv_max.x, uv_max.y);
 
         const auto entity = registry.create();
-        registry.emplace<Sprite>(entity, position, scale, uv_min, uv_max);
+        registry.emplace<Sprite>(entity, model_mat, uv_min, uv_max);
     }
 
-    std::vector<Vertex> vertices = {
-        Vertex {  0.5,  0.5, 0.0, 1.0, 1.0 },
-        Vertex {  0.5, -0.5, 0.0, 1.0, 0.0 },
-        Vertex { -0.5, -0.5, 0.0, 0.0, 0.0 },
-        Vertex { -0.5,  0.5, 0.0, 0.0, 1.0 }
-    };
-
-    std::vector<unsigned int> indices = {
-        0, 1, 3,
-        1, 2, 3
-    };
-
-    unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &UV_VBO);
-    glGenBuffers(1, &MODEL_MAT_VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    // position attribute
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
-    // vertex texture coords attribute
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-    glEnableVertexAttribArray(1);
-
-    // sprite texture coords attribute
-
-    glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
-
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(2);
-    glVertexAttribDivisor(2, 1);
-
-    // model matrix attribute
-
-    glBindBuffer(GL_ARRAY_BUFFER, MODEL_MAT_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_mats.size(), model_mats.data(), GL_DYNAMIC_DRAW);
-
-    for(int i = 0; i < 4; i++) {
-        glEnableVertexAttribArray(3 + i);
-        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4) * i));
-        glVertexAttribDivisor(3 + i, 1);
-    }
-
-    // index buffer
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-
-    glBindVertexArray(VAO);
+    Render render_system;
+    render_system.bind();
 
     shaders.bind();
     shaders.setUniform1i("texture_atlas", 0);
@@ -231,7 +173,7 @@ int main() {
     Input charInput(window);
     JSONLoader loader("ne_engine/public/bindings/example_bindings.json");
 
-    std::vector<std::vector<std::pair<std::string, int>>> bindings = loader.processFileArray();
+    auto bindings = loader.processFileArray();
 
     charInput.bindKeyPress("QUIT", [&window]() {
         glfwSetWindowShouldClose(window, true);
@@ -280,32 +222,25 @@ int main() {
                 float u = tile_x * uv_width;
                 float v = tile_y * uv_height;
 
-                glm::vec2 uv_min(u, v);
-                glm::vec2 uv_max(u + uv_width, v + uv_height);
-
-                uv_ranges.emplace_back(uv_min.x, uv_min.y, uv_max.x, uv_max.y);
+                sprite.uv_min = glm::vec2(u, v);
+                sprite.uv_max = glm::vec2(u + uv_width, v + uv_height);
             }
 
-            glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
-            glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
-
+            //sprite_update(registry, uv_ranges, UV_VBO);
         }
+
+
 
         glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
         shaders.setUniformMat4("proj_view_mat", proj_view_mat);
 
-        glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, num_sprites);
+        render_system.render(registry);
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
 	shaders.cleanup();
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &UV_VBO);
-    glDeleteBuffers(1, &MODEL_MAT_VBO);
-    glDeleteBuffers(1, &EBO);
 
     glfwTerminate();
     return 0;
@@ -313,8 +248,4 @@ int main() {
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
-}
-
-void shiftCameraLeft() {
-
 }
