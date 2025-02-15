@@ -5,5 +5,6 @@
 #include "GLFWContext.hpp"
 #include "ShaderProgram.h"
 #include "Sprite.h"
+#include "HypRotate.hpp"
 
 #endif
