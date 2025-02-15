@@ -6,7 +6,6 @@
 #include "ShaderProgram.hpp"
 #include "Input.hpp"
 #include "Triangle.hpp"
-#include "CharWrapper.hpp"
 #include "JSONLoader.hpp"
 
 static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods);
@@ -74,7 +73,7 @@ int main() {
 
     Input charInput(window);
     CharWrapper wrapper(triangle);
-    JSONLoader loading("../ne_engine/public/bindings/example_bindings.json");
+    JSONLoader loading("../tests/bindings/example_bindings.json");
 
     // Process a json array of bindings that has multiple contexts
     // --> see ne_engine/public/bindings/example_bindings.json for the example

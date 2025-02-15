@@ -15,8 +15,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(.. ne_engine)
 
 set(SOURCES
-    "moving_tiles.cpp"
-    "orthographic_proj.cpp"
+    "input_test.cpp"
     "point_square_demo.cpp"
 )
 
