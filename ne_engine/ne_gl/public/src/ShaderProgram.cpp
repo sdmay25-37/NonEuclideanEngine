@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "ShaderProgram.h"
+#include "ShaderProgram.hpp"
 #include "glad/glad.h"
 
 std::string fileToString(const char* filePath);

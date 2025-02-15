@@ -2,7 +2,7 @@
 // Created by benj2003 on 10/26/2024.
 //
 
-#include "Input.h"
+#include "Input.hpp"
 
 #include <iostream>
 
@@ -53,7 +53,7 @@ void Input::bindKeyPress(const std::string& action, int key) {
 		_key_action_map[key] = _key_action_map[formerKey];
 		_key_action_map.erase(formerKey);
 	} else {
-		_key_action_map[key] = action; 
+		_key_action_map[key] = action;
 	}
 }
 
@@ -92,7 +92,7 @@ void Input::switchBindings() {
 }
 
 void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (!action) return; 
+	if (!action) return;
 	auto action_it = _key_action_map.find(key);
 	if(action_it == _key_action_map.end() || action != GLFW_PRESS) return;
 

@@ -1,5 +1,5 @@
-#ifndef RENDER_H
-#define RENDER_H
+#ifndef RENDER_HPP
+#define RENDER_HPP
 
 #include <entt/entt.hpp>
 #include <glm/glm.hpp>
@@ -29,4 +29,4 @@ private:
 
 };
 
-#endif //RENDER_H
+#endif //RENDER_HPP

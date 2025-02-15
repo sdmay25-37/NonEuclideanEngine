@@ -9,8 +9,8 @@
     This is an example object class that I used for testing the Input stuff (JSON, rebinding, etc)
 */
 
-#ifndef TRIANGLE_H
-#define TRIANGLE_H
+#ifndef TRIANGLE_HPP
+#define TRIANGLE_HPP
 
 #include <vector>
 

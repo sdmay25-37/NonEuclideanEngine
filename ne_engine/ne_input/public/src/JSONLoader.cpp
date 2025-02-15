@@ -3,7 +3,7 @@
 //  2/2/2025
 //
 
-#include "JSONLoader.h"
+#include "JSONLoader.hpp"
 
 #include <fstream>
 #include <iostream>
@@ -38,11 +38,11 @@ std::vector <std::pair <std::string, int>> JSONLoader::processFile() {
     }
 
     std::vector <std::pair <std::string, int>> action_key_bindings;
-     
+
     for (int i = 0; i < jsonData["actions"].size(); i++) {
         std::pair bind((std::string) (jsonData["actions"].at(i)), _stringToEnum.find(jsonData["keys"].at(i))->second);
         action_key_bindings.push_back(bind);
-        
+
     }
 
     return action_key_bindings;
@@ -87,7 +87,7 @@ void JSONLoader::outputBindings(std::vector <std::pair <std::string, int>> bindi
 
     std::vector <std::string> actions;
     std::vector <std::string> keys;
-    
+
     for (int i = 0; i < bindings.size(); i++) {
         actions.push_back(bindings.at(i).first);
         keys.push_back(_enumToString.find(bindings.at(i).second)->second);
@@ -108,7 +108,7 @@ void JSONLoader::outputBindingsArray(std::vector <std::vector <std::pair <std::s
 
         std::vector <std::string> actions;
         std::vector <std::string> keys;
-        
+
         for (int j = 0; j < bindings.at(i).size(); j++) {
             actions.push_back(bindings.at(i).at(j).first);
             keys.push_back(_enumToString.find(bindings.at(i).at(j).second)->second);

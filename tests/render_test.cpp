@@ -9,16 +9,15 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "ShaderProgram.h"
-
 #include <entt/entt.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include <JSONLoader.h>
-#include <Render.h>
+#include <stb_image.h>
 
-#include "stb_image.h"
-#include "Input.h"
+#include "JSONLoader.hpp"
+#include "Render.hpp"
+#include "ShaderProgram.hpp"
+#include "Input.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -171,7 +170,7 @@ int main() {
     glm::mat4 proj_mat = glm::perspective(fov, ASPECT_RATIO, nearPlane, farPlane);
 
     Input charInput(window);
-    JSONLoader loader("ne_engine/public/bindings/example_bindings.json");
+    JSONLoader loader("tests/bindings/example_bindings.json");
 
     auto bindings = loader.processFileArray();
 
