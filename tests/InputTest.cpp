@@ -9,15 +9,14 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "ShaderProgram.h"
+#include "Sprite.h"
 
-#include <entt/entt.hpp>
+#include "ShaderProgram.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "Input.h"
 #include "Camera.h"
-
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -32,12 +31,6 @@ struct Vertex {
     float u, v;
 };
 
-struct Sprite {
-    glm::vec3 position;
-    glm::vec3 scale;
-    glm::vec2 uv_min, uv_max;
-};
-
 float rand_float() {
     return (float)rand() / RAND_MAX;
 }
@@ -47,10 +40,6 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-    entt::registry registry;
-
-
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -116,9 +105,8 @@ int main() {
     std::vector<glm::mat4> model_mats;
     std::vector<glm::vec4> uv_ranges;
 
-    int num_sprites = map_width * map_height;
-
-    for(int i = 0; i < num_sprites; i++) {
+    std::vector<Sprite> sprites;
+    for(int i = 0; i < map_width * map_height; i++) {
 
         int x = i % map_width;
         int y = i / map_width;
@@ -144,8 +132,7 @@ int main() {
 
         uv_ranges.emplace_back(uv_min.x, uv_min.y, uv_max.x, uv_max.y);
 
-        const auto entity = registry.create();
-        registry.emplace<Sprite>(entity, position, scale, uv_min, uv_max);
+        sprites.emplace_back(position, scale, uv_min, uv_max);
     }
 
     std::vector<Vertex> vertices = {
@@ -231,7 +218,7 @@ int main() {
     glm::mat4 proj_mat = glm::perspective(fov, ASPECT_RATIO, nearPlane, farPlane);
 
     input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]() {
-        glfwSetWindowShouldClose(window, true);
+        glfwSetWindowShouldClose(win    dow, true);
     });
 
     // input.bindKeyPress("up", GLFW_KEY_W, [&window]() {
@@ -262,9 +249,7 @@ int main() {
         count++;
         if(count % 25 == 0) {
             uv_ranges.clear();
-
-            auto view = registry.view<Sprite>();
-            for(auto [entity, sprite] : view.each()) {
+            for(int i = 0; i < sprites.size(); i++) {
                 int tile_x = rand() % tile_width;
                 int tile_y = rand() % tile_height;
 
@@ -285,7 +270,7 @@ int main() {
         glm::mat4 proj_view_mat = proj_mat * glm::lookAt(cam.getCameraPos(), glm::vec3(cam.getCameraPos().x, cam.getCameraPos().y, 0.0), xyz(camera_up));
         shaders.setUniformMat4("proj_view_mat", proj_view_mat);
 
-        glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, num_sprites);
+        glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, sprites.size());
 
         glfwSwapBuffers(window);
         glfwPollEvents();

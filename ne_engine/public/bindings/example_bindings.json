@@ -1,0 +1,38 @@
+[
+    {
+        "actions": [
+            "MOVE_UP",
+            "MOVE_DOWN",
+            "MOVE_LEFT",
+            "MOVE_RIGHT",
+            "QUIT",
+            "SWITCH"
+        ],
+        "keys": [
+            "W",
+            "S",
+            "A",
+            "D",
+            "ESCAPE",
+            "Q"
+        ]
+    },
+    {
+        "actions": [
+            "MOVE_UP",
+            "MOVE_DOWN",
+            "MOVE_LEFT",
+            "MOVE_RIGHT",
+            "QUIT",
+            "SWITCH"
+        ],
+        "keys": [
+            "UP",
+            "DOWN",
+            "LEFT",
+            "RIGHT",
+            "ESCAPE",
+            "Q"
+        ]
+    }
+]
