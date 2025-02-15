@@ -10,11 +10,14 @@
         {
             "name": "Win32",
             "defines": [],
-            "compilerPath": "", // Add this if done in windows
+            "compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe", // Add this if done in windows
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "", // Add this if done in windows
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+            "intelliSenseMode": "windows-gcc-x64", // Add this if done in windows
+            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "includePath": [
+                "${workspaceFolder}/lib/glad/include/glad"
+            ]
         }
     ],
     "version": 4

@@ -218,7 +218,7 @@ int main() {
     glm::mat4 proj_mat = glm::perspective(fov, ASPECT_RATIO, nearPlane, farPlane);
 
     input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]() {
-        glfwSetWindowShouldClose(window, true);
+        glfwSetWindowShouldClose(win    dow, true);
     });
 
     // input.bindKeyPress("up", GLFW_KEY_W, [&window]() {
