@@ -9,12 +9,13 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "Sprite.h"
-
 #include "ShaderProgram.h"
+
+#include <entt/entt.hpp>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
+
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -30,6 +31,12 @@ struct Vertex {
     float u, v;
 };
 
+struct Sprite {
+    glm::vec3 position;
+    glm::vec3 scale;
+    glm::vec2 uv_min, uv_max;
+};
+
 float rand_float() {
     return (float)rand() / RAND_MAX;
 }
@@ -39,6 +46,10 @@ int main() {
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    entt::registry registry;
+
+
 
 #ifdef __APPLE__
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
@@ -102,8 +113,9 @@ int main() {
     std::vector<glm::mat4> model_mats;
     std::vector<glm::vec4> uv_ranges;
 
-    std::vector<Sprite> sprites;
-    for(int i = 0; i < map_width * map_height; i++) {
+    int num_sprites = map_width * map_height;
+
+    for(int i = 0; i < num_sprites; i++) {
 
         int x = i % map_width;
         int y = i / map_width;
@@ -129,7 +141,8 @@ int main() {
 
         uv_ranges.emplace_back(uv_min.x, uv_min.y, uv_max.x, uv_max.y);
 
-        sprites.emplace_back(position, scale, uv_min, uv_max);
+        const auto entity = registry.create();
+        registry.emplace<Sprite>(entity, position, scale, uv_min, uv_max);
     }
 
     std::vector<Vertex> vertices = {
@@ -221,7 +234,9 @@ int main() {
         count++;
         if(count % 25 == 0) {
             uv_ranges.clear();
-            for(int i = 0; i < sprites.size(); i++) {
+
+            auto view = registry.view<Sprite>();
+            for(auto [entity, sprite] : view.each()) {
                 int tile_x = rand() % tile_width;
                 int tile_y = rand() % tile_height;
 
@@ -246,7 +261,7 @@ int main() {
         glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), glm::vec3(0.0, 1.0, 0.0));
         shaders.setUniformMat4("proj_view_mat", proj_view_mat);
 
-        glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, sprites.size());
+        glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, num_sprites);
 
         glfwSwapBuffers(window);
         glfwPollEvents();

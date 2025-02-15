@@ -1,8 +1,7 @@
 add_library(
     ne_engine STATIC
 
-    "public/src/Sprite.cpp"
-    "public/src/ShaderProgram.cpp"
+        "public/src/ShaderProgram.cpp"
     "public/src/Engine.cpp"
 )
 
