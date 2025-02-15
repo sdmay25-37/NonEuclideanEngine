@@ -3,7 +3,8 @@
 //  2/15/25
 //
 
-#include <glm>
+#include <glm/glm.hpp>
+#include "Sprite.hpp"
 
 
 struct RowInf {
@@ -26,4 +27,4 @@ private:
     
 };
 
-#endif // ANIMATION
+// #endif // ANIMATION

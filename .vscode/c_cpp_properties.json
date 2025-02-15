@@ -21,9 +21,9 @@
             ],
             "includePath": [
                 "${workspaceFolder}/lib/glad/include/glad",
-                "${workspaceFolder}/lib/glm",
                 "${workspaceFolder}/lib/glfw/include",
-                "${workspaceFolder}/lib/glad/include"
+                "${workspaceFolder}/lib/glad/include",
+                "${workspaceFolder}/lib/glm"
             ]
         }
     ],
