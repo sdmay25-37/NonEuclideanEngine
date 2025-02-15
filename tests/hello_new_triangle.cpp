@@ -3,11 +3,11 @@
 
 #include <iostream>
 
-#include "ShaderProgram.h"
-#include "Input.h"
-#include "Triangle.h"
-#include "CharWrapper.h"
-#include "JSONLoader.h"
+#include "ShaderProgram.hpp"
+#include "Input.hpp"
+#include "Triangle.hpp"
+#include "CharWrapper.hpp"
+#include "JSONLoader.hpp"
 
 static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods);
 static void bindWrap();
@@ -43,7 +43,7 @@ int main() {
     Triangle::Vertex vert0 = {-0.05f, -0.05f, 0.0f, 1.0f, 0.0f, 0.0f};
     Triangle::Vertex vert1 = {0.0f, 0.05f, 0.0f, 0.0f, 1.0f, 0.0f};
     Triangle::Vertex vert2 = {0.05f, -0.05f, 0.0f, 0.0f, 0.0f, 1.0f};
-    
+
     vertArr.push_back(vert0);
     vertArr.push_back(vert1);
     vertArr.push_back(vert2);
@@ -54,18 +54,18 @@ int main() {
     ShaderProgram shaders (
         "../shaders/color.vert",
         "../shaders/color.frag"
-    );  
+    );
 
     glGenBuffers(1, &vertBuff);
-    glBindBuffer(GL_ARRAY_BUFFER, vertBuff);    
+    glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
     // Assign buffer data
     glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), triangle.getVerts().data(), GL_STATIC_DRAW);
 
     GLuint vao = 0;
     glGenVertexArrays(1, &vao);
     glBindVertexArray(vao);
-    glBindBuffer(GL_ARRAY_BUFFER, vertBuff);  
-    
+    glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
+
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid*) 0);
     glEnableVertexAttribArray(0);
 
@@ -76,7 +76,7 @@ int main() {
     CharWrapper wrapper(triangle);
     JSONLoader loading("../ne_engine/public/bindings/example_bindings.json");
 
-    // Process a json array of bindings that has multiple contexts 
+    // Process a json array of bindings that has multiple contexts
     // --> see ne_engine/public/bindings/example_bindings.json for the example
     std::vector<std::vector <std::pair <std::string, int>>> bindings = loading.processFileArray();
 
@@ -97,7 +97,7 @@ int main() {
     bool set = false;
 
     while (!glfwWindowShouldClose(window)) {
-                
+
         glfwWaitEvents();
         glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
         glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), wrapper.getTriangle().getVerts().data(), GL_STATIC_DRAW);

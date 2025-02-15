@@ -9,14 +9,14 @@
 #include <cstdlib>
 #include <ctime>
 
-#include "Sprite.h"
+#include "Sprite.hpp"
 
-#include "ShaderProgram.h"
+#include "ShaderProgram.hpp"
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#include "Input.h"
-#include "Camera.h"
+#include "stb_image.hpp"
+#include "Input.hpp"
+#include "Camera.hpp"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);

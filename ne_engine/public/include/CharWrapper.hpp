@@ -1,7 +1,7 @@
-#ifndef CHARWRAPPER_H
-#define CHARWRAPPER_H
+#ifndef CHARWRAPPER_HPP
+#define CHARWRAPPER_HPP
 
-#include "Triangle.h"
+#include "Triangle.hpp"
 
 class CharWrapper {
 public:

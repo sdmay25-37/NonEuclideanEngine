@@ -7,7 +7,7 @@
     TODO: REMOVE WHEN NECESSARY
 */
 
-#include "Triangle.h"
+#include "Triangle.hpp"
 
 #include <vector>
 #include <iostream>

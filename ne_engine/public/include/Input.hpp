@@ -1,5 +1,5 @@
-#ifndef INPUTHANDLER_H
-#define INPUTHANDLER_H
+#ifndef INPUTHANDLER_HPP
+#define INPUTHANDLER_HPP
 
 #include <functional>
 #include <string>
@@ -22,7 +22,7 @@ public:
 	void getMousePosition(double& x, double& y) const;
 
 	/*
-		If this is confusing, I can change the function names to make it more clear 
+		If this is confusing, I can change the function names to make it more clear
 				vvv
 	*/
 
@@ -64,4 +64,4 @@ private:
 
 
 
-#endif //INPUTHANDLER_H
+#endif //INPUTHANDLER_HPP

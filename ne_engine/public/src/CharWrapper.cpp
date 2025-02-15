@@ -1,4 +1,4 @@
-#include "CharWrapper.h"
+#include "CharWrapper.hpp"
 
 #include <iostream>
 
@@ -6,14 +6,14 @@ CharWrapper::CharWrapper() {
 }
 
 CharWrapper::CharWrapper(Triangle triangle) {
-    CharWrapper::character = triangle; 
+    CharWrapper::character = triangle;
 }
 
 void CharWrapper::moveRightWrapper() {
     character.moveRight();
 }
 
-void CharWrapper::moveLeftWrapper() {    
+void CharWrapper::moveLeftWrapper() {
     character.moveLeft();
 }
 
