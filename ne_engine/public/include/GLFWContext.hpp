@@ -12,7 +12,9 @@ class GLFWContext
     GLFWContext();
     ~GLFWContext();
 
-    void createWindow(unsigned int width, unsigned int height, std::string name);
+    void initAll(unsigned int width, unsigned int height, std::string window_name);
+
+    void createWindow(unsigned int width, unsigned int height, std::string window_name);
 
     void setCurrent();
 

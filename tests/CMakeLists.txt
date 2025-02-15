@@ -17,7 +17,7 @@ add_subdirectory(.. ne_engine)
 set(SOURCES
     "moving_tiles.cpp"
     "orthographic_proj.cpp"
-    "hyperboloid.cpp"
+    "point_square_demo.cpp"
 )
 
 set(VS_DEBUGGER_WORKING_DIRECTORY "..")

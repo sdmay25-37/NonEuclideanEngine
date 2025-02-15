@@ -13,16 +13,9 @@
 
 #include "ne_engine.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 void processInput(GLFWwindow *window);
 
-struct Vertex {
-	float x, y, z;
-    float u, v;
-};
 // settings
 constexpr unsigned int SCREEN_WIDTH = 1920;
 constexpr unsigned int SCREEN_HEIGHT = 1080;
@@ -31,53 +24,55 @@ constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 int main() {
 
     GLFWContext context = GLFWContext();
-    context.createWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Hyperboloid");
-    context.setCurrent();
-    context.initGLAD();
+    context.initAll(SCREEN_WIDTH, SCREEN_HEIGHT, "Hyperboloid");
 
     // std::vector<Eigen::Vector3d> hyperboloid_verts;
-    std::vector<glm::vec3> hyperboloid_verts;
+    Square square(Square::SQUARE_XY);
+    square = square * .25f;
+    // std::vector<glm::vec3> square_points;
+    // std::vector<unsigned int> square_indices({0, 1, 2, 3, 0});
 
-    // hyperboloid_verts.push_back(glm::vec3(0,.5,0));
-    // hyperboloid_verts.push_back(glm::vec3(.5, 0, 0));
-    // hyperboloid_verts.push_back(glm::vec3(-.5,0,0));
-    #define X_Z_OFFSET 10
-    for(int i = -X_Z_OFFSET; i < X_Z_OFFSET + 1; i++)
-    {
-        for(int j = -X_Z_OFFSET; j < X_Z_OFFSET + 1;j++)
-        {
-            float x = i/(float)(X_Z_OFFSET*2);
-            float z = j/(float)(X_Z_OFFSET*2);
-            float y = sqrt(pow(x, 2) + pow(z, 2));
+    // #define SQUARES_PER_SIDE 1
+    // #define POINT_DIST 1.0f / 2
 
-            hyperboloid_verts.push_back(glm::vec3(x, y, z));
-        }
-    }
+    // glm::vec3 p0 = glm::vec3({-.5f, .5f, 0});
+    // glm::vec3 p1 = glm::vec3({-.5f, -.5f, 0});
+    // glm::vec3 p2 = glm::vec3({.5f, -.5f, 0});
+    // glm::vec3 p3 = glm::vec3({.5f, .5f, 0});
+
+    // square_points.push_back(p0);
+    // square_points.push_back(p1);
+    // square_points.push_back(p2);
+    // square_points.push_back(p3);
 
     // build and compile our shader program
     ShaderProgram shaders(
-			"shaders/color.vert",
+			"shaders/vec4.vert",
 			"shaders/color.frag"
 	);
 
     shaders.bind();
     shaders.setUniform3f("color", glm::vec3(1, 0, 0));
 
-    unsigned int VA0, VB0;
+    unsigned int VA0, VB0, VE0;
 
     glGenVertexArrays(1, &VA0);
     glGenBuffers(1, &VB0);
+    glGenBuffers(1, &VE0);
 
     glBindVertexArray(VA0);
 
     // position attribute
     glBindBuffer(GL_ARRAY_BUFFER, VB0);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec3) * hyperboloid_verts.size(), hyperboloid_verts.data(), GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * square.getPoints().size(), square.getPoints().data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * square.getIndices().size(), square.getIndices().data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
     glEnableVertexAttribArray(0);
 
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while (!glfwWindowShouldClose(context.getWindow())) {
         processInput(context.getWindow());
@@ -85,7 +80,9 @@ int main() {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glDrawArrays(GL_TRIANGLE_STRIP, 0, hyperboloid_verts.size());
+        glBindVertexArray(VA0);
+        // glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+        glDrawElements(GL_LINE_STRIP, square.getIndices().size(), GL_UNSIGNED_INT, 0);
 
         context.swapBuffers();
         glfwPollEvents();

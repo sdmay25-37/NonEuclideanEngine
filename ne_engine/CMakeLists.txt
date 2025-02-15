@@ -9,6 +9,7 @@ add_library(
     "public/src/Triangle.cpp"
     "public/src/JSONLoader.cpp"
     "public/src/GLFWContext.cpp"
+    "public/src/HypRotate.cpp"
 )
 
 target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json)

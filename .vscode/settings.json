@@ -88,4 +88,5 @@
         "<C-z>": false,
         "<C-p>": false
     },
+    "cmake.options.statusBarVisibility": "visible",
 }
