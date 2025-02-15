@@ -16,7 +16,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 #include "Input.h"
-#include "Camera.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -72,7 +71,7 @@ int main() {
 
     stbi_set_flip_vertically_on_load(true);
     int width, height, nrChannels;
-    unsigned char *data = stbi_load("res/tiles.png", &width, &height, &nrChannels, 0);
+    unsigned char *data = stbi_load("../res/tiles.png", &width, &height, &nrChannels, 0);
     if (data) {
         GLenum format = (nrChannels == 3) ? GL_RGB : GL_RGBA;
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
@@ -85,8 +84,8 @@ int main() {
 
     // build and compile our shader program
     ShaderProgram shaders(
-			"shaders/sprite.vert",
-			"shaders/sprite.frag"
+			"../shaders/sprite.vert",
+			"../shaders/sprite.frag"
 	);
 
     std::srand(std::time(nullptr));
@@ -206,11 +205,6 @@ int main() {
 
     int count = 0;
 
-    Camera cam = Camera();
-    glm::vec3 camera_pos(0.0, 0.0, 1.0);
-    glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
-    float camera_speed = 0.05f;
-
     float fov = glm::radians(45.0f);
     float nearPlane = 0.1f;
     float farPlane = 100.0f;
@@ -227,21 +221,21 @@ int main() {
 
     while (!glfwWindowShouldClose(window)) {
 
-        if(input.isKeyPressed(GLFW_KEY_S)) {
-            camera_pos.y -= camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_A)) {
-            camera_pos.x -= camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_D)) {
-            camera_pos.x += camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_Q)) {
-            camera_pos.z += camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_E)) {
-            camera_pos.z -= camera_speed;
-        }
+        // if(input.isKeyPressed(GLFW_KEY_S)) {
+        //     camera_pos.y -= camera_speed;
+        // }
+        // if(input.isKeyPressed(GLFW_KEY_A)) {
+        //     camera_pos.x -= camera_speed;
+        // }
+        // if(input.isKeyPressed(GLFW_KEY_D)) {
+        //     camera_pos.x += camera_speed;
+        // }
+        // if(input.isKeyPressed(GLFW_KEY_Q)) {
+        //     camera_pos.z += camera_speed;
+        // }
+        // if(input.isKeyPressed(GLFW_KEY_E)) {
+        //     camera_pos.z -= camera_speed;
+        // }
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -267,7 +261,7 @@ int main() {
 
         }
 
-        glm::mat4 proj_view_mat = proj_mat * glm::lookAt(cam.getCameraPos(), glm::vec3(cam.getCameraPos().x, cam.getCameraPos().y, 0.0), xyz(camera_up));
+        glm::mat4 proj_view_mat = proj_mat; // * glm::lookAt(cam.getCameraPos(), glm::vec3(cam.getCameraPos().x, cam.getCameraPos().y, 0.0), xyz(camera_up));
         shaders.setUniformMat4("proj_view_mat", proj_view_mat);
 
         glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, sprites.size());
