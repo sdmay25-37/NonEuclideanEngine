@@ -6,6 +6,7 @@ add_library(
     "ne_gl/public/src/Engine.cpp"
     "ne_gl/public/src/Triangle.cpp"
     "ne_gl/public/src/GLFWContext.cpp"
+    "ne_gl/public/src/Animation.cpp"
 
     "ne_input/public/src/Input.cpp"
     "ne_input/public/src/JSONLoader.cpp"
