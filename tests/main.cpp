@@ -10,13 +10,15 @@
 #include <ctime>
 #include <chrono>
 
-#include "Sprite.h"
+#include "ne_engine.hpp"
 
-#include "ShaderProgram.h"
+// #include "Sprite.h"
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#include "Input.h"
+// #include "ShaderProgram.h"
+
+// #define STB_IMAGE_IMPLEMENTATION
+// #include "stb_image.h"
+// #include "Input.h"
 
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);

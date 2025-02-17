@@ -55,6 +55,11 @@ int main() {
 
     Input input(window);
 
+    // build and compile our shader program
+    ShaderProgram shaders(
+			"../shaders/sprite.vert",
+			"../shaders/sprite.frag"
+	);
 
     // Set up Textures
     unsigned int texture;
@@ -78,13 +83,6 @@ int main() {
     }
     stbi_image_free(data);
 
-
-    // build and compile our shader program
-    ShaderProgram shaders(
-			"../shaders/sprite.vert",
-			"../shaders/sprite.frag"
-	);
-
     // std::vector <Sprite> giratinaSprites;
     // 24 Frames
     // Width / 24
@@ -102,21 +100,28 @@ int main() {
 
     std::vector<glm::mat4> model_mats;
     std::vector<glm::vec4> uv_ranges;
+    
+    float totalFrames = 33.0;
+    int animFrames = 7;
+    float startRow = 0.5;
+    float rowSize = 1.0 / 4.0;
 
     glm::vec3 position(0.0, 0.0, 0.0);
     glm::vec3 scale(0.3, 0.3, 1.0);
-    glm::vec2 uv_min(0.0, 0.0);
-    glm::vec2 uv_max(1.0, 0.5);
+    glm::vec2 uv_min(0.0, startRow);
+    glm::vec2 uv_max(1.0 / totalFrames * ((float) animFrames) , startRow + rowSize);
 
     glm::mat4 model_mat(1.0);
     model_mat = glm::translate(model_mat, position);
     model_mat = glm::scale(model_mat, scale);
     model_mats.push_back(model_mat);
 
-    float frames = 7.0; // 33.0;
-    float startRow = 0.25; // 3.0 / 4.0;
+    Animation slime(position, scale, uv_min, uv_max, 2, 3, 4, 7, 1, "../res/Slime.png");
 
-    uv_ranges.emplace_back(0.0, startRow, 1.0 / frames, startRow + 0.25);    // 33 Frames
+    slime.initAnimation();
+    AnimationData checkInf = slime.getAnimationData();
+
+    uv_ranges.emplace_back(0.0, startRow, 1.0 / totalFrames, startRow + rowSize);    // 7 Frames
     // uv_ranges.emplace_back(0.0, 0.0, 1.0 / 24.0, 1.0);       // 24 frames
 
     /*
@@ -214,7 +219,7 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, MODEL_MAT_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_mats.size(), model_mats.data(), GL_DYNAMIC_DRAW);
 
-        for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < 4; i++) {
         glEnableVertexAttribArray(3 + i);
         glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4) * i));
         glVertexAttribDivisor(3 + i, 1);
@@ -275,7 +280,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         uv_ranges.clear();
-        uv_ranges.emplace_back(ctr / frames, 0.75, (ctr + 1.0) / frames, 1.0);
+        uv_ranges.emplace_back(ctr / totalFrames, startRow, (ctr + 1.0) / totalFrames, startRow + rowSize);
 
         glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
@@ -290,7 +295,7 @@ int main() {
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-        ctr = (ctr + 1) % ((int) frames);
+        ctr = (ctr + 1) % ((int) animFrames);
     }
 
 	shaders.cleanup();
