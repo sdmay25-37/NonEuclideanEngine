@@ -5,20 +5,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 #include <iostream>
 #include <cstdlib>
 #include <ctime>
 #include <chrono>
 #include <thread>
 
-#include "Sprite.h"
-
-#include "ShaderProgram.h"
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-#include "Input.h"
-
+#include "ne_engine.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -120,10 +116,10 @@ int main() {
     model_mat = glm::scale(model_mat, scale);
     model_mats.push_back(model_mat);
 
-    float frames = 33.0;
-    float startRow = 0.0; // 3.0 / 4.0;
+    float frames = 7.0; // 33.0;
+    float startRow = 0.25; // 3.0 / 4.0;
 
-    uv_ranges.emplace_back(0.0, .75, 1.0 / frames, 1.0);    // 33 Frames
+    uv_ranges.emplace_back(0.0, startRow, 1.0 / frames, startRow + 0.25);    // 33 Frames
     // uv_ranges.emplace_back(0.0, 0.0, 1.0 / 24.0, 1.0);       // 24 frames
 
     /*
@@ -234,7 +230,6 @@ int main() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
 
     glBindVertexArray(VAO);
 
