@@ -23,7 +23,12 @@
                 "${workspaceFolder}/lib/glad/include/glad",
                 "${workspaceFolder}/lib/glfw/include",
                 "${workspaceFolder}/lib/glad/include",
-                "${workspaceFolder}/lib/glm"
+                "${workspaceFolder}/ne_engine/include",
+                "${workspaceFolder}/lib/glm",
+                "${workspaceFolder}/ne_engine/ne_gl/public/include",
+                "${workspaceFolder}/lib/stb_image",
+                "${workspaceFolder}/ne_engine/ne_input/public/include",
+                "${workspaceFolder}/ne_engine/ne_math/public/include"
             ]
         }
     ],

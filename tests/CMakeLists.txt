@@ -16,7 +16,7 @@ add_subdirectory(.. ne_engine)
 
 set(SOURCES
     # "input_test.cpp"
-    # "point_square_demo.cpp"
+    "point_square_demo.cpp"
     "SpriteTesting.cpp"
 )
 
