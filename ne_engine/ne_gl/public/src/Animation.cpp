@@ -1,5 +1,8 @@
 #include "Animation.hpp"
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
+
 Animation::Animation() 
 : Sprite(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0), glm::vec2(0.0, 0.0), glm::vec2(0.0, 0.0)) {
 

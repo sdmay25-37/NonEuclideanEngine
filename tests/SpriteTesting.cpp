@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -118,8 +120,8 @@ int main() {
 
     Animation slime(position, scale, uv_min, uv_max, 2, 3, 4, 7, 1, "../res/Slime.png");
 
-    slime.initAnimation();
-    AnimationData checkInf = slime.getAnimationData();
+    // slime.initAnimation();
+    // AnimationData checkInf = slime.getAnimationData();
 
     uv_ranges.emplace_back(0.0, startRow, 1.0 / totalFrames, startRow + rowSize);    // 7 Frames
     // uv_ranges.emplace_back(0.0, 0.0, 1.0 / 24.0, 1.0);       // 24 frames
