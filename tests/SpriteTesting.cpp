@@ -11,8 +11,8 @@
 #include <chrono>
 #include <thread>
 
-// #define STB_IMAGE_IMPLEMENTATION
-// #include "stb_image.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 #include "ne_engine.hpp"
 
@@ -64,32 +64,8 @@ int main() {
 			"../shaders/sprite.frag"
 	);
 
-    // // Set up Textures
-    // unsigned int texture;
-    // glGenTextures(1, &texture);
-    // glBindTexture(GL_TEXTURE_2D, texture);
-
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-
-    // stbi_set_flip_vertically_on_load(true);
-    // int width, height, nrChannels;
-    // unsigned char *data = stbi_load("../res/Slime.png", &width, &height, &nrChannels, 0);
-    // if (data) {
-    //     GLenum format = (nrChannels == 3) ? GL_RGB : GL_RGBA;
-    //     glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-    //     glGenerateMipmap(GL_TEXTURE_2D);
-    // } else {
-    //     std::cerr << "Failed to load texture" << std::endl;
-    // }
-    // stbi_image_free(data);
-
     // std::vector <Sprite> giratinaSprites;
     // 24 Frames
-    // Width / 24
-    // Height
 
     std::srand(std::time(nullptr));
 
@@ -97,15 +73,13 @@ int main() {
     std::vector<glm::mat4> model_mats;
     std::vector<glm::vec4> uv_ranges;
     
-    float totalFrames = 33.0;
-    int animFrames = 7;
-    float startRow = 0.5;
-    float rowSize = 1.0 / 4.0;
+                                    // startRow, frameWidth, rowHeight, numFramesInSheet, numFramesInAnimation, looping
+    struct AnimationData slimeData = {0,        1.0 / 33.0,  1.0 / 4.0, 33.0,             33.0, 1};
 
     glm::vec3 position(0.0, 0.0, 0.0);
     glm::vec3 scale(0.3, 0.3, 1.0);
-    glm::vec2 uv_min(0.0, startRow);
-    glm::vec2 uv_max(1.0 / totalFrames * ((float) animFrames) , startRow + rowSize);
+    glm::vec2 uv_min(0.0, slimeData.startRow);
+    glm::vec2 uv_max(slimeData.frameWidth, slimeData.startRow + slimeData.rowHeight);
 
     glm::mat4 model_mat(1.0);
     model_mat = glm::translate(model_mat, position);
@@ -113,13 +87,13 @@ int main() {
     model_mats.push_back(model_mat);
 
     Animation slime(position, scale, uv_min, uv_max, 
-        1, 4, 3, 33, 1, "../res/Slime.png");
+        slimeData, "../res/Slime.png");
 
     slime.initAnimation();
     AnimationData checkInf = slime.getAnimationData();
 
     uv_ranges.emplace_back(0.0, slime.getAnimationData().startRow, 
-        1.0 / (float) slime.getAnimationData().totalFrames, slime.getAnimationData().startRow + (1.0 / ((float) slime.getAnimationData().totalRows)));    // 7 Frames
+        slime.getAnimationData().frameWidth, slime.getAnimationData().startRow + slime.getAnimationData().rowHeight);    // 7 Frames
     
     std::vector<Vertex> vertices = {
         Vertex {  0.5,  0.5, 0.0, 1.0, 1.0 },
@@ -208,28 +182,11 @@ int main() {
     int ctr = 0;
 
     while (!glfwWindowShouldClose(window)) {
-
-        if(input.isKeyPressed(GLFW_KEY_S)) {
-            camera_pos.y -= camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_A)) {
-            camera_pos.x -= camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_D)) {
-            camera_pos.x += camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_Q)) {
-            camera_pos.z += camera_speed;
-        }
-        if(input.isKeyPressed(GLFW_KEY_E)) {
-            camera_pos.z -= camera_speed;
-        }
-
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         uv_ranges.clear();
-        uv_ranges.emplace_back(ctr / (float) slime.getAnimationData().totalFrames, slime.getAnimationData().startRow, (ctr + 1.0) / (float) slime.getAnimationData().totalFrames, slime.getAnimationData().startRow + (1.0 / (float) slime.getAnimationData().totalRows));
+        uv_ranges.emplace_back(ctr * slime.getAnimationData().frameWidth, slime.getAnimationData().startRow, (ctr + 1.0) * (float) slime.getAnimationData().frameWidth, slime.getAnimationData().startRow + (slime.getAnimationData().rowHeight));
 
         glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
@@ -244,7 +201,7 @@ int main() {
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-        ctr = (ctr + 1) % ((int) slime.getAnimationData().animationFrames);
+        ctr = (ctr + 1) % ((int) slime.getAnimationData().numFramesInAnimation);
     }
 
 	shaders.cleanup();

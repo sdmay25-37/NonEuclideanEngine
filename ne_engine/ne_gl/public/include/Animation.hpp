@@ -12,17 +12,23 @@
 
 // Struct for storing Row information
 struct AnimationData {
-    int startRow;               // The Row the animation starts on
-    int totalRows;              // The total number of rows in the spritesheet
-    int animationFrames;        // Number of frames for a specific animation
-    int totalFrames;            // The max # of frames for an animation in the spritesheet
+    int startRow;                       // The row the animation starts on
+    float frameWidth;                   // Width of a frame in the animation
+    float rowHeight;                    // The height of the row (e.g., sheet w/ 4 rows => rowHeight = 0.25)
+    float numFramesInSheet;             // Total number of frames that can fit onto the sheet
+    float numFramesInAnimation;         // Total number of frames for the specific animation
+    int looping;
 };
 
 class Animation : public Sprite {
 public:
     Animation ();
+    // Constructor using the AnimationData struct
     Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max, 
-        int startRow, int totalRows, int numFrames, int animationFrames, int looping, const char *spritesheet);
+        struct AnimationData animationData, const char *spritesheet);
+    // Constructor by parameter
+    Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max, 
+        int startRow, float frameWidth, float rowHeight, float numFramesInSheet, float numFramesInAnimation, int looping, const char *spritesheet);
 
     void initAnimation();
 
@@ -31,11 +37,11 @@ public:
     struct AnimationData getAnimationData() { return _animData; };
 
     // Setters
-    void setTextureId(unsigned int newTexture);
+    void setTextureId(unsigned int newTexture) { _textureId = newTexture; };
+    struct AnimationData setAnimationData(struct AnimationData newData) { _animData = newData; };
 
 private:
     struct AnimationData _animData;     // Row information (startRow, endRow, totalNums of rows)
-    int _loop;               // If animation loops
     unsigned int _textureId;   // Texture Buffer ID
     const char *_spritesheet;
     
