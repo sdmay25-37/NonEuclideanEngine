@@ -1,5 +1,3 @@
-#define STB_IMAGE_IMPLEMENTATION
-
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -12,6 +10,9 @@
 #include <ctime>
 #include <chrono>
 #include <thread>
+
+// #define STB_IMAGE_IMPLEMENTATION
+// #include "stb_image.h"
 
 #include "ne_engine.hpp"
 
@@ -63,15 +64,15 @@ int main() {
 			"../shaders/sprite.frag"
 	);
 
-    // Set up Textures
-    unsigned int texture;
-    glGenTextures(1, &texture);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    // // Set up Textures
+    // unsigned int texture;
+    // glGenTextures(1, &texture);
+    // glBindTexture(GL_TEXTURE_2D, texture);
 
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
     // stbi_set_flip_vertically_on_load(true);
     // int width, height, nrChannels;
@@ -92,13 +93,6 @@ int main() {
 
     std::srand(std::time(nullptr));
 
-    // float uv_width = 1.0;
-    // float uv_height = 1.0;
-
-    // int map_width = 2;
-    // int map_height = map_width * ASPECT_RATIO;
-
-    // float rect_size = 2.0 / (map_width - 1);
 
     std::vector<glm::mat4> model_mats;
     std::vector<glm::vec4> uv_ranges;
@@ -118,62 +112,15 @@ int main() {
     model_mat = glm::scale(model_mat, scale);
     model_mats.push_back(model_mat);
 
-    Animation slime(position, scale, uv_min, uv_max, 2, 3, 4, 7, 1, "../res/Slime.png");
+    Animation slime(position, scale, uv_min, uv_max, 
+        1, 4, 3, 33, 1, "../res/Slime.png");
 
-    // slime.initAnimation();
-    // AnimationData checkInf = slime.getAnimationData();
+    slime.initAnimation();
+    AnimationData checkInf = slime.getAnimationData();
 
-    uv_ranges.emplace_back(0.0, startRow, 1.0 / totalFrames, startRow + rowSize);    // 7 Frames
-    // uv_ranges.emplace_back(0.0, 0.0, 1.0 / 24.0, 1.0);       // 24 frames
-
-    /*
-    std::srand(std::time(nullptr));
-
-    int tile_width = width;
-    int tile_height = height / 2;
-
-    float uv_width = 1.0 / tile_width;
-    float uv_height = 1.0 / tile_height;
-
-    int map_width = 20;
-    int map_height = map_width * ASPECT_RATIO;
-
-    float rect_size = 2.0 / (map_width - 1);
-
-    std::vector<glm::mat4> model_mats;
-    std::vector<glm::vec4> uv_ranges;
-
-    std::vector<Sprite> sprites;
-    for(int i = 0; i < map_width * map_height; i++) {
-
-        int x = i % map_width;
-        int y = i / map_width;
-
-        float rect_x = x * rect_size - 1.0;
-        float rect_y = y * rect_size - 1.0;
-
-        int tile_x = rand() % tile_width;
-        int tile_y = rand() % tile_height;
-
-        float u = tile_x * uv_width;
-        float v = tile_y * uv_height;
-
-        glm::vec3 position(rect_x, rect_y, 0.0);
-        glm::vec3 scale(rect_size, rect_size, 1.0);
-        glm::vec2 uv_min(u, v);
-        glm::vec2 uv_max(u + uv_width, v + uv_height);
-
-        glm::mat4 model_mat(1.0);
-        model_mat = glm::translate(model_mat, position);
-        model_mat = glm::scale(model_mat, scale);
-        model_mats.push_back(model_mat);
-
-        uv_ranges.emplace_back(uv_min.x, uv_min.y, uv_max.x, uv_max.y);
-
-        sprites.emplace_back(position, scale, uv_min, uv_max);
-    }
-    */
-
+    uv_ranges.emplace_back(0.0, slime.getAnimationData().startRow, 
+        1.0 / (float) slime.getAnimationData().totalFrames, slime.getAnimationData().startRow + (1.0 / ((float) slime.getAnimationData().totalRows)));    // 7 Frames
+    
     std::vector<Vertex> vertices = {
         Vertex {  0.5,  0.5, 0.0, 1.0, 1.0 },
         Vertex {  0.5, -0.5, 0.0, 1.0, 0.0 },
@@ -240,7 +187,7 @@ int main() {
     shaders.bind();
     shaders.setUniform1i("texture_atlas", 0);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
+    glBindTexture(GL_TEXTURE_2D, slime.getTextureId());
 
     int count = 0;
 
@@ -282,7 +229,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         uv_ranges.clear();
-        uv_ranges.emplace_back(ctr / totalFrames, startRow, (ctr + 1.0) / totalFrames, startRow + rowSize);
+        uv_ranges.emplace_back(ctr / (float) slime.getAnimationData().totalFrames, slime.getAnimationData().startRow, (ctr + 1.0) / (float) slime.getAnimationData().totalFrames, slime.getAnimationData().startRow + (1.0 / (float) slime.getAnimationData().totalRows));
 
         glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
@@ -297,7 +244,7 @@ int main() {
 
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-        ctr = (ctr + 1) % ((int) animFrames);
+        ctr = (ctr + 1) % ((int) slime.getAnimationData().animationFrames);
     }
 
 	shaders.cleanup();

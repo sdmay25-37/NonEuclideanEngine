@@ -8,12 +8,12 @@ Animation::Animation()
 
 }
    
-Animation::Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max, int startRow, int totalRows, int numFrames, int animationFrames, int looping, const char *spritesheet) 
-    : Sprite (position, scale, uv_min, uv_max), _animData({startRow, totalRows, numFrames, animationFrames}), _loop(looping), _spritesheet(spritesheet) {
+Animation::Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max, int startRow, int totalRows, int animationFrames, int totalFrames, int looping, const char *spritesheet) 
+    : Sprite (position, scale, uv_min, uv_max), _animData({startRow, totalRows, animationFrames, totalFrames}), _loop(looping), _spritesheet(spritesheet) {
 
 }
 
-// Figure out if i'm supposed to set up the Texture stuff in this part.    
+// Set up the Texture Parameters for the Spritesheet & load spritesheet image from res/ directory    
 void Animation::initAnimation() {
     // Set up Textures
     glGenTextures(1, &_textureId);

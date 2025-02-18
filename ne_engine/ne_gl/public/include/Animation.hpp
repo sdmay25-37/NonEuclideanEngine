@@ -12,10 +12,10 @@
 
 // Struct for storing Row information
 struct AnimationData {
-    int startRow;
-    int totalRows;
-    int numFrames;
-    int animationFrames;
+    int startRow;               // The Row the animation starts on
+    int totalRows;              // The total number of rows in the spritesheet
+    int animationFrames;        // Number of frames for a specific animation
+    int totalFrames;            // The max # of frames for an animation in the spritesheet
 };
 
 class Animation : public Sprite {
