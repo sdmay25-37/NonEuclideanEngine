@@ -40,7 +40,7 @@ public:
 
     // Setters
     void setTextureId(unsigned int newTexture) { _textureId = newTexture; };
-    struct AnimationData setAnimationData(struct AnimationData newData) { _animData = newData; };
+    void setAnimationData(struct AnimationData newData) { _animData = newData; };
 
 private:
     struct AnimationData _animData;     // Row information (startRow, endRow, totalNums of rows)
