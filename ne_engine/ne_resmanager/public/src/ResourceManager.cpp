@@ -10,5 +10,5 @@ ResourceManager::ResourceManager () {
 
 void ResourceManager::initResourceManager() {
     // Initialize Private Variables
-    Input _input();
+    Input _input;
 }

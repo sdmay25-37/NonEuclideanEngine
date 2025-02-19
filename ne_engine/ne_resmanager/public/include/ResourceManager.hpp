@@ -16,7 +16,6 @@ Input
     JSONLoader
 ---------------------------------------------
 
-
 */
 
 #ifndef RESOURCEMANAGER_HPP

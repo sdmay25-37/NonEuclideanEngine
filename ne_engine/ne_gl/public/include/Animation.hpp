@@ -3,8 +3,10 @@
 //  2/15/25
 //
 
+#ifndef ANIMATION_HPP
+#define ANIMATION_HPP
+
 #include <glm/glm.hpp>
-#include <glad/glad.h>
 #include <string>
 #include <iostream>
 
@@ -47,4 +49,4 @@ private:
     
 };
 
-// #endif // ANIMATION
+#endif // ANIMATION
