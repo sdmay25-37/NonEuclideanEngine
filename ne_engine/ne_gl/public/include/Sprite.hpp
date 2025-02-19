@@ -4,7 +4,7 @@
 
 #ifndef SPRITE_HPP
 #define SPRITE_HPP
-#include "glm/vec2.hpp"
+#include <glm/vec2.hpp>
 #include "glm/vec3.hpp"
 
 

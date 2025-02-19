@@ -1,15 +1,19 @@
 add_library(
     ne_engine STATIC
 
+    # ne_gl
     "ne_gl/public/src/Sprite.cpp"
     "ne_gl/public/src/ShaderProgram.cpp"
     "ne_gl/public/src/Engine.cpp"
     "ne_gl/public/src/Triangle.cpp"
     "ne_gl/public/src/GLFWContext.cpp"
+    "ne_gl/public/src/Animation.cpp"
 
+    # ne_input
     "ne_input/public/src/Input.cpp"
     "ne_input/public/src/JSONLoader.cpp"
 
+    # ne_math
     "ne_math/public/src/HypRotate.cpp"
 )
 
