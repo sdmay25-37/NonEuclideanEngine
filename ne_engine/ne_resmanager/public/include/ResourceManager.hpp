@@ -22,14 +22,17 @@ Input
 #define RESOURCEMANAGER_HPP
 
 #include "Input.hpp"
+#include "JSONLoader.hpp"
 #include "Sprite.hpp"
 #include "Animation.hpp"
 
 class ResourceManager {
 public:
     ResourceManager();
+    ResourceManager(Input input, GLFWwindow *window);
 
-    void initResourceManager();
+    void initResourceManager(GLFWwindow *window, const char* bindings);
+    void outputBindings();
 
     // Getters
     Input getInput() { return _input; };
@@ -39,6 +42,8 @@ public:
 
 private:
     Input _input;
+    JSONLoader _loader;
+    GLFWwindow *_window;
 
 };
 

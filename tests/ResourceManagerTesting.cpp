@@ -12,6 +12,7 @@
 #include <thread>
 
 #include "ne_engine.hpp"
+#include "Triangle.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
 
@@ -25,191 +26,91 @@ struct Vertex {
     float u, v;
 };
 
-float rand_float() {
-    return (float)rand() / RAND_MAX;
-}
-
 int main() {
-    glfwInit();
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-#ifdef __APPLE__
-    glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
-
-    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", nullptr, nullptr);
-    if (window == nullptr) {
-        std::cout << "Failed to create GLFW window" << std::endl;
-        glfwTerminate();
-        return -1;
+    // GLFW Init
+    if (!glfwInit()) {
+        std::cout << "GLFW Failed to initialize!" << std::endl;
     }
+
+    // Create Window
+    GLFWwindow* window = glfwCreateWindow(SCREEN_HEIGHT, SCREEN_WIDTH, "What tf is going on", NULL, NULL);
+    // If fail
+    if (!window) {
+        std::cout << "WHAT DID YOU DO" << std::endl;
+    }
+
+    // Before using OpenGL, must make the window the current opengl context
     glfwMakeContextCurrent(window);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-        std::cout << "Failed to initialize GLAD" << std::endl;
-        return -1;
-    }
+    gladLoadGL();
 
-    Input input(window);
+    // Set up a dummy triangle for triangling (testing)
+    std::vector<Triangle::Vertex> vertArr;
+    Triangle::Vertex vert0 = {-0.05f, -0.05f, 0.0f, 1.0f, 0.0f, 0.0f};
+    Triangle::Vertex vert1 = {0.0f, 0.05f, 0.0f, 0.0f, 1.0f, 0.0f};
+    Triangle::Vertex vert2 = {0.05f, -0.05f, 0.0f, 0.0f, 0.0f, 1.0f};
 
-    // build and compile our shader program
-    ShaderProgram shaders(
-			"../shaders/sprite.vert",
-			"../shaders/sprite.frag"
-	);
+    vertArr.push_back(vert0);
+    vertArr.push_back(vert1);
+    vertArr.push_back(vert2);
 
-    // std::vector <Sprite> giratinaSprites;
-    // 24 Frames
+    Triangle newTriangle(vertArr, 0.05f);
+    Input i;
+    ResourceManager resManager(i, window);
 
-    std::srand(std::time(nullptr));
+    resManager.initResourceManager(window,  "../tests/bindings/example_bindings.json");
+    resManager.getInput().bindKeyPress("MOVE_UP", std::bind(&Triangle::moveUp, &newTriangle));
+    resManager.getInput().bindKeyPress("MOVE_DOWN", std::bind(&Triangle::moveDown, &newTriangle));
+    resManager.getInput().bindKeyPress("MOVE_LEFT", std::bind(&Triangle::moveLeft, &newTriangle));
+    resManager.getInput().bindKeyPress("MOVE_RIGHT", std::bind(&Triangle::moveRight, &newTriangle));
 
+    ShaderProgram shaders (
+        "../shaders/color.vert",
+        "../shaders/color.frag"
+    );
 
-    std::vector<glm::mat4> model_mats;
-    std::vector<glm::vec4> uv_ranges;
-    
-                                    // startRow, frameWidth, rowHeight, numFramesInSheet, numFramesInAnimation, looping
-    struct AnimationData slimeData = {0,        1.0 / 33.0,  1.0 / 4.0, 33.0,             33.0, 1};
+    unsigned vertBuff;
+    glGenBuffers(1, &vertBuff);
+    glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
+    // Assign buffer data
+    glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), newTriangle.getVerts().data(), GL_STATIC_DRAW);
 
-    glm::vec3 position(0.0, 0.0, 0.0);
-    glm::vec3 scale(0.3, 0.3, 1.0);
-    glm::vec2 uv_min(0.0, slimeData.startRow);
-    glm::vec2 uv_max(slimeData.frameWidth, slimeData.startRow + slimeData.rowHeight);
+    GLuint vao = 0;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
+    glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
 
-    glm::mat4 model_mat(1.0);
-    model_mat = glm::translate(model_mat, position);
-    model_mat = glm::scale(model_mat, scale);
-    model_mats.push_back(model_mat);
-
-    Animation slime(position, scale, uv_min, uv_max, 
-        slimeData, "../res/Slime.png");
-
-    slime.initAnimation();
-    AnimationData checkInf = slime.getAnimationData();
-
-    uv_ranges.emplace_back(0.0, slime.getAnimationData().startRow, 
-        slime.getAnimationData().frameWidth, slime.getAnimationData().startRow + slime.getAnimationData().rowHeight);    // 7 Frames
-    
-    std::vector<Vertex> vertices = {
-        Vertex {  0.5,  0.5, 0.0, 1.0, 1.0 },
-        Vertex {  0.5, -0.5, 0.0, 1.0, 0.0 },
-        Vertex { -0.5, -0.5, 0.0, 0.0, 0.0 },
-        Vertex { -0.5,  0.5, 0.0, 0.0, 1.0 }
-    };
-
-    std::vector<unsigned int> indices = {
-        0, 1, 3,
-        1, 2, 3
-    };
-
-    unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-    glGenBuffers(1, &UV_VBO);
-    glGenBuffers(1, &MODEL_MAT_VBO);
-    glGenBuffers(1, &EBO);
-
-    glBindVertexArray(VAO);
-
-    // position attribute
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid*) 0);
     glEnableVertexAttribArray(0);
 
-    // vertex texture coords attribute
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*) (4 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    // sprite texture coords attribute
-
-    glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
-
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(2);
-    glVertexAttribDivisor(2, 1);
-
-    // model matrix attribute
-
-    glBindBuffer(GL_ARRAY_BUFFER, MODEL_MAT_VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_mats.size(), model_mats.data(), GL_DYNAMIC_DRAW);
-
-    for(int i = 0; i < 4; i++) {
-        glEnableVertexAttribArray(3 + i);
-        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4) * i));
-        glVertexAttribDivisor(3 + i, 1);
-    }
-
-    // index buffer
-
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
-
-    glBindVertexArray(VAO);
-
-    shaders.bind();
-    shaders.setUniform1i("texture_atlas", 0);
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, slime.getTextureId());
-
-    int count = 0;
-
-    glm::vec3 camera_pos(0.0, 0.0, 1.0);
-    glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
-    float camera_speed = 0.05f;
-
-    float fov = glm::radians(45.0f);
-    float nearPlane = 0.1f;
-    float farPlane = 100.0f;
-
-    glm::mat4 proj_mat = glm::perspective(fov, ASPECT_RATIO, nearPlane, farPlane);
-
-    input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]() {
+    resManager.getInput().bindKeyPress("QUIT", [&window]() {
         glfwSetWindowShouldClose(window, true);
     });
 
-    int ctr = 0;
+    bool set = false;
 
     while (!glfwWindowShouldClose(window)) {
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+        glfwWaitEvents();
+        glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
+        glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), newTriangle.getVerts().data(), GL_STATIC_DRAW);
+
         glClear(GL_COLOR_BUFFER_BIT);
-
-        uv_ranges.clear();
-        uv_ranges.emplace_back(ctr * slime.getAnimationData().frameWidth, slime.getAnimationData().startRow, (ctr + 1.0) * (float) slime.getAnimationData().frameWidth, slime.getAnimationData().startRow + (slime.getAnimationData().rowHeight));
-
-        glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
-
-        glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
-        shaders.setUniformMat4("proj_view_mat", proj_view_mat);
-
-        glDrawElementsInstanced(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr, 1);
+        glBindVertexArray(vao);
+        // Use for non-indexed buffers
+        glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
-        glfwPollEvents();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
-
-        ctr = (ctr + 1) % ((int) slime.getAnimationData().numFramesInAnimation);
     }
 
-	shaders.cleanup();
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
-    glDeleteBuffers(1, &UV_VBO);
-    glDeleteBuffers(1, &MODEL_MAT_VBO);
-    glDeleteBuffers(1, &EBO);
+    resManager.outputBindings();
 
     glfwTerminate();
-    return 0;
+   
 }
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
