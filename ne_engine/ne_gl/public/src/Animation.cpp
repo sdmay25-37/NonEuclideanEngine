@@ -1,25 +1,26 @@
 #include "Animation.hpp"
 
-#define STB_IMAGE_IMPLEMENTATION
+#include <glad/glad.h>
+
 #include "stb_image.h"
 
-Animation::Animation() 
+Animation::Animation()
 : Sprite(glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 0.0, 0.0), glm::vec2(0.0, 0.0), glm::vec2(0.0, 0.0)) {
 
 }
-   
-Animation::Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max, struct AnimationData animationData, const char *spritesheet) 
+
+Animation::Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max, struct AnimationData animationData, const char *spritesheet)
     : Sprite (position, scale, uv_min, uv_max), _animData(animationData), _spritesheet(spritesheet) {
 
 }
 
-Animation::Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max, 
-    int startRow, float frameWidth, float rowHeight, float numFramesInSheet, float numFramesInAnimation, int looping, const char *spritesheet) 
+Animation::Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max,
+    int startRow, float frameWidth, float rowHeight, float numFramesInSheet, float numFramesInAnimation, int looping, const char *spritesheet)
     : Sprite (position, scale, uv_min, uv_max), _animData({startRow, frameWidth, rowHeight, numFramesInSheet, numFramesInAnimation, looping}), _spritesheet(spritesheet) {
 
 }
 
-// Set up the Texture Parameters for the Spritesheet & load spritesheet image from res/ directory    
+// Set up the Texture Parameters for the Spritesheet & load spritesheet image from res/ directory
 void Animation::initAnimation() {
     // Set up Textures
     glGenTextures(1, &_textureId);
