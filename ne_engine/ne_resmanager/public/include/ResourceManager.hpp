@@ -25,14 +25,12 @@ Input
 
 #include <GLFW/glfw3.h>
 
-#include "stb_image.h"
-
 #include "JSONLoader.hpp"
 #include "ShaderProgram.hpp"
 
 struct FileInfo {
     int numberOfReferences;         // Keep track of all the references to the given resource
-    unsigned char* spritesheet;
+    unsigned char* spritesheet;     // Spritesheet image that has been loaded
 };
 
 class ResourceManager {
@@ -43,14 +41,13 @@ public:
     void initResourceManager();
     void outputBindings(std::vector <std::vector <std::pair <std::string, int>>> bindings);
 
-    int retireResource(std::string filepath);
+    void removeReference(const char* filepath);
+    void retireResource(const char* filepath);
 
     // Returns a FileDescriptor from a string.  If the resource hasn't been opened, then it needs to open the file
     unsigned char* getResource(const char* filepath);
 
-    // Getters
-
-    // Setters
+    void retireManager();
 
 private:
     JSONLoader _loader;

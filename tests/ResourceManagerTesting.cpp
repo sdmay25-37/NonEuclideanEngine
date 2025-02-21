@@ -56,13 +56,10 @@ int main() {
 
     Triangle newTriangle(vertArr, 0.05f);
     Input i;
-    ResourceManager resManager(i, window);
+    ResourceManager resManager;
 
-    resManager.initResourceManager(window,  "../tests/bindings/example_bindings.json");
-    resManager.getInput().bindKeyPress("MOVE_UP", std::bind(&Triangle::moveUp, &newTriangle));
-    resManager.getInput().bindKeyPress("MOVE_DOWN", std::bind(&Triangle::moveDown, &newTriangle));
-    resManager.getInput().bindKeyPress("MOVE_LEFT", std::bind(&Triangle::moveLeft, &newTriangle));
-    resManager.getInput().bindKeyPress("MOVE_RIGHT", std::bind(&Triangle::moveRight, &newTriangle));
+    Input input(window);
+
 
     ShaderProgram shaders (
         "../shaders/color.vert",
@@ -86,7 +83,7 @@ int main() {
     glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*) (4 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    resManager.getInput().bindKeyPress("QUIT", [&window]() {
+    input.bindKeyPress("QUIT", [&window]() {
         glfwSetWindowShouldClose(window, true);
     });
 
@@ -107,7 +104,6 @@ int main() {
 
     }
 
-    resManager.outputBindings();
 
     glfwTerminate();
    
