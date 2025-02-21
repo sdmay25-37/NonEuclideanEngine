@@ -36,8 +36,6 @@ foreach(SOURCE ${SOURCES})
         "-g"
     )
 
-    target_compile_definitions(${EXECUTABLE} PUBLIC STB_IMAGE_IMPLEMENTATION)
-
     target_link_libraries(${EXECUTABLE} ne_engine)
 
 endforeach(SOURCE ${SOURCES})
