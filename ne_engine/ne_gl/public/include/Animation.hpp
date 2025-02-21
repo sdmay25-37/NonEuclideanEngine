@@ -12,6 +12,8 @@
 
 #include "Sprite.hpp"
 
+#include "stb_image.h"
+
 // Struct for storing Row information
 struct AnimationData {
     int startRow;                       // The row the animation starts on
@@ -26,10 +28,10 @@ class Animation : public Sprite {
 public:
     Animation ();
     // Constructor using the AnimationData struct
-    Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max, 
+    Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max,
         struct AnimationData animationData, const char *spritesheet);
     // Constructor by parameter
-    Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max, 
+    Animation (glm::vec3 position, glm::vec3 scale, glm::vec2 uv_min, glm::vec2 uv_max,
         int startRow, float frameWidth, float rowHeight, float numFramesInSheet, float numFramesInAnimation, int looping, const char *spritesheet);
 
     void initAnimation();
@@ -46,7 +48,7 @@ private:
     struct AnimationData _animData;     // Row information (startRow, endRow, totalNums of rows)
     unsigned int _textureId;   // Texture Buffer ID
     const char *_spritesheet;
-    
+
 };
 
 #endif // ANIMATION_HPP
