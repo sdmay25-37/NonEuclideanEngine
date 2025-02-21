@@ -85,5 +85,5 @@ unsigned char* loadTexture(const char* filepath) {
 }
 
 void freeSheets(std::unordered_map <const char*, FileInfo> fileDirectory, const char* filepath) {
-    free(&fileDirectory.find(filepath)->second);
+    free(&(fileDirectory.find(filepath)->second));
 }

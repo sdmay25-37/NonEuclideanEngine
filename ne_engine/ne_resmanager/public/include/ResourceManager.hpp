@@ -3,24 +3,8 @@
 //  2/18/25
 //
 
-/*
-
-Resource Manager Scope
----------------------------------------------
-ShaderProgram
-Sprite
-    Animations
-ECS
-Render Subsystem
-Input
-    JSONLoader
----------------------------------------------
-
-*/
-
 #ifndef RESOURCEMANAGER_HPP
 #define RESOURCEMANAGER_HPP
-
 
 #include <GLFW/glfw3.h>
 #include "stb_image.h"
