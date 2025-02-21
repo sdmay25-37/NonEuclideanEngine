@@ -37,7 +37,7 @@ public:
 
 private:
     JSONLoader _loader;
-    std::unordered_map <const char*, FileInfo> _fileDirectory;
+    std::unordered_map <const char*, FileInfo*> _fileDirectory;
 
 };
 

@@ -5,7 +5,7 @@
 
 #include "ResourceManager.hpp"
 
-void freeSheets(std::unordered_map <const char*, FileInfo> fileDirectory, const char* filepath);
+void freeSheets(std::unordered_map <const char*, FileInfo*> &fileDirectory, const char* filepath);
 unsigned char* loadTexture(const char* filepath);
 
 ResourceManager::ResourceManager () {
@@ -27,7 +27,7 @@ void ResourceManager::outputBindings(std::vector <std::vector <std::pair <std::s
 
 // Remove a reference to a File spritesheet
 void ResourceManager::removeReference(const char* filepath) {
-    _fileDirectory.find(filepath)->second.numberOfReferences--;
+    _fileDirectory.find(filepath)->second->numberOfReferences--;
 }
 
 // Retire a resource => Free the FileInfo struct that we previously malloc'd
@@ -50,17 +50,17 @@ unsigned char* ResourceManager::getResource(const char* filepath) {
             return __null;
         }
         // Allocate space for the FileInfo struct to store the data
-        FileInfo* newFile = (FileInfo*) malloc(sizeof(int) + sizeof(texture));
+        FileInfo* newFile = new FileInfo;
         newFile->numberOfReferences = 1;
         newFile->spritesheet = texture;
         
         // Put it into our directory
-        _fileDirectory[filepath] = *newFile;
+        _fileDirectory[filepath] = newFile;
         return texture;
     } else {
         // Exists => Increase the numberOfReferences and return
-        check->second.numberOfReferences++;
-        return check->second.spritesheet;
+        check->second->numberOfReferences++;
+        return check->second->spritesheet;
     }
     // Fail
     return __null;
@@ -84,6 +84,8 @@ unsigned char* loadTexture(const char* filepath) {
     return data;
 }
 
-void freeSheets(std::unordered_map <const char*, FileInfo> fileDirectory, const char* filepath) {
-    free(&(fileDirectory.find(filepath)->second));
+void freeSheets(std::unordered_map <const char*, FileInfo*> &fileDirectory, const char* filepath) {
+    auto it = fileDirectory.find(filepath);
+    delete it->second;
+    fileDirectory.erase(filepath);
 }
