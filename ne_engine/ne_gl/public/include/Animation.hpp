@@ -49,4 +49,4 @@ private:
     
 };
 
-#endif // ANIMATION
+#endif // ANIMATION_HPP

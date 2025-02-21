@@ -21,9 +21,11 @@ Input
 #ifndef RESOURCEMANAGER_HPP
 #define RESOURCEMANAGER_HPP
 
-#include <iostream>
 
 #include <GLFW/glfw3.h>
+#include "stb_image.h"
+
+#include <iostream>
 
 #include "JSONLoader.hpp"
 #include "ShaderProgram.hpp"

@@ -5,8 +5,6 @@
 
 #include "ResourceManager.hpp"
 
-#include "stb_image.h"
-
 void freeSheets(std::unordered_map <const char*, FileInfo> fileDirectory, const char* filepath);
 unsigned char* loadTexture(const char* filepath);
 

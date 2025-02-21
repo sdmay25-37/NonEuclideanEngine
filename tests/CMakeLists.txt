@@ -23,7 +23,7 @@ set(SOURCES
 
 set(VS_DEBUGGER_WORKING_DIRECTORY "..")
 
-foreach(SOURCE ${SOURCES})  
+foreach(SOURCE ${SOURCES})
 
     get_filename_component(SOURCE_NAME ${SOURCE} NAME_WE)
 
@@ -36,6 +36,8 @@ foreach(SOURCE ${SOURCES})
         "-O0"
         "-g"
     )
+
+    target_compile_definitions(${EXECUTABLE} PUBLIC STB_IMAGE_IMPLEMENTATION)
 
     target_link_libraries(${EXECUTABLE} ne_engine)
 

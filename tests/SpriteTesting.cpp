@@ -69,7 +69,7 @@ int main() {
 
     std::vector<glm::mat4> model_mats;
     std::vector<glm::vec4> uv_ranges;
-    
+
                                     // startRow, frameWidth, rowHeight, numFramesInSheet, numFramesInAnimation, looping
     struct AnimationData slimeData = {0,        1.0 / 33.0,  1.0 / 4.0, 33.0,             33.0, 1};
 
@@ -83,15 +83,15 @@ int main() {
     model_mat = glm::scale(model_mat, scale);
     model_mats.push_back(model_mat);
 
-    Animation slime(position, scale, uv_min, uv_max, 
+    Animation slime(position, scale, uv_min, uv_max,
         slimeData, "../res/Slime.png");
 
     slime.initAnimation();
     AnimationData checkInf = slime.getAnimationData();
 
-    uv_ranges.emplace_back(0.0, slime.getAnimationData().startRow, 
+    uv_ranges.emplace_back(0.0, slime.getAnimationData().startRow,
         slime.getAnimationData().frameWidth, slime.getAnimationData().startRow + slime.getAnimationData().rowHeight);    // 7 Frames
-    
+
     std::vector<Vertex> vertices = {
         Vertex {  0.5,  0.5, 0.0, 1.0, 1.0 },
         Vertex {  0.5, -0.5, 0.0, 1.0, 0.0 },
