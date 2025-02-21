@@ -56,9 +56,36 @@ int main() {
 
     Triangle newTriangle(vertArr, 0.05f);
     Input i;
-    ResourceManager resManager;
+
+    //
+    //  Resource Manager Testing Portion
+    //
+    ResourceManager resManager; //("../tests/bindings/example_bindings.json");
+    resManager.setLoaderPath("../tests/bindings/example_bindings.json");
+
+    unsigned char* slimeArray = resManager.getResource("../res/Slime.png");
+    unsigned char* newSlimeArray = resManager.getResource("../res/Slime.png");
+
+    unsigned char* flip = resManager.getResource("../res/coinflip.png");
+
+    resManager.removeReference("../res/Slime.png");
+    resManager.removeReference("../res/Slime.png");
+    resManager.removeReference("../res/coinflip.png");
+    resManager.removeReference("../res/Slime.png");
+
+    // End Testing
 
     Input input(window);
+    
+    auto bind = resManager.getBindingsArray();
+
+    // Bind a ton of functions to the action string
+    input.bindKeyPress("MOVE_LEFT", std::bind(&Triangle::moveLeft, &newTriangle));
+    input.bindKeyPress("MOVE_RIGHT", std::bind(&Triangle::moveRight, &newTriangle));
+    input.bindKeyPress("MOVE_UP", std::bind(&Triangle::moveUp, &newTriangle));
+    input.bindKeyPress("MOVE_DOWN", std::bind(&Triangle::moveDown, &newTriangle));
+
+    input.bindContexts(bind);
 
 
     ShaderProgram shaders (
@@ -103,7 +130,6 @@ int main() {
         glfwSwapBuffers(window);
 
     }
-
 
     glfwTerminate();
    

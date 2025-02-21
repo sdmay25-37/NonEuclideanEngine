@@ -29,6 +29,8 @@ public:
 
     std::string getFilepath() { return _filepath; };
 
+    void setFilepath(std::string filepath) { _filepath = filepath; };
+
 private:
 	std::unordered_map <int, std::string> _enumToString;
     std::unordered_map <std::string, int> _stringToEnum;
