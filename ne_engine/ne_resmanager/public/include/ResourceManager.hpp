@@ -21,29 +21,40 @@ Input
 #ifndef RESOURCEMANAGER_HPP
 #define RESOURCEMANAGER_HPP
 
-#include "Input.hpp"
+#include <iostream>
+
+#include <GLFW/glfw3.h>
+
+#include "stb_image.h"
+
 #include "JSONLoader.hpp"
-#include "Sprite.hpp"
-#include "Animation.hpp"
+#include "ShaderProgram.hpp"
+
+struct FileInfo {
+    int numberOfReferences;         // Keep track of all the references to the given resource
+    unsigned char* spritesheet;
+};
 
 class ResourceManager {
 public:
     ResourceManager();
-    ResourceManager(Input input, GLFWwindow *window);
+    ResourceManager(std::string bindingsFilePath);
 
-    void initResourceManager(GLFWwindow *window, const char* bindings);
-    void outputBindings();
+    void initResourceManager();
+    void outputBindings(std::vector <std::vector <std::pair <std::string, int>>> bindings);
+
+    int retireResource(std::string filepath);
+
+    // Returns a FileDescriptor from a string.  If the resource hasn't been opened, then it needs to open the file
+    unsigned char* getResource(const char* filepath);
 
     // Getters
-    Input getInput() { return _input; };
 
     // Setters
-    void setInput(Input newInput) { _input = newInput; };
 
 private:
-    Input _input;
     JSONLoader _loader;
-    GLFWwindow *_window;
+    std::unordered_map <const char*, FileInfo> _fileDirectory;
 
 };
 

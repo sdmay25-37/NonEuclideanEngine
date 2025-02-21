@@ -27,6 +27,8 @@ public:
     void outputBindings(std::vector <std::pair <std::string, int>> bindings);
     void outputBindingsArray(std::vector <std::vector <std::pair <std::string, int>>> bindings);
 
+    std::string getFilepath() { return _filepath; };
+
 private:
 	std::unordered_map <int, std::string> _enumToString;
     std::unordered_map <std::string, int> _stringToEnum;

@@ -80,7 +80,8 @@
         "typeinfo": "cpp",
         "variant": "cpp",
         "complex": "cpp",
-        "hash_map": "cpp"
+        "hash_map": "cpp",
+        "expected": "cpp"
     },
     "vim.useSystemClipboard": true,
     "vim.handleKeys": {
