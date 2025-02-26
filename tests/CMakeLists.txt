@@ -15,8 +15,9 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(.. ne_engine)
 
 set(SOURCES
-    "input_test.cpp"
+    # "input_test.cpp"
     "point_square_demo.cpp"
+    "SpriteTesting.cpp"
 )
 
 set(VS_DEBUGGER_WORKING_DIRECTORY "..")

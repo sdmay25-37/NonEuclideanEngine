@@ -72,7 +72,7 @@ int main() {
     glEnableVertexAttribArray(1);
 
     Input charInput(window);
-    CharWrapper wrapper(triangle);
+    // CharWrapper wrapper(triangle);
     JSONLoader loading("../tests/bindings/example_bindings.json");
 
     // Process a json array of bindings that has multiple contexts
@@ -84,10 +84,10 @@ int main() {
     });
 
     // Bind a ton of functions to the action string
-    charInput.bindKeyPress("MOVE_LEFT", std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
-    charInput.bindKeyPress("MOVE_RIGHT", std::bind(&CharWrapper::moveRightWrapper, &wrapper));
-    charInput.bindKeyPress("MOVE_UP", std::bind(&CharWrapper::moveUpWrapper, &wrapper));
-    charInput.bindKeyPress("MOVE_DOWN", std::bind(&CharWrapper::moveDownWrapper, &wrapper));
+    // charInput.bindKeyPress("MOVE_LEFT", std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
+    // charInput.bindKeyPress("MOVE_RIGHT", std::bind(&CharWrapper::moveRightWrapper, &wrapper));
+    // charInput.bindKeyPress("MOVE_UP", std::bind(&CharWrapper::moveUpWrapper, &wrapper));
+    // charInput.bindKeyPress("MOVE_DOWN", std::bind(&CharWrapper::moveDownWrapper, &wrapper));
     charInput.bindKeyPress("SWITCH", std::bind(&Input::switchBindings, &charInput));
 
     // Bind keys to the action strings through a list of list of pairs <string -> key>

@@ -5,18 +5,40 @@
             "defines": [],
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json"
+            "compileCommands": [
+                "${workspaceFolder}/build/compile_commands.json"
+            ],
+            "includePath": [
+                "${default}",
+                "${workspaceFolder}/lib/glm",
+                "${workspaceFolder}/lib/glad/include",
+                "${workspaceFolder}/lib/eigen",
+                "${workspaceFolder}/ne_engine/ne_gl/public/include",
+                "${workspaceFolder}/lib/stb_image",
+                "${workspaceFolder}/lib/json/include",
+                "${workspaceFolder}/ne_engine/include"
+            ]
         },
         {
             "name": "Win32",
             "defines": [],
-            "compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe", // Add this if done in windows
+            "compilerPath": "C:/msys64/mingw64/bin/g++.exe",
             "cStandard": "c17",
             "cppStandard": "c++17",
-            "intelliSenseMode": "windows-gcc-x64", // Add this if done in windows
-            "compileCommands": "${workspaceFolder}/build/compile_commands.json",
+            "intelliSenseMode": "windows-gcc-x64",
+            "compileCommands": [
+                "${workspaceFolder}/build/compile_commands.json"
+            ],
             "includePath": [
-                "${workspaceFolder}/lib/glad/include/glad"
+                "${workspaceFolder}/lib/glad/include/glad",
+                "${workspaceFolder}/lib/glfw/include",
+                "${workspaceFolder}/lib/glad/include",
+                "${workspaceFolder}/ne_engine/include",
+                "${workspaceFolder}/lib/glm",
+                "${workspaceFolder}/ne_engine/ne_gl/public/include",
+                "${workspaceFolder}/lib/stb_image",
+                "${workspaceFolder}/ne_engine/ne_input/public/include",
+                "${workspaceFolder}/ne_engine/ne_math/public/include"
             ]
         }
     ],
