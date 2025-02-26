@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "ne_engine.hpp"
+
 #include "ShaderProgram.hpp"
 #include "Input.hpp"
 #include "Triangle.hpp"
@@ -99,7 +101,7 @@ int main() {
 
         glfwWaitEvents();
         glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
-        glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), wrapper.getTriangle().getVerts().data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), newTriangle.getVerts().data(), GL_STATIC_DRAW);
 
         glClear(GL_COLOR_BUFFER_BIT);
         glBindVertexArray(vao);

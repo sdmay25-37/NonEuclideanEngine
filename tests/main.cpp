@@ -1,3 +1,5 @@
+#define STB_IMAGE_IMPLEMENTATION
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -10,13 +12,14 @@
 #include <ctime>
 #include <chrono>
 
+#include "stb_image.h"
+
 #include "ne_engine.hpp"
 
 // #include "Sprite.h"
 
 // #include "ShaderProgram.h"
 
-// #define STB_IMAGE_IMPLEMENTATION
 // #include "stb_image.h"
 // #include "Input.h"
 

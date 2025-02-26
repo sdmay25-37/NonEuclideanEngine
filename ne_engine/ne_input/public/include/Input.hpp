@@ -1,10 +1,11 @@
 #ifndef INPUTHANDLER_HPP
 #define INPUTHANDLER_HPP
 
+#include <GLFW/glfw3.h>
+
 #include <functional>
 #include <string>
 #include <unordered_map>
-#include <GLFW/glfw3.h>
 
 class Input {
 public:

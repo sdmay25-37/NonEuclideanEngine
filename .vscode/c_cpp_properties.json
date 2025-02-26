@@ -11,12 +11,17 @@
             "includePath": [
                 "${default}",
                 "${workspaceFolder}/lib/glm",
+                "${workspaceFolder}/lib/glm/glm",
                 "${workspaceFolder}/lib/glad/include",
                 "${workspaceFolder}/lib/eigen",
-                "${workspaceFolder}/ne_engine/ne_gl/public/include",
                 "${workspaceFolder}/lib/stb_image",
                 "${workspaceFolder}/lib/json/include",
-                "${workspaceFolder}/ne_engine/include"
+                "${workspaceFolder}/ne_engine/include",
+                "${workspaceFolder}/ne_engine/ne_resmanager/public/include",
+                "${workspaceFolder}/ne_engine/ne_gl/public/include",
+                "${workspaceFolder}/ne_engine/ne_math/public/include",
+                "${workspaceFolder}/ne_engine/ne_input/public/include",
+                "${workspaceFolder}/ne_engine/ne_resmanager/public/include"
             ]
         },
         {
@@ -33,12 +38,14 @@
                 "${workspaceFolder}/lib/glad/include/glad",
                 "${workspaceFolder}/lib/glfw/include",
                 "${workspaceFolder}/lib/glad/include",
-                "${workspaceFolder}/ne_engine/include",
                 "${workspaceFolder}/lib/glm",
-                "${workspaceFolder}/ne_engine/ne_gl/public/include",
                 "${workspaceFolder}/lib/stb_image",
+                "${workspaceFolder}/lib/json/include",
+                "${workspaceFolder}/ne_engine/include",
                 "${workspaceFolder}/ne_engine/ne_input/public/include",
-                "${workspaceFolder}/ne_engine/ne_math/public/include"
+                "${workspaceFolder}/ne_engine/ne_gl/public/include",
+                "${workspaceFolder}/ne_engine/ne_math/public/include",
+                "${workspaceFolder}/ne_engine/ne_resmanager/public/include"
             ]
         }
     ],

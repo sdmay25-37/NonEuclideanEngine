@@ -14,4 +14,7 @@
 // ne_math
 #include "HypRotate.hpp"
 
+// ne_resmanager
+#include "ResourceManager.hpp"
+
 #endif
