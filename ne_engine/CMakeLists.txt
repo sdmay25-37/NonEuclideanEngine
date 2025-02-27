@@ -30,4 +30,4 @@ target_include_directories(ne_engine
     ne_gl/private/include ne_math/private/include ne_input/private/include ne_resmanager/private/include
 )
 
-target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb_image QuadTree)
+target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb_image quadtree)

@@ -25,7 +25,7 @@ std::vector <std::pair <char*, std::string>> TileMap::getTileInformation() {
     for (int i = 0; i < _tileList.size(); i++) {
         Tile currTile = _tileList.at(i);
         
-        int end = currTile.tileLocation & 0xF800000000000000;   // Mask the top 5 bits for the length
+        int end = 0; // currTile.tileLocation & 0xF800000000000000;   // Mask the top 5 bits for the length
         char* dirString[end];   // Create a string of size end, which is max 30 characters 
         for (int j = 0; j < end; j++) {
             
