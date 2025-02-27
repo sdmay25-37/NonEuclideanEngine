@@ -45,7 +45,8 @@
                 "${workspaceFolder}/ne_engine/ne_input/public/include",
                 "${workspaceFolder}/ne_engine/ne_gl/public/include",
                 "${workspaceFolder}/ne_engine/ne_math/public/include",
-                "${workspaceFolder}/ne_engine/ne_resmanager/public/include"
+                "${workspaceFolder}/ne_engine/ne_resmanager/public/include",
+                "${workspaceFolder}/lib/QuadTree/include"
             ]
         }
     ],
