@@ -18,6 +18,7 @@ struct ImageData {
     int width;
     int height;
     int channels;
+
     unsigned char* spritesheet;
 };
 
@@ -31,14 +32,14 @@ public:
     ResourceManager();
     ResourceManager(std::string bindingsFilePath);
 
+    ~ResourceManager();
+
     std::vector <std::vector <std::pair <std::string, int>>> getBindingsArray();
 
     void outputBindings(std::vector <std::vector <std::pair <std::string, int>>> bindings);
 
     void removeReference(const char* filepath);
     void retireResource(const char* filepath);
-
-    void retireManager();
 
     // Returns a FileDescriptor from a string.  If the resource hasn't been opened, then it needs to open the file
     unsigned char* getResource(const char* filepath);

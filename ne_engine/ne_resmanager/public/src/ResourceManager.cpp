@@ -74,10 +74,12 @@ void ResourceManager::setLoaderPath(std::string filepath) {
     _loader->setFilepath(filepath);
 }
 
-void ResourceManager::retireManager() {
+ResourceManager::~ResourceManager() {
     for (auto keyFile : _fileDirectory) {
         freeSheets(_fileDirectory, keyFile.first);
     }
+
+    delete _loader;
 }
 
 ImageData* loadTexture(const char* filepath) {
