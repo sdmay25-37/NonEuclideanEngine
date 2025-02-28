@@ -1,6 +1,7 @@
 add_library(
     ne_engine STATIC
 
+    "ne_gl/public/src/App.cpp"
     "ne_gl/public/src/ShaderProgram.cpp"
     "ne_gl/public/src/Engine.cpp"
     "ne_gl/public/src/Triangle.cpp"

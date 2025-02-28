@@ -224,11 +224,7 @@ int main() {
                 sprite.uv_min = glm::vec2(u, v);
                 sprite.uv_max = glm::vec2(u + uv_width, v + uv_height);
             }
-
-            //sprite_update(registry, uv_ranges, UV_VBO);
         }
-
-
 
         glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
         shaders.setUniformMat4("proj_view_mat", proj_view_mat);
