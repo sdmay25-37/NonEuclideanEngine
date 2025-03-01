@@ -14,15 +14,13 @@ ResourceManager::ResourceManager(const char *resourceFilepath) {
                 const char *filepath = entry.path().c_str();
                 std::string filename = entry.path().filename().string();
 
-                int width, height, channels;
+                auto texture_result = Texture::create(filepath);
 
-                unsigned char *image_data = stbi_load(filepath, &width, &height, &channels, 0);
-                if (!image_data) {
-                    std::cerr << "Failed to load texture: " << filepath << std::endl;
-                    return;
+                if(texture_result.is_ok()) {
+                    _fileDirectory.insert({filename, std::make_shared<Texture>(texture_result.ok())});
+                } else {
+                    std::cerr << "Failed to load image file: " << filepath << std::endl;
                 }
-
-                _fileDirectory.emplace(filename, std::make_shared<Texture>(width, height, channels, image_data));
             }
         }
     } catch(const std::exception &e) {

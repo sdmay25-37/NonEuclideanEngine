@@ -79,10 +79,17 @@ int main() {
         std::cout << "Texture failed to load!" << std::endl;
     }
 
-    ShaderProgram shaders (
+    auto shaderProgramResult = ShaderProgram::create(
         "../shaders/color.vert",
         "../shaders/color.frag"
     );
+
+    if(shaderProgramResult.is_error()) {
+        std::cerr << shaderProgramResult.error() << std::endl;
+        return -1;
+    }
+
+    ShaderProgram shaders = shaderProgramResult.ok();
 
     unsigned vertBuff;
     glGenBuffers(1, &vertBuff);
