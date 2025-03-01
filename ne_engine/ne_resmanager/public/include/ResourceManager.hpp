@@ -12,43 +12,18 @@
 #include <iostream>
 
 #include "JSONLoader.hpp"
-#include "ShaderProgram.hpp"
-
-struct ImageData {
-    int width;
-    int height;
-    int channels;
-
-    unsigned char* spritesheet;
-};
-
-struct FileInfo {
-    int numberOfReferences;         // Keep track of all the references to the given resource
-    ImageData* spritesheetInfo;      // Spritesheet image + data that has been loaded
-};
+#include "Texture.hpp"
 
 class ResourceManager {
 public:
-    ResourceManager();
-    ResourceManager(std::string bindingsFilePath);
-
-    ~ResourceManager();
-
-    std::vector <std::vector <std::pair <std::string, int>>> getBindingsArray();
-
-    void outputBindings(std::vector <std::vector <std::pair <std::string, int>>> bindings);
-
-    void removeReference(const char* filepath);
-    void retireResource(const char* filepath);
+    ResourceManager(const char *resourceFilepath);
+    ~ResourceManager() = default;
 
     // Returns a FileDescriptor from a string.  If the resource hasn't been opened, then it needs to open the file
-    unsigned char* getResource(const char* filepath);
-
-    void setLoaderPath(std::string filepath);
+    std::weak_ptr<Texture> getResource(const char *filepath);
 
 private:
-    JSONLoader* _loader;
-    std::unordered_map <const char*, FileInfo*> _fileDirectory;
+    std::unordered_map<std::string, std::shared_ptr<Texture>> _fileDirectory;
 
 };
 

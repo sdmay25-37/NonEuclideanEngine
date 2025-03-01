@@ -8,6 +8,7 @@ add_library(
     "ne_gl/public/src/Triangle.cpp"
     "ne_gl/public/src/GLFWContext.cpp"
     "ne_gl/public/src/Animation.cpp"
+    "ne_gl/public/src/Texture.cpp"
 
     # ne_input
     "ne_input/public/src/Input.cpp"
