@@ -71,8 +71,8 @@ int main() {
 
     input.bindContexts(bindings);
 
-    ResourceManager resManager("../res");
-    std::weak_ptr<Texture> textureRef = resManager.getResource("tiles.png");
+    ResourceManager resManager("../res/textures");
+    std::weak_ptr<Texture> textureRef = resManager.getResource<Texture>("tiles.png");
     if(auto texture = textureRef.lock()) {
         std::cout << "Texture ID: " << texture->getTextureId() << std::endl;
     } else {

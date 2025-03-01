@@ -2,8 +2,9 @@
 #define TEXTURE_H
 
 #include "utils.hpp"
+#include "Resource.hpp"
 
-class Texture {
+class Texture : public Resource {
 public:
 
     // Constructor to load texture from file

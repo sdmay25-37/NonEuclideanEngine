@@ -17,7 +17,8 @@ ResourceManager::ResourceManager(const char *resourceFilepath) {
                 auto texture_result = Texture::create(filepath);
 
                 if(texture_result.is_ok()) {
-                    _fileDirectory.insert({filename, std::make_shared<Texture>(texture_result.ok())});
+                    auto texture = std::make_shared<Texture>(texture_result.ok());
+                    _fileDirectory[filename] = texture;
                 } else {
                     std::cerr << "Failed to load image file: " << filepath << std::endl;
                 }
@@ -31,13 +32,3 @@ ResourceManager::ResourceManager(const char *resourceFilepath) {
 }
 
 
-std::weak_ptr<Texture> ResourceManager::getResource(const char *filepath) {
-
-    auto it = _fileDirectory.find(filepath);
-    if(it != _fileDirectory.end()) {
-        return it->second;
-    }
-
-    // Return empty pointer if the file doesn't exist
-    return {};
-}
