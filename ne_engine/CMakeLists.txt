@@ -15,6 +15,9 @@ add_library(
 
     # ne_math
     "ne_math/public/src/HypRotate.cpp"
+
+    # ne_ui
+
 )
 
 target_include_directories(ne_engine

@@ -47,7 +47,21 @@ int main() {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::ShowDemoWindow();
+		if(ImGui::BeginMainMenuBar()) {
+			if(ImGui::BeginMenu("File")) {
+				if(ImGui::MenuItem("Exit")) {
+					glfwSetWindowShouldClose(window, true);
+				}
+				ImGui::EndMenu();
+			}
+			if(ImGui::BeginMenu("Tools")) {
+				ImGui::EndMenu();
+			}
+
+			ImGui::EndMainMenuBar();
+		}
+
+
 
 		ImGui::Render();
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
