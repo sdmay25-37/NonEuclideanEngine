@@ -74,7 +74,7 @@ int main() {
     ResourceManager resManager("../res/textures");
     std::weak_ptr<Texture> textureRef = resManager.getResource<Texture>("tiles.png");
     if(auto texture = textureRef.lock()) {
-        std::cout << "Texture ID: " << texture->getTextureId() << std::endl;
+        std::cout << "Texture ID: " << texture->getId() << std::endl;
     } else {
         std::cout << "Texture failed to load!" << std::endl;
     }
