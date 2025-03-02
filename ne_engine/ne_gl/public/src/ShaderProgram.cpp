@@ -3,12 +3,24 @@
 #include "ShaderProgram.hpp"
 #include "glad/glad.h"
 
-std::string fileToString(const char* filePath);
+Result<std::string, Error<std::string>> fileToString(const char* filePath);
 
-ShaderProgram::ShaderProgram(const char* vertexShaderPath, const char* fragmentShaderPath) {
+Result<ShaderProgram, std::string> ShaderProgram::create(const char* vertexShaderPath, const char* fragmentShaderPath) {
+	using Result = Result<ShaderProgram, std::string>;
 
-	std::string vertexShaderString = fileToString(vertexShaderPath);
-	std::string fragmentShaderString = fileToString(fragmentShaderPath);
+	// Read vertex shader into string
+	auto vertexShaderStringResult = fileToString(vertexShaderPath);
+	if(vertexShaderStringResult.is_error()) {
+		return Result::Error(vertexShaderStringResult.error().value);
+	}
+	std::string vertexShaderString = vertexShaderStringResult.ok();
+
+	// Read fragment shader into string
+	auto fragmentShaderStringResult = fileToString(fragmentShaderPath);
+	if(fragmentShaderStringResult.is_error()) {
+		return Result::Error(fragmentShaderStringResult.error().value);
+	}
+	std::string fragmentShaderString = fragmentShaderStringResult.ok();
 
 	const char* vertexShaderSource = vertexShaderString.c_str();
 	const char* fragmentShaderSource = fragmentShaderString.c_str();
@@ -24,8 +36,10 @@ ShaderProgram::ShaderProgram(const char* vertexShaderPath, const char* fragmentS
 	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
 	if(!success) {
 		glGetShaderInfoLog(vertexShader, 512, nullptr, infoLog);
-		std::cerr << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << std::endl;
-		return;
+
+		std::stringstream ss;
+		ss << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog << '\n';
+		return Result::Error(ss.str());
 	}
 
 	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
@@ -36,11 +50,13 @@ ShaderProgram::ShaderProgram(const char* vertexShaderPath, const char* fragmentS
 	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
 	if(!success) {
 		glGetShaderInfoLog(fragmentShader, 512, nullptr, infoLog);
-		std::cerr << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << std::endl;
-		return;
+
+		std::stringstream ss;
+		ss << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog << '\n';
+		return Result::Error(ss.str());
 	}
 
-	programId = glCreateProgram();
+	unsigned int programId = glCreateProgram();
 	glAttachShader(programId, vertexShader);
 	glAttachShader(programId, fragmentShader);
 	glLinkProgram(programId);
@@ -49,45 +65,52 @@ ShaderProgram::ShaderProgram(const char* vertexShaderPath, const char* fragmentS
 	glGetProgramiv(programId, GL_LINK_STATUS, &success);
 	if(!success) {
 		glGetProgramInfoLog(programId, 512, nullptr, infoLog);
-		std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << std::endl;
-		return;
+
+		std::stringstream ss;
+		ss << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog << '\n';
+		return Result::Error(ss.str());
 	}
 
 	// shaders can be deleted after linking
 	glDeleteShader(vertexShader);
 	glDeleteShader(fragmentShader);
+
+	return Result::Ok(ShaderProgram(programId));
 }
 
 void ShaderProgram::bind() {
-	glUseProgram(programId);
+	glUseProgram(_programId);
 }
 
 void ShaderProgram::cleanup() {
-	glDeleteProgram(programId);
+	glDeleteProgram(_programId);
 }
 
 void ShaderProgram::setUniform1i(const char *name, int value) {
-	glUniform1i(glGetUniformLocation(programId, name), value);
+	glUniform1i(glGetUniformLocation(_programId, name), value);
 }
 
 void ShaderProgram::setUniform2f(const char *name, const glm::vec2 &vec) {
-	glUniform2f(glGetUniformLocation(programId, name), vec.x, vec.y);
+	glUniform2f(glGetUniformLocation(_programId, name), vec.x, vec.y);
 }
 
 void ShaderProgram::setUniform3f(const char *name, const glm::vec3& vec) {
-	glUniform3f(glGetUniformLocation(programId, name), vec.x, vec.y, vec.z);
+	glUniform3f(glGetUniformLocation(_programId, name), vec.x, vec.y, vec.z);
 }
 
 void ShaderProgram::setUniformMat4(const char *name, const glm::mat4 &matrix) {
-	glUniformMatrix4fv(glGetUniformLocation(programId, name), 1, GL_FALSE, glm::value_ptr(matrix));
+	glUniformMatrix4fv(glGetUniformLocation(_programId, name), 1, GL_FALSE, glm::value_ptr(matrix));
 }
 
-std::string fileToString(const char* filePath) {
+Result<std::string, Error<std::string>> fileToString(const char* filePath) {
+	using Result = Result<std::string, Error<std::string>>;
+
 	std::ifstream file(filePath, std::ios::binary | std::ios::ate);
 
 	if(!file.is_open()) {
-		std::cerr << "Failed to open file: " << filePath << std::endl;
-		return nullptr;
+		std::stringstream ss;
+		ss << "Failed to open file: " << filePath << '\n';
+		return Result::Error(ss.str());
 	}
 
 	size_t fileSize = file.tellg();
@@ -96,10 +119,11 @@ std::string fileToString(const char* filePath) {
 	std::string buffer(fileSize, '\0');
 
 	if(!file.read(&buffer[0], fileSize)) {
-		std::cerr << "Failed to read file: " << filePath << std::endl;
-		return nullptr;
+		std::stringstream ss;
+		ss << "Failed to read file: " << filePath << '\n';
+		return Result::Error(ss.str());
 	}
 
 	file.close();
-	return buffer;
+	return Result::Ok(buffer);
 }
