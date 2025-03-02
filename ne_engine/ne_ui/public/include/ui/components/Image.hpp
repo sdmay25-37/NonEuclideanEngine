@@ -1,7 +1,7 @@
 #ifndef DRAGGABLEIMAGE_HPP
 #define DRAGGABLEIMAGE_HPP
 
-#include "UIComponent.hpp"
+#include "ui/UIComponent.hpp"
 
 class Image : public DraggableComponent {
 public:

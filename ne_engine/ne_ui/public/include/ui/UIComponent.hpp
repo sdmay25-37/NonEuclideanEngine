@@ -3,7 +3,9 @@
 
 #include <string>
 #include <imgui.h>
+
 #include "Texture.hpp"
+
 
 class UIComponent {
   public:

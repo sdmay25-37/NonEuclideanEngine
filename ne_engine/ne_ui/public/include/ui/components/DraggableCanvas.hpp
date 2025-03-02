@@ -3,7 +3,7 @@
 
 #include <memory>
 
-#include "UIComponent.hpp"
+#include "ui/UIComponent.hpp"
 
 
 class DraggableCanvas : public UIComponent {

@@ -23,6 +23,7 @@ add_library(
     # ne_ui
     "ne_ui/public/src/Image.cpp"
     "ne_ui/public/src/DraggableCanvas.cpp"
+    "ne_ui/public/src/TextureAtlasBuilder.cpp"
 
 )
 

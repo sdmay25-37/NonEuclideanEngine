@@ -1,5 +1,5 @@
 
-#include "Image.hpp"
+#include "ui/components/Image.hpp"
 
 #include <iostream>
 

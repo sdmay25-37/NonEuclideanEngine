@@ -1,16 +1,16 @@
-#include "DraggableCanvas.hpp"
+#include "ui/components/DraggableCanvas.hpp"
 
 #include <algorithm>
-#include <iostream>
 
 void DraggableCanvas::render() {
-	ImGui::SetNextWindowPos(_position, ImGuiCond_Appearing);
-	ImGui::SetNextWindowSize(_size, ImGuiCond_Appearing);
-	ImGui::Begin("Canvas", nullptr, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+	ImGui::SetCursorPos(_position);
+	ImGui::BeginChild("Canvas", _size, ImGuiChildFlags_Borders, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
+	ImGui::PushStyleVar(ImGuiStyleVar_FramePadding, ImVec2(0, 0));
 	for (const auto& component : _components) {
 		ImGui::SetNextItemAllowOverlap();
 		component->render();
+
 		if(ImGui::IsItemActive() && ImGui::IsMouseDragging(0)) {
 			ImVec2 mouseDelta = ImGui::GetMouseDragDelta(0);
 			ImVec2 position = component->getPosition();
@@ -35,5 +35,6 @@ void DraggableCanvas::render() {
 		}
 	}
 
-	ImGui::End();
+	ImGui::PopStyleVar();
+	ImGui::EndChild();
 }
