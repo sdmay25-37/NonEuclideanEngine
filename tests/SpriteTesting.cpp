@@ -1,4 +1,5 @@
 #include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
@@ -85,6 +86,8 @@ int main() {
 
     Animation slime(position, scale, uv_min, uv_max,
         slimeData, "../res/Slime.png");
+
+
 
     slime.initAnimation();
     AnimationData checkInf = slime.getAnimationData();

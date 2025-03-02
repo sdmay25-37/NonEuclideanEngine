@@ -18,6 +18,7 @@ set(SOURCES
     # "input_test.cpp"
     "point_square_demo.cpp"
     "SpriteTesting.cpp"
+    "GuiTesting.cpp"
 )
 
 set(VS_DEBUGGER_WORKING_DIRECTORY "..")
