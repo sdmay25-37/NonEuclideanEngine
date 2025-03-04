@@ -10,7 +10,7 @@
 
 
 void TextureAtlasBuilder::render() {
-	ImGui::Begin(GUI_NAME, nullptr);
+	ImGui::Begin(GUI_REFERENCE, nullptr);
 
 	ImGuiID dockspace_id = ImGui::GetID("TextureAssetBuilderDockSpace");
 	ImGui::DockSpace(dockspace_id);
@@ -60,12 +60,12 @@ void TextureAtlasBuilder::render() {
 	ImGui::SeparatorText("Textures");
 
 	ImGui::TextUnformatted("Textures folder: ");
-
 	_textureFolderSelector.render();
 
 	ImGui::SameLine();
 	if(ImGui::Button("Import")) {
 		loadTextures(_textureFolderSelector.getBuffer());
+		_textureFolderSelector.clear();
 	}
 
 	ImGui::End();

@@ -62,7 +62,7 @@ int main() {
 	bool atlas_tool_window = false;
 	bool gui_init = true;
 
-	TextureAtlasBuilder texture_atlas_builder("../res/textures");
+	TextureAtlasBuilder texture_atlas_builder;
 
 	while(!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -84,14 +84,14 @@ int main() {
 
 
 		if(ImGui::BeginMainMenuBar()) {
-			if(ImGui::BeginMenu("File")) {
-				if(ImGui::MenuItem("Exit")) {
+			if(ImGui::BeginMenu(ICON_FA_FILE " File")) {
+				if(ImGui::MenuItem(ICON_FA_POWER_OFF " Exit")) {
 					glfwSetWindowShouldClose(window, true);
 				}
 				ImGui::EndMenu();
 			}
-			if(ImGui::BeginMenu("Tools")) {
-				if(ImGui::MenuItem("Texture Atlas Builder")) {
+			if(ImGui::BeginMenu(ICON_FA_WRENCH " Tools")) {
+				if(ImGui::MenuItem(TextureAtlasBuilder::GUI_NAME)) {
 
 					atlas_tool_window = true;
 				}
