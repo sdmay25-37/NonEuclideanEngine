@@ -21,7 +21,8 @@
 
 using namespace std::chrono_literals;
 
-namespace FileDialog {
+class FileDialog {
+public:
 
 	enum class FileDialogType {
 		OpenFile,
@@ -33,11 +34,11 @@ namespace FileDialog {
 		None
 	};
 
-	static bool file_dialog_open = false;
+	static bool file_dialog_open;
 
-	void ShowFileDialog(bool* open, char* buffer, [[maybe_unused]] unsigned int buffer_size, FileDialogType type = FileDialogType::OpenFile);
-	void ShowFileDialog_s(bool* open, char* buffer, FileDialogType type = FileDialogType::OpenFile);
+	static void ShowFileDialog(bool* open, char* buffer, [[maybe_unused]] unsigned int buffer_size, FileDialogType type = FileDialogType::OpenFile);
+	static void ShowFileDialog_s(bool* open, char* buffer, FileDialogType type = FileDialogType::OpenFile);
 
-}
+};
 
 #endif //L2DFILEDIALOG_HPP

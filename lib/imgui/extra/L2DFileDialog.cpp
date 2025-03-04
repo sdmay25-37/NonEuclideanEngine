@@ -4,13 +4,14 @@
 #include <filesystem>
 #include <imgui.h>
 #include <imgui_internal.h>
+#include <iostream>
 #include <sstream>
 #include <string>
 #include <time.h>
 #include <vector>
 
-using FileDialogType = FileDialog::FileDialogType;
-using FileDialogSortOrder = FileDialog::FileDialogSortOrder;
+
+bool FileDialog::file_dialog_open = false;
 
 void FileDialog::ShowFileDialog(bool* open, char* buffer, [[maybe_unused]] unsigned int buffer_size, FileDialogType type) {
 	static int file_dialog_file_select_index = 0;
@@ -288,7 +289,9 @@ void FileDialog::ShowFileDialog(bool* open, char* buffer, [[maybe_unused]] unsig
 			file_dialog_current_file = "";
 			strcpy_s(file_dialog_error, "");
 			initial_path_set = false;
-			FileDialog::file_dialog_open = false;
+			file_dialog_open = false;
+
+			std::cerr << "CLOSING WINDOW\n";
 		};
 
 		if (ImGui::Button("Cancel")) {
