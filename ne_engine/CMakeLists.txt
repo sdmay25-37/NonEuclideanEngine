@@ -26,6 +26,7 @@ add_library(
     "ne_ui/public/src/TextureAtlasBuilder.cpp"
         ne_gl/public/src/TextureAtlas.cpp
         ne_gl/public/include/TextureAtlas.hpp
+        ne_ui/public/src/FileSelector.cpp
 
 )
 

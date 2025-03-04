@@ -7,36 +7,7 @@
 
 #include <IconsFontAwesome5.h>
 #include <imgui_internal.h>
-#include <L2DFileDialog.h>
 
-
-TextureAtlasBuilder::TextureAtlasBuilder(const char* texture_path) {
-	try {
-		for(const auto &entry : std::filesystem::directory_iterator(texture_path)) {
-			if(is_regular_file(entry.status())) {
-				std::string filepath = entry.path().string();
-				std::string filename = entry.path().filename().string();
-
-				auto texture_result = Texture::create(filepath);
-
-				if(texture_result.is_ok()) {
-					int image_x = Random::integer(0, 500);
-					int image_y = Random::integer(0, 500);
-
-					Texture texture = std::move(texture_result.ok());
-					int width = texture.getWidth();
-					int height = texture.getHeight();
-
-					_canvas.addComponent(std::make_unique<Image>(filename, std::move(texture), ImVec2(image_x, image_y), ImVec2(width, height)));
-				} else {
-					std::cerr << "Failed to load image file: " << filepath << std::endl;
-				}
-			}
-		}
-	} catch(const std::exception &e) {
-		std::cerr << "Failed to load file: " << e.what() << std::endl;
-	}
-}
 
 void TextureAtlasBuilder::render() {
 	ImGui::Begin(GUI_NAME, nullptr);
@@ -88,36 +59,46 @@ void TextureAtlasBuilder::render() {
 
 	ImGui::SeparatorText("Textures");
 
-	static char* file_dialog_buffer = nullptr;
-	static char path[500] = "";
-
 	ImGui::TextUnformatted("Textures folder: ");
 
-	if(ImGui::Button(ICON_FA_FOLDER "##path")) {
-		file_dialog_buffer = path;
-		FileDialog::file_dialog_open = true;
-	}
+	_textureFolderSelector.render();
 
 	ImGui::SameLine();
-	ImGui::SetCursorPosX(ImGui::GetCursorPosX() - ImGui::GetStyle().ItemSpacing.x);
-
-	ImGui::InputText("##path", path, sizeof(path));
-
-	if(FileDialog::file_dialog_open) {
-		FileDialog::ShowFileDialog(
-			&FileDialog::file_dialog_open,
-			file_dialog_buffer,
-			sizeof(file_dialog_buffer),
-			FileDialog::FileDialogType::SelectFolder
-		);
+	if(ImGui::Button("Import")) {
+		loadTextures(_textureFolderSelector.getBuffer());
 	}
-
-	ImGui::SameLine();
-	ImGui::Button("Import");
 
 	ImGui::End();
 
 	ImGui::SetNextWindowClass(&docked_window_class);
 	ImGui::Begin(ICON_FA_TERMINAL " Output###Output", nullptr, ImGuiWindowFlags_NoTitleBar);
 	ImGui::End();
+}
+
+void TextureAtlasBuilder::loadTextures(const char* path) {
+	try {
+		for(const auto &entry : std::filesystem::directory_iterator(path)) {
+			if(is_regular_file(entry.status())) {
+				std::string filepath = entry.path().string();
+				std::string filename = entry.path().filename().string();
+
+				auto texture_result = Texture::create(filepath);
+
+				if(texture_result.is_ok()) {
+					int image_x = Random::integer(0, 500);
+					int image_y = Random::integer(0, 500);
+
+					Texture texture = std::move(texture_result.ok());
+					int width = texture.getWidth();
+					int height = texture.getHeight();
+
+					_canvas.addComponent(std::make_unique<Image>(filename, std::move(texture), ImVec2(image_x, image_y), ImVec2(width, height)));
+				} else {
+					std::cerr << "Failed to load image file: " << filepath << std::endl;
+				}
+			}
+		}
+	} catch(const std::exception &e) {
+		std::cerr << "Failed to load file: " << e.what() << std::endl;
+	}
 }

@@ -9,7 +9,6 @@ add_library(imgui STATIC
         ${IMGUI_DIR}/imgui_widgets.cpp
         ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
         ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
-        extra/L2DFileDialog.cpp
 )
 
 target_include_directories(imgui PUBLIC
