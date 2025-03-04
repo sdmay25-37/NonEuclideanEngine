@@ -5,13 +5,13 @@
 
 #include <stb_image.h>
 
-Result<Texture, Texture::CreateError> Texture::create(const char *filepath) {
+Result<Texture, Texture::CreateError> Texture::create(const std::string& filepath) {
 	using Result = Result<Texture, CreateError>;
 
 	unsigned int textureId;
 	int width, height;
 
-	unsigned char *image_data = stbi_load(filepath, &width, &height, nullptr, 4);
+	unsigned char *image_data = stbi_load(filepath.c_str(), &width, &height, nullptr, 4);
 	if (!image_data) {
 		return Result::Error(CreateError::IMAGE_LOAD_FAILURE);
 	}

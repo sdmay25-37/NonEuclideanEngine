@@ -39,12 +39,13 @@ TextureAtlasBuilder::TextureAtlasBuilder(const char* texture_path) {
 }
 
 void TextureAtlasBuilder::render() {
-	ImGui::Begin("Texture Atlas Builder", nullptr);
+	ImGui::Begin(GUI_NAME, nullptr);
 
 	ImGuiID dockspace_id = ImGui::GetID("TextureAssetBuilderDockSpace");
 	ImGui::DockSpace(dockspace_id);
 
 	static bool init = true;
+	static ImGuiWindowClass docked_window_class;
 	if(init) {
 		init = false;
 
@@ -55,15 +56,18 @@ void TextureAtlasBuilder::render() {
 		auto dock_id_left = ImGui::DockBuilderSplitNode(dockspace_id, ImGuiDir_Left, 0.2f, nullptr, &dock_id_main);
 		auto dock_id_down = ImGui::DockBuilderSplitNode(dock_id_main, ImGuiDir_Down, 0.25f, nullptr, &dock_id_main);
 
-		ImGui::DockBuilderDockWindow("Canvas", dock_id_main);
-		ImGui::DockBuilderDockWindow("Menu", dock_id_left);
-		ImGui::DockBuilderDockWindow("Output", dock_id_down);
+		ImGui::DockBuilderDockWindow("###Canvas", dock_id_main);
+		ImGui::DockBuilderDockWindow("###Menu", dock_id_left);
+		ImGui::DockBuilderDockWindow("###Output", dock_id_down);
 
 		ImGui::DockBuilderFinish(dockspace_id);
+
+		docked_window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoWindowMenuButton;
 	}
 	ImGui::End();
 
-	ImGui::Begin("Canvas");
+	ImGui::SetNextWindowClass(&docked_window_class);
+	ImGui::Begin(ICON_FA_PALETTE " Canvas###Canvas");
 	ImVec2 window_size = ImGui::GetContentRegionAvail();
 
 	ImVec2 canvasSize = window_size;
@@ -76,23 +80,28 @@ void TextureAtlasBuilder::render() {
 
 	ImGui::End();
 
-	ImGui::Begin("Menu");
+	ImGui::SetNextWindowClass(&docked_window_class);
+	ImGui::Begin(ICON_FA_SLIDERS_H " Menu###Menu");
 
 	ImGui::SeparatorText("Atlas");
-	ImGui::Text(ICON_FA_FOLDER " Open");
+	ImGui::Text(ICON_FA_FOLDER_PLUS " Open");
 
 	ImGui::SeparatorText("Textures");
 
 	static char* file_dialog_buffer = nullptr;
 	static char path[500] = "";
 
-	ImGui::TextUnformatted("Path: ");
-	ImGui::InputText("##path", path, sizeof(path));
-	ImGui::SameLine();
-	if(ImGui::Button("Browse##path")) {
+	ImGui::TextUnformatted("Textures folder: ");
+
+	if(ImGui::Button(ICON_FA_FOLDER "##path")) {
 		file_dialog_buffer = path;
 		FileDialog::file_dialog_open = true;
 	}
+
+	ImGui::SameLine();
+	ImGui::SetCursorPosX(ImGui::GetCursorPosX() - ImGui::GetStyle().ItemSpacing.x);
+
+	ImGui::InputText("##path", path, sizeof(path));
 
 	if(FileDialog::file_dialog_open) {
 		FileDialog::ShowFileDialog(
@@ -103,8 +112,12 @@ void TextureAtlasBuilder::render() {
 		);
 	}
 
+	ImGui::SameLine();
+	ImGui::Button("Import");
+
 	ImGui::End();
 
-	ImGui::Begin("Output");
+	ImGui::SetNextWindowClass(&docked_window_class);
+	ImGui::Begin(ICON_FA_TERMINAL " Output###Output", nullptr, ImGuiWindowFlags_NoTitleBar);
 	ImGui::End();
 }

@@ -45,7 +45,7 @@ int main() {
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 
 	io.Fonts->AddFontDefault();
-	constexpr float base_font_size = 12.0f;
+	constexpr float base_font_size = 16.0f;
 	constexpr float icon_font_size = base_font_size * 2.0f / 3.0f;
 
 	static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
@@ -71,7 +71,17 @@ int main() {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		ImGui::DockSpaceOverViewport();
+		ImGuiID dockspace_id = ImGui::DockSpaceOverViewport();
+		static bool init = true;
+		if(init) {
+			init = false;
+			ImGui::DockBuilderRemoveNode(dockspace_id); // Clear previous layout
+			ImGuiID dock_id_main = ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
+			ImGui::DockBuilderSetNodeSize(dock_id_main, ImGui::GetMainViewport()->Size);
+
+			ImGui::DockBuilderDockWindow(TextureAtlasBuilder::GUI_ID, dock_id_main);
+		}
+
 
 		if(ImGui::BeginMainMenuBar()) {
 			if(ImGui::BeginMenu("File")) {
@@ -82,6 +92,7 @@ int main() {
 			}
 			if(ImGui::BeginMenu("Tools")) {
 				if(ImGui::MenuItem("Texture Atlas Builder")) {
+
 					atlas_tool_window = true;
 				}
 				ImGui::EndMenu();

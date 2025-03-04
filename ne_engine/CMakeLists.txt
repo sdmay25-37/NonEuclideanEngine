@@ -24,6 +24,8 @@ add_library(
     "ne_ui/public/src/Image.cpp"
     "ne_ui/public/src/DraggableCanvas.cpp"
     "ne_ui/public/src/TextureAtlasBuilder.cpp"
+        ne_gl/public/src/TextureAtlas.cpp
+        ne_gl/public/include/TextureAtlas.hpp
 
 )
 

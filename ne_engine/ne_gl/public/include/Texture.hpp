@@ -12,7 +12,7 @@ public:
 
     // Constructor to load texture from file
     enum class CreateError { IMAGE_LOAD_FAILURE };
-   	static Result<Texture, CreateError> create(const char *filepath);
+   	static Result<Texture, CreateError> create(const std::string& filepath);
 
     // Destructor to free GPU texture memory
 	~Texture();
