@@ -10,7 +10,7 @@
 
 class TextureAtlasBuilder : public UIComponent {
 public:
-	GEN_GUI_NAME("TextureAtlasBuilder", ICON_FA_LAYER_GROUP " Texture Atlas Builder")
+	GEN_GUI_NAME("TextureAtlasBuilder", ICON_FA_IMAGE " Texture Atlas Builder")
 
 	void render() override;
 

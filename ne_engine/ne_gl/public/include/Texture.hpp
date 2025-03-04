@@ -1,11 +1,10 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-#include <imgui.h>
-#include <stb_image.h>
 
-#include "utils.hpp"
 #include "Resource.hpp"
+#include "utils.hpp"
+
 
 class Texture : public Resource {
 public:

@@ -1,42 +1,49 @@
+set(GL_SRC_DIR      ${CMAKE_CURRENT_SOURCE_DIR}/ne_gl/public/src)
+set(INPUT_SRC_DIR   ${CMAKE_CURRENT_SOURCE_DIR}/ne_input/public/src)
+set(MATH_SRC_DIR    ${CMAKE_CURRENT_SOURCE_DIR}/ne_math/public/src)
+set(RES_SRC_DIR     ${CMAKE_CURRENT_SOURCE_DIR}/ne_resource/public/src)
+set(UI_SRC_DIR      ${CMAKE_CURRENT_SOURCE_DIR}/ne_ui/public/src)
+
 add_library(
     ne_engine STATIC
 
     # ne_gl
-    "ne_gl/public/src/Sprite.cpp"
-    "ne_gl/public/src/ShaderProgram.cpp"
-    "ne_gl/public/src/Engine.cpp"
-    "ne_gl/public/src/Triangle.cpp"
-    "ne_gl/public/src/GLFWContext.cpp"
-    "ne_gl/public/src/Animation.cpp"
-    "ne_gl/public/src/Texture.cpp"
+    "${GL_SRC_DIR}/Sprite.cpp"
+    "${GL_SRC_DIR}/ShaderProgram.cpp"
+    "${GL_SRC_DIR}/Engine.cpp"
+    "${GL_SRC_DIR}/Triangle.cpp"
+    "${GL_SRC_DIR}/GLFWContext.cpp"
+    "${GL_SRC_DIR}/Animation.cpp"
+    "${GL_SRC_DIR}/Texture.cpp"
+    "${GL_SRC_DIR}/TextureAtlas.cpp"
 
     # ne_input
-    "ne_input/public/src/Input.cpp"
-    "ne_input/public/src/JSONLoader.cpp"
+    "${INPUT_SRC_DIR}/Input.cpp"
+    "${INPUT_SRC_DIR}/JSONLoader.cpp"
 
     # ne_math
-    "ne_math/public/src/HypRotate.cpp"
+    "${MATH_SRC_DIR}/HypRotate.cpp"
 
-    # ne_resmanager
-    "ne_resmanager/public/src/ResourceManager.cpp"
+    # ne_resource
+    "${RES_SRC_DIR}/ResourceManager.cpp"
 
     # ne_ui
-    "ne_ui/public/src/Image.cpp"
-    "ne_ui/public/src/DraggableCanvas.cpp"
-    "ne_ui/public/src/TextureAtlasBuilder.cpp"
-        ne_gl/public/src/TextureAtlas.cpp
-        ne_gl/public/include/TextureAtlas.hpp
-        ne_ui/public/src/FileSelector.cpp
+    "${UI_SRC_DIR}/Image.cpp"
+    "${UI_SRC_DIR}/DraggableCanvas.cpp"
+    "${UI_SRC_DIR}/TextureAtlasBuilder.cpp"
+    "${UI_SRC_DIR}/FileSelector.cpp"
+    "${UI_SRC_DIR}/AnimationEditor.cpp"
+    "${UI_SRC_DIR}/KeyMappingsManager.cpp"
 
 )
 
 target_include_directories(ne_engine
 
     PUBLIC
-    include ne_gl/public/include ne_math/public/include ne_input/public/include ne_resmanager/public/include ne_ui/public/include
+    include ne_gl/public/include ne_math/public/include ne_input/public/include ne_resource/public/include ne_ui/public/include
 
     PRIVATE
-    ne_gl/private/include ne_math/private/include ne_input/private/include ne_resmanager/private/include ne_ui/private/include
+    ne_gl/private/include ne_math/private/include ne_input/private/include ne_resource/private/include ne_ui/private/include
 )
 
 target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb_image imgui)

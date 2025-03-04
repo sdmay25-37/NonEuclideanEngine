@@ -1,13 +1,17 @@
-#include <glad/glad.h>
-#include <imgui.h>
-#include <backends/imgui_impl_glfw.h>
-#include <backends/imgui_impl_opengl3.h>
 #include <iostream>
 #include <filesystem>
-#include <imgui_internal.h>
-#include <GLFW/glfw3.h>
-#include <IconsFontAwesome5.h>
 
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+
+#include <IconsFontAwesome5.h>
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+
+#include "ui/tools/AnimationEditor.hpp"
+#include "ui/tools/KeyMappingsManager.hpp"
 #include "ui/tools/TextureAtlasBuilder.hpp"
 
 
@@ -91,10 +95,18 @@ int main() {
 				ImGui::EndMenu();
 			}
 			if(ImGui::BeginMenu(ICON_FA_WRENCH " Tools")) {
-				if(ImGui::MenuItem(TextureAtlasBuilder::GUI_NAME)) {
-
+				if(ImGui::MenuItem(AnimationEditor::GUI_NAME)) {
 					atlas_tool_window = true;
 				}
+
+				if(ImGui::MenuItem(KeyMappingsManager::GUI_NAME)) {
+					atlas_tool_window = true;
+				}
+
+				if(ImGui::MenuItem(TextureAtlasBuilder::GUI_NAME)) {
+					atlas_tool_window = true;
+				}
+
 				ImGui::EndMenu();
 			}
 

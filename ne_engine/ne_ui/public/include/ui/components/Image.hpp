@@ -2,6 +2,7 @@
 #define DRAGGABLEIMAGE_HPP
 
 #include "ui/UIComponent.hpp"
+#include "Texture.hpp"
 
 class Image : public DraggableComponent {
 public:

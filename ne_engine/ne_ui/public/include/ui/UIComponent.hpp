@@ -1,21 +1,24 @@
 #ifndef UICOMPONENT_HPP
 #define UICOMPONENT_HPP
 
+
 #include <string>
+
 #include <imgui.h>
 
-#include "Texture.hpp"
 
 #define GEN_GUI_NAME(id, display_name)  \
 	inline static const char* GUI_ID = "###" id;  \
 	inline static const char* GUI_NAME = display_name; \
 	inline static const char* GUI_REFERENCE = display_name "###" id;
 
+
 class UIComponent {
   public:
 	virtual void render() = 0;
     virtual ~UIComponent() = default;
 };
+
 
 class DraggableComponent : public UIComponent {
 public:
@@ -34,5 +37,6 @@ protected:
 	ImVec2 _position;
 	ImVec2 _size;
 };
+
 
 #endif //UICOMPONENT_HPP

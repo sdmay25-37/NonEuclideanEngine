@@ -2,6 +2,7 @@
 #define DRAGGABLECANVAS_HPP
 
 #include <memory>
+#include <vector>
 
 #include "ui/UIComponent.hpp"
 

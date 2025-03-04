@@ -1,12 +1,12 @@
 #include <filesystem>
 #include <iostream>
 
+#include <IconsFontAwesome5.h>
+#include <imgui_internal.h>
+
 #include "Texture.hpp"
 #include "ui/components/Image.hpp"
 #include "ui/tools/TextureAtlasBuilder.hpp"
-
-#include <IconsFontAwesome5.h>
-#include <imgui_internal.h>
 
 
 void TextureAtlasBuilder::render() {
