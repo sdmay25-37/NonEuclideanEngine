@@ -1,4 +1,5 @@
 set(IMGUI_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(EXTRA_DIR ${CMAKE_CURRENT_SOURCE_DIR}/extra)
 
 add_library(imgui STATIC
         ${IMGUI_DIR}/imgui.cpp
@@ -12,6 +13,7 @@ add_library(imgui STATIC
 
 target_include_directories(imgui PUBLIC
         ${IMGUI_DIR}
+        ${EXTRA_DIR}
 )
 
 target_link_libraries(imgui PRIVATE glfw glad)

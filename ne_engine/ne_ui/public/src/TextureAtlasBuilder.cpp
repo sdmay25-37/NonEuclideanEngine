@@ -5,14 +5,16 @@
 #include "ui/components/Image.hpp"
 #include "ui/tools/TextureAtlasBuilder.hpp"
 
+#include <IconsFontAwesome5.h>
 #include <imgui_internal.h>
+#include <L2DFileDialog.h>
 
 
 TextureAtlasBuilder::TextureAtlasBuilder(const char* texture_path) {
 	try {
 		for(const auto &entry : std::filesystem::directory_iterator(texture_path)) {
 			if(is_regular_file(entry.status())) {
-				const char *filepath = entry.path().c_str();
+				std::string filepath = entry.path().string();
 				std::string filename = entry.path().filename().string();
 
 				auto texture_result = Texture::create(filepath);
@@ -75,6 +77,32 @@ void TextureAtlasBuilder::render() {
 	ImGui::End();
 
 	ImGui::Begin("Menu");
+
+	ImGui::SeparatorText("Atlas");
+	ImGui::Text(ICON_FA_FOLDER " Open");
+
+	ImGui::SeparatorText("Textures");
+
+	static char* file_dialog_buffer = nullptr;
+	static char path[500] = "";
+
+	ImGui::TextUnformatted("Path: ");
+	ImGui::InputText("##path", path, sizeof(path));
+	ImGui::SameLine();
+	if(ImGui::Button("Browse##path")) {
+		file_dialog_buffer = path;
+		FileDialog::file_dialog_open = true;
+	}
+
+	if(FileDialog::file_dialog_open) {
+		FileDialog::ShowFileDialog(
+			&FileDialog::file_dialog_open,
+			file_dialog_buffer,
+			sizeof(file_dialog_buffer),
+			FileDialog::FileDialogType::SelectFolder
+		);
+	}
+
 	ImGui::End();
 
 	ImGui::Begin("Output");

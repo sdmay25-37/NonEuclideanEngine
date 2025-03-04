@@ -11,7 +11,7 @@ ResourceManager::ResourceManager(const char *resourceFilepath) {
     try {
         for(const auto &entry : std::filesystem::directory_iterator(resourceFilepath)) {
             if(is_regular_file(entry.status())) {
-                const char *filepath = entry.path().c_str();
+                const char *filepath = entry.path().string().c_str();
                 std::string filename = entry.path().filename().string();
 
                 auto texture_result = Texture::create(filepath);

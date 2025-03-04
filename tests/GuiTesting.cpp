@@ -3,17 +3,12 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 #include <iostream>
-#include <stb_image.h>
 #include <filesystem>
 #include <imgui_internal.h>
-#include <vector>
-#include <memory>
 #include <GLFW/glfw3.h>
+#include <IconsFontAwesome5.h>
 
-#include "Texture.hpp"
-#include "ui/components/Image.hpp"
 #include "ui/tools/TextureAtlasBuilder.hpp"
-#include "utils.hpp"
 
 
 void glfw_error_callback(int error, const char* description) {
@@ -28,6 +23,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
 	GLFWwindow* window = glfwCreateWindow(800, 600, "Gui Testing", NULL, NULL);
 	if(!window) {
 		glfwTerminate();
@@ -47,6 +43,18 @@ int main() {
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+
+	io.Fonts->AddFontDefault();
+	constexpr float base_font_size = 12.0f;
+	constexpr float icon_font_size = base_font_size * 2.0f / 3.0f;
+
+	static const ImWchar icon_ranges[] = { ICON_MIN_FA, ICON_MAX_16_FA, 0 };
+	ImFontConfig icon_config;
+	icon_config.MergeMode = true;
+	icon_config.PixelSnapH = true;
+	icon_config.GlyphMinAdvanceX = icon_font_size;
+
+	io.Fonts->AddFontFromFileTTF("../res/fonts/fa-solid-900.ttf", icon_font_size, &icon_config, icon_ranges);
 
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
@@ -84,6 +92,8 @@ int main() {
 
 		if(atlas_tool_window) {
 			texture_atlas_builder.render();
+		} else {
+			ImGui::ShowDemoWindow();
 		}
 
 		ImGui::Render();
