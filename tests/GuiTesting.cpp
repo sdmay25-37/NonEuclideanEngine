@@ -63,10 +63,10 @@ int main() {
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	bool atlas_tool_window = false;
-	bool gui_init = true;
+	std::unique_ptr<AnimationEditor> animation_editor;
+	std::unique_ptr<KeyMappingsManager> key_mappings_manager;
+	std::unique_ptr<TextureAtlasBuilder> texture_atlas_builder;
 
-	TextureAtlasBuilder texture_atlas_builder;
 
 	while(!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -96,15 +96,15 @@ int main() {
 			}
 			if(ImGui::BeginMenu(ICON_FA_WRENCH " Tools")) {
 				if(ImGui::MenuItem(AnimationEditor::GUI_NAME)) {
-					atlas_tool_window = true;
+					animation_editor = std::make_unique<AnimationEditor>();
 				}
 
 				if(ImGui::MenuItem(KeyMappingsManager::GUI_NAME)) {
-					atlas_tool_window = true;
+					key_mappings_manager = std::make_unique<KeyMappingsManager>();
 				}
 
 				if(ImGui::MenuItem(TextureAtlasBuilder::GUI_NAME)) {
-					atlas_tool_window = true;
+					texture_atlas_builder = std::make_unique<TextureAtlasBuilder>();
 				}
 
 				ImGui::EndMenu();
@@ -113,11 +113,19 @@ int main() {
 			ImGui::EndMainMenuBar();
 		}
 
-		if(atlas_tool_window) {
-			texture_atlas_builder.render();
+		if(animation_editor != nullptr) {
+			animation_editor->render();
+
+		} else if(key_mappings_manager != nullptr) {
+			key_mappings_manager->render();
+
+		} else if(texture_atlas_builder != nullptr) {
+			texture_atlas_builder->render();
+
 		} else {
 			ImGui::ShowDemoWindow();
 		}
+
 
 		ImGui::Render();
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

@@ -5,9 +5,11 @@
 
 #include "ui/UIComponent.hpp"
 
-class AnimationEditor {
+class AnimationEditor : public UIComponent {
 public:
 	GEN_GUI_NAME("AnimationEditor", ICON_FA_FILM " Animation Editor")
+
+	void render() override;
 };
 
 
