@@ -1,4 +1,4 @@
-#include "ToolManager.hpp"
+#include "../include/ui/components/ToolManager.hpp"
 
 void ToolManager::render() {
 	if(empty()) return;

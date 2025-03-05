@@ -80,8 +80,6 @@ int main() {
 			ImGui::DockBuilderRemoveNode(dockspace_id); // Clear previous layout
 			ImGuiID dock_id_main = ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
 			ImGui::DockBuilderSetNodeSize(dock_id_main, ImGui::GetMainViewport()->Size);
-
-
 			ImGui::DockBuilderDockWindow(ToolManager::GUI_ID, dock_id_main);
 		}
 

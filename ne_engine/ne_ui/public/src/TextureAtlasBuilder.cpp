@@ -11,10 +11,9 @@
 
 void TextureAtlasBuilder::render() {
 	ImGuiID dockspace_id = ImGui::GetID("TextureAssetBuilderDockSpace");
-	ImGui::DockSpace(dockspace_id);
+	ImGui::DockSpace(dockspace_id, ImVec2(0, 0), ImGuiDockNodeFlags_NoWindowMenuButton);
 
 	static bool init = true;
-	static ImGuiWindowClass docked_window_class;
 	if(init) {
 		init = false;
 
@@ -31,10 +30,8 @@ void TextureAtlasBuilder::render() {
 
 		ImGui::DockBuilderFinish(dockspace_id);
 
-		docked_window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoWindowMenuButton;
 	}
 
-	ImGui::SetNextWindowClass(&docked_window_class);
 	ImGui::Begin(ICON_FA_PALETTE " Canvas###Canvas");
 	ImVec2 window_size = ImGui::GetContentRegionAvail();
 
@@ -48,7 +45,6 @@ void TextureAtlasBuilder::render() {
 
 	ImGui::End();
 
-	ImGui::SetNextWindowClass(&docked_window_class);
 	ImGui::Begin(ICON_FA_SLIDERS_H " Menu###Menu");
 
 	ImGui::SeparatorText("Atlas");
@@ -67,7 +63,6 @@ void TextureAtlasBuilder::render() {
 
 	ImGui::End();
 
-	ImGui::SetNextWindowClass(&docked_window_class);
 	ImGui::Begin(ICON_FA_TERMINAL " Output###Output", nullptr, ImGuiWindowFlags_NoTitleBar);
 	ImGui::End();
 }

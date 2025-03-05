@@ -34,8 +34,7 @@ add_library(
     "${UI_SRC_DIR}/FileSelector.cpp"
     "${UI_SRC_DIR}/AnimationEditor.cpp"
     "${UI_SRC_DIR}/KeyMappingsManager.cpp"
-        ne_ui/public/include/ui/components/ToolManager.cpp
-        ne_ui/public/include/ui/components/ToolManager.hpp
+    "${UI_SRC_DIR}/ToolManager.cpp"
 
 )
 
