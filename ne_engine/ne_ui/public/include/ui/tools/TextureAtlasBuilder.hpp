@@ -6,13 +6,15 @@
 #include "ui/UIComponent.hpp"
 #include "ui/components/DraggableCanvas.hpp"
 #include "ui/components/FileSelector.hpp"
+#include "ui/components/ToolManager.hpp"
 
 
-class TextureAtlasBuilder : public UIComponent {
+class TextureAtlasBuilder : public Tool {
 public:
 	GEN_GUI_NAME("TextureAtlasBuilder", ICON_FA_IMAGE " Texture Atlas Builder")
 
 	void render() override;
+	const char* getName() override { return GUI_NAME; }
 
 private:
 	DraggableCanvas _canvas;

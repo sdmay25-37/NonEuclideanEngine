@@ -10,6 +10,7 @@
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
 
+#include "ui/components/ToolManager.hpp"
 #include "ui/tools/AnimationEditor.hpp"
 #include "ui/tools/KeyMappingsManager.hpp"
 #include "ui/tools/TextureAtlasBuilder.hpp"
@@ -63,10 +64,7 @@ int main() {
 	ImGui_ImplGlfw_InitForOpenGL(window, true);
 	ImGui_ImplOpenGL3_Init("#version 330");
 
-	std::unique_ptr<AnimationEditor> animation_editor;
-	std::unique_ptr<KeyMappingsManager> key_mappings_manager;
-	std::unique_ptr<TextureAtlasBuilder> texture_atlas_builder;
-
+	ToolManager tool_manager;
 
 	while(!glfwWindowShouldClose(window)) {
 		glfwPollEvents();
@@ -75,7 +73,7 @@ int main() {
 		ImGui_ImplGlfw_NewFrame();
 		ImGui::NewFrame();
 
-		ImGuiID dockspace_id = ImGui::DockSpaceOverViewport();
+		ImGuiID dockspace_id = ImGui::DockSpaceOverViewport(0, nullptr, ImGuiDockNodeFlags_NoTabBar);
 		static bool init = true;
 		if(init) {
 			init = false;
@@ -83,9 +81,9 @@ int main() {
 			ImGuiID dock_id_main = ImGui::DockBuilderAddNode(dockspace_id, ImGuiDockNodeFlags_DockSpace);
 			ImGui::DockBuilderSetNodeSize(dock_id_main, ImGui::GetMainViewport()->Size);
 
-			ImGui::DockBuilderDockWindow(TextureAtlasBuilder::GUI_ID, dock_id_main);
-		}
 
+			ImGui::DockBuilderDockWindow(ToolManager::GUI_ID, dock_id_main);
+		}
 
 		if(ImGui::BeginMainMenuBar()) {
 			if(ImGui::BeginMenu(ICON_FA_FILE " File")) {
@@ -96,15 +94,21 @@ int main() {
 			}
 			if(ImGui::BeginMenu(ICON_FA_WRENCH " Tools")) {
 				if(ImGui::MenuItem(AnimationEditor::GUI_NAME)) {
-					animation_editor = std::make_unique<AnimationEditor>();
+					tool_manager.open(AnimationEditor::GUI_ID, []() -> auto {
+						return std::make_unique<AnimationEditor>();
+					});
 				}
 
 				if(ImGui::MenuItem(KeyMappingsManager::GUI_NAME)) {
-					key_mappings_manager = std::make_unique<KeyMappingsManager>();
+					tool_manager.open(KeyMappingsManager::GUI_ID, []() -> auto {
+						return std::make_unique<KeyMappingsManager>();
+					});
 				}
 
 				if(ImGui::MenuItem(TextureAtlasBuilder::GUI_NAME)) {
-					texture_atlas_builder = std::make_unique<TextureAtlasBuilder>();
+					tool_manager.open(TextureAtlasBuilder::GUI_ID, []() -> auto {
+						return std::make_unique<TextureAtlasBuilder>();
+					});
 				}
 
 				ImGui::EndMenu();
@@ -113,19 +117,11 @@ int main() {
 			ImGui::EndMainMenuBar();
 		}
 
-		if(animation_editor != nullptr) {
-			animation_editor->render();
+		tool_manager.render();
 
-		} else if(key_mappings_manager != nullptr) {
-			key_mappings_manager->render();
-
-		} else if(texture_atlas_builder != nullptr) {
-			texture_atlas_builder->render();
-
-		} else {
+		if(tool_manager.empty()) {
 			ImGui::ShowDemoWindow();
 		}
-
 
 		ImGui::Render();
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

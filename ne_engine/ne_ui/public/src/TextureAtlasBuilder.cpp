@@ -10,8 +10,6 @@
 
 
 void TextureAtlasBuilder::render() {
-	ImGui::Begin(GUI_REFERENCE, nullptr);
-
 	ImGuiID dockspace_id = ImGui::GetID("TextureAssetBuilderDockSpace");
 	ImGui::DockSpace(dockspace_id);
 
@@ -35,7 +33,6 @@ void TextureAtlasBuilder::render() {
 
 		docked_window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoWindowMenuButton;
 	}
-	ImGui::End();
 
 	ImGui::SetNextWindowClass(&docked_window_class);
 	ImGui::Begin(ICON_FA_PALETTE " Canvas###Canvas");
