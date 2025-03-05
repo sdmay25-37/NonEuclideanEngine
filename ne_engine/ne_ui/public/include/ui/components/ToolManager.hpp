@@ -19,6 +19,7 @@ public:
 
 	void render() override;
 	void open(const char* id, const std::function<std::unique_ptr<Tool>()>& constructor);
+	void close(const char* id);
 
 	[[nodiscard]] bool empty() const { return _tools.empty(); }
 
