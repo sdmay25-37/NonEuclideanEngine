@@ -13,6 +13,8 @@ class TextureAtlasBuilder : public Tool {
 public:
 	GEN_GUI_NAME("TextureAtlasBuilder", ICON_FA_IMAGE " Texture Atlas Builder")
 
+	TextureAtlasBuilder() : _canvas(ImVec2(1000, 1000)) {}
+
 	void render() override;
 	const char* getName() override { return GUI_NAME; }
 

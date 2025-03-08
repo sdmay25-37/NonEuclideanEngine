@@ -31,7 +31,7 @@ struct CanvasItem {
 	ImVec2 p0, p1;
 	bool dragging = false;
 
-	CanvasItem(Texture&& texture)
+	explicit CanvasItem(Texture&& texture)
 		: texture(std::move(texture)), p0({0, 0}), p1({0, 0}) {
 		p1 = ImVec2(p0.x + texture.getWidth(), p0.y + texture.getHeight());
 	}
@@ -46,6 +46,8 @@ public:
 	void render() override;
 	~Canvas() override = default;
 
+	explicit Canvas(const ImVec2 size) : _size(size) {}
+
 	void addItem(Texture&& texture) {
 		_items.emplace_back(std::move(texture));
 	}
@@ -54,8 +56,11 @@ private:
     ScreenCamera _camera;
 	std::vector<CanvasItem> _items;
 	bool is_dragging = false;
+	ImVec2 _size;
+	ImVec2 _p0, _p1;
 
-	void handleInput();
+  void handleInput(ImDrawList* draw_list);
+	void snapToItems(ImDrawList* draw_list, ImVec2& p0_screen, ImVec2& p1_screen);
 };
 
 
