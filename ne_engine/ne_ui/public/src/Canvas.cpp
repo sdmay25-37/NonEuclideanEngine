@@ -63,14 +63,14 @@ void Canvas::render() {
 		ImGui::ResetMouseDragDelta(ImGuiMouseButton_Middle);
 	}
 
-	handleInput(draw_list);
-
 	for (auto& item : _items) {
 
 		ImVec2 p0_screen = _camera.worldToScreen(item.p0);
 		ImVec2 p1_screen = _camera.worldToScreen(item.p1);
 		draw_list->AddImage(item.texture.getId(), p0_screen, p1_screen);
 	}
+
+	handleInput(draw_list);
 
 	ImGui::End();
 }
@@ -112,14 +112,14 @@ void Canvas::handleInput(ImDrawList* draw_list) {
 	}
 }
 
-void snap(ImDrawList* draw_list, ImVec2& p0, ImVec2& p1, ImVec2& other_p0, ImVec2 other_p1, float snapping) {
+void snapInside(ImDrawList* draw_list, ImVec2& p0, ImVec2& p1, const ImVec2& other_p0, const ImVec2& other_p1, float snapping) {
 	// Left side
 	float diff = p0.x - other_p0.x;
 	if(std::abs(diff) < snapping) {
 		p0.x -= diff;
 		p1.x -= diff;
 
-		draw_list->AddLine(p0, {p0.x, p1.y}, IM_COL32(255, 0, 0, 255), 5.0f);
+		draw_list->AddLine(p0, {p0.x, p1.y}, IM_COL32(255, 0, 0, 255), 3.0f);
 	}
 
 	// Right side
@@ -128,7 +128,7 @@ void snap(ImDrawList* draw_list, ImVec2& p0, ImVec2& p1, ImVec2& other_p0, ImVec
 		p0.x -= diff;
 		p1.x -= diff;
 
-		draw_list->AddLine({p1.x, p0.y}, p1, IM_COL32(255, 0, 0, 255), 5.0f);
+		draw_list->AddLine({p1.x, p0.y}, p1, IM_COL32(255, 0, 0, 255), 3.0f);
 	}
 
 	// Top side
@@ -137,7 +137,7 @@ void snap(ImDrawList* draw_list, ImVec2& p0, ImVec2& p1, ImVec2& other_p0, ImVec
 		p0.y -= diff;
 		p1.y -= diff;
 
-		draw_list->AddLine(p0, {p1.x, p0.y}, IM_COL32(255, 0, 0, 255), 5.0f);
+		draw_list->AddLine(p0, {p1.x, p0.y}, IM_COL32(255, 0, 0, 255), 3.0f);
 	}
 
 	// Bottom side
@@ -146,7 +146,53 @@ void snap(ImDrawList* draw_list, ImVec2& p0, ImVec2& p1, ImVec2& other_p0, ImVec
 		p0.y -= diff;
 		p1.y -= diff;
 
-		draw_list->AddLine({p0.x, p1.y}, p1, IM_COL32(255, 0, 0, 255), 5.0f);
+		draw_list->AddLine({p0.x, p1.y}, p1, IM_COL32(255, 0, 0, 255), 3.0f);
+	}
+}
+
+void snapOutside(ImDrawList* draw_list, ImVec2& p0, ImVec2& p1, const ImVec2& other_p0, const ImVec2& other_p1, float snapping) {
+	// Left side
+	float diff = p0.x - other_p1.x;
+	if(std::abs(diff) < snapping) {
+		p0.x -= diff;
+		p1.x -= diff;
+
+		const ImVec2 start = { p0.x, std::min(p0.y, other_p0.y) };
+		const ImVec2 end   = { p0.x, std::max(p1.y, other_p1.y) };
+		draw_list->AddLine(start, end, IM_COL32(255, 0, 0, 255), 3.0f);
+	}
+
+	// Right side
+	diff = p1.x - other_p0.x;
+	if(std::abs(diff) < snapping) {
+		p0.x -= diff;
+		p1.x -= diff;
+
+		const ImVec2 start = { p1.x, std::min(p0.y, other_p0.y) };
+		const ImVec2 end   = { p1.x, std::max(p1.y, other_p1.y) };
+		draw_list->AddLine(start, end, IM_COL32(255, 0, 0, 255), 3.0f);
+	}
+
+	// Top side
+	diff = p0.y - other_p1.y;
+	if(std::abs(diff) < snapping) {
+		p0.y -= diff;
+		p1.y -= diff;
+
+		const ImVec2 start = { std::min(p0.x, other_p0.x), p0.y };
+		const ImVec2 end   = { std::max(p1.x, other_p1.x), p0.y };
+		draw_list->AddLine(start, end, IM_COL32(255, 0, 0, 255), 3.0f);
+	}
+
+	// Bottom side
+	diff = p1.y - other_p0.y;
+	if(std::abs(diff) < snapping) {
+		p0.y -= diff;
+		p1.y -= diff;
+
+		const ImVec2 start = { std::min(p0.x, other_p0.x), p1.y };
+		const ImVec2 end   = { std::max(p1.x, other_p1.x), p1.y };
+		draw_list->AddLine(start, end, IM_COL32(255, 0, 0, 255), 3.0f);
 	}
 }
 
@@ -157,10 +203,17 @@ void Canvas::snapToItems(ImDrawList* draw_list, ImVec2& p0_screen, ImVec2& p1_sc
 	ImVec2 canvas_p0 = _camera.worldToScreen(_p0);
 	ImVec2 canvas_p1 = _camera.worldToScreen(_p1);
 
-	snap(draw_list, p0_screen, p1_screen, canvas_p0, canvas_p1, snapping);
+	snapInside(draw_list, p0_screen, p1_screen, canvas_p0, canvas_p1, snapping);
 
 	// Todo: for efficiency (if needed), pre-compute the screen positions of other items whenever a new drag is started
 	// Snap to other items
+	for(auto& item : _items) {
+		if(item.dragging) continue; // skip current item
 
+		ImVec2 other_p0 = _camera.worldToScreen(item.p0);
+		ImVec2 other_p1 = _camera.worldToScreen(item.p1);
+
+		snapOutside(draw_list, p0_screen, p1_screen, other_p0, other_p1, snapping);
+	}
 }
 
