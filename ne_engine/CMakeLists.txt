@@ -29,7 +29,7 @@ add_library(
 
     # ne_ui
     "${UI_SRC_DIR}/Image.cpp"
-    "${UI_SRC_DIR}/DraggableCanvas.cpp"
+    "${UI_SRC_DIR}/Canvas.cpp"
     "${UI_SRC_DIR}/TextureAtlasBuilder.cpp"
     "${UI_SRC_DIR}/FileSelector.cpp"
     "${UI_SRC_DIR}/AnimationEditor.cpp"

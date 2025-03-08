@@ -32,18 +32,7 @@ void TextureAtlasBuilder::render() {
 
 	}
 
-	ImGui::Begin(ICON_FA_PALETTE " Canvas###Canvas");
-	ImVec2 window_size = ImGui::GetContentRegionAvail();
-
-	ImVec2 canvasSize = window_size;
-	canvasSize.x *= 0.8;
-	canvasSize.y *= 0.8;
-
-	_canvas.setSize(canvasSize);
-	_canvas.setPosition(ImVec2((window_size.x - canvasSize.x) / 2, (window_size.y - canvasSize.y) / 2));
 	_canvas.render();
-
-	ImGui::End();
 
 	ImGui::Begin(ICON_FA_SLIDERS_H " Menu###Menu");
 
@@ -77,14 +66,8 @@ void TextureAtlasBuilder::loadTextures(const char* path) {
 				auto texture_result = Texture::create(filepath);
 
 				if(texture_result.is_ok()) {
-					int image_x = Random::integer(0, 500);
-					int image_y = Random::integer(0, 500);
 
-					Texture texture = std::move(texture_result.ok());
-					int width = texture.getWidth();
-					int height = texture.getHeight();
-
-					_canvas.addComponent(std::make_unique<Image>(filename, std::move(texture), ImVec2(image_x, image_y), ImVec2(width, height)));
+					_canvas.addItem(std::move(texture_result.ok()));
 				} else {
 					std::cerr << "Failed to load image file: " << filepath << std::endl;
 				}

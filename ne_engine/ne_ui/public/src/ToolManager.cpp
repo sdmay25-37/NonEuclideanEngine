@@ -4,16 +4,21 @@ void ToolManager::render() {
 	if(empty()) return;
 
 	ImGui::Begin(GUI_ID);
-	ImGui::BeginTabBar("TabBar");
+	ImGui::BeginTabBar("TabBar", ImGuiTabBarFlags_AutoSelectNewTabs);
 
-	for(auto& [id, tool] : _tools) {
-		if(ImGui::BeginTabItem(tool->getName())) {
+	for(auto it = _tools.begin(); it != _tools.end(); ) {
+		auto& [id, tool] = *it;
+
+		bool open = true;
+		if(ImGui::BeginTabItem(tool->getName(), &open)) {
 			tool->render();
 			ImGui::EndTabItem();
 		}
 
-		if(ImGui::IsItemHovered() && ImGui::IsMouseClicked(ImGuiMouseButton_Right)) {
-			close(id);
+		if(!open) {
+			it = _tools.erase(it);
+		} else {
+			++it;
 		}
 	}
 

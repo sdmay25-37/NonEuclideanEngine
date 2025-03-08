@@ -4,7 +4,7 @@
 #include <IconsFontAwesome5.h>
 
 #include "ui/UIComponent.hpp"
-#include "ui/components/DraggableCanvas.hpp"
+#include "ui/components/Canvas.hpp"
 #include "ui/components/FileSelector.hpp"
 #include "ui/components/ToolManager.hpp"
 
@@ -17,7 +17,7 @@ public:
 	const char* getName() override { return GUI_NAME; }
 
 private:
-	DraggableCanvas _canvas;
+	Canvas _canvas;
 	FileSelector _textureFolderSelector;
 
 	void loadTextures(const char* path);
