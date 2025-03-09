@@ -23,7 +23,6 @@ public:
 	// Move constructor
 	Texture(Texture&& other) noexcept
 		: _textureId(other._textureId), _width(other._width), _height(other._height) {
-
 		other._textureId = 0;  // Prevent the other destructor from freeing the texture
 	}
 

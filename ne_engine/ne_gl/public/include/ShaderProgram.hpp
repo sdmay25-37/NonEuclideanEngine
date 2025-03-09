@@ -9,15 +9,30 @@
 #include "utils.hpp"
 
 class ShaderProgram {
-private:
-	unsigned int _programId;
-
 public:
 
 	[[nodiscard]] static Result<ShaderProgram, std::string> create(
 		const char* vertex_shader_path,
 		const char* fragment_shader_path
 	);
+
+	ShaderProgram(const ShaderProgram&) = delete; // delete copy constructor
+	ShaderProgram& operator=(const ShaderProgram&) = delete; // delete copy assignment
+
+	// Move constructor
+	ShaderProgram(ShaderProgram&& other) noexcept
+		: _programId(other._programId) {
+		other._programId = 0;
+	}
+
+	// Move assignment operator
+	ShaderProgram& operator=(ShaderProgram&& other) noexcept {
+		if(this != &other) {
+			_programId = other._programId;
+			other._programId = 0;
+		}
+		return *this;
+	}
 
 	void bind();
 	void cleanup();
@@ -28,7 +43,10 @@ public:
 	void setUniformMat4(const char* name, const glm::mat4& matrix);
 
 private:
-	explicit ShaderProgram(unsigned int programId) : _programId(programId) {};
+	unsigned int _programId;
+
+	explicit ShaderProgram(unsigned int programId) : _programId(programId) {}
+	;
 };
 
 #endif

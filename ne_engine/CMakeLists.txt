@@ -8,13 +8,14 @@ add_library(
     ne_engine STATIC
 
     # ne_gl
-    "${GL_SRC_DIR}/Sprite.cpp"
-    "${GL_SRC_DIR}/ShaderProgram.cpp"
-    "${GL_SRC_DIR}/Engine.cpp"
-    "${GL_SRC_DIR}/Triangle.cpp"
-    "${GL_SRC_DIR}/GLFWContext.cpp"
     "${GL_SRC_DIR}/Animation.cpp"
+    "${GL_SRC_DIR}/App.cpp"
+    "${GL_SRC_DIR}/Engine.cpp"
+    "${GL_SRC_DIR}/GLFWContext.cpp"
+    "${GL_SRC_DIR}/Render.cpp"
+    "${GL_SRC_DIR}/ShaderProgram.cpp"
     "${GL_SRC_DIR}/Texture.cpp"
+    "${GL_SRC_DIR}/Triangle.cpp"
 
     # ne_input
     "${INPUT_SRC_DIR}/Input.cpp"
@@ -46,4 +47,4 @@ target_include_directories(ne_engine
     ne_gl/private/include ne_math/private/include ne_input/private/include ne_resource/private/include ne_ui/private/include
 )
 
-target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb_image imgui)
+target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb_image imgui entt)
