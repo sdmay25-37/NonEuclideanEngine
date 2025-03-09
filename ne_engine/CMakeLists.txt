@@ -15,7 +15,6 @@ add_library(
     "${GL_SRC_DIR}/GLFWContext.cpp"
     "${GL_SRC_DIR}/Animation.cpp"
     "${GL_SRC_DIR}/Texture.cpp"
-    "${GL_SRC_DIR}/TextureAtlas.cpp"
 
     # ne_input
     "${INPUT_SRC_DIR}/Input.cpp"
