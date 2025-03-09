@@ -1,4 +1,4 @@
-set(GL_SRC_DIR      ${CMAKE_CURRENT_SOURCE_DIR}/ne_gl/public/src)
+set(GL_SRC_DIR      ${CMAKE_CURRENT_SOURCE_DIR}/ne_graphics/public/src)
 set(INPUT_SRC_DIR   ${CMAKE_CURRENT_SOURCE_DIR}/ne_input/public/src)
 set(MATH_SRC_DIR    ${CMAKE_CURRENT_SOURCE_DIR}/ne_math/public/src)
 set(RES_SRC_DIR     ${CMAKE_CURRENT_SOURCE_DIR}/ne_resource/public/src)
@@ -41,10 +41,10 @@ add_library(
 target_include_directories(ne_engine
 
     PUBLIC
-    include ne_gl/public/include ne_math/public/include ne_input/public/include ne_resource/public/include ne_ui/public/include
+    include ne_graphics/public/include ne_math/public/include ne_input/public/include ne_resource/public/include ne_ui/public/include
 
     PRIVATE
-    ne_gl/private/include ne_math/private/include ne_input/private/include ne_resource/private/include ne_ui/private/include
+    ne_graphics/private/include ne_math/private/include ne_input/private/include ne_resource/private/include ne_ui/private/include
 )
 
 target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb_image imgui entt)
