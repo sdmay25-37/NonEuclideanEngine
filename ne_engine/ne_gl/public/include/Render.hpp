@@ -25,7 +25,7 @@ public:
 	static constexpr int N_INDICES = 6;
 
 private:
-	unsigned int VBO{}, UV_VBO{}, MODEL_MAT_VBO{}, VAO{}, EBO{};
+	unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO;
 
 };
 
