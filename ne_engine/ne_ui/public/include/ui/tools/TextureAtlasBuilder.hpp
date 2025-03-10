@@ -13,13 +13,15 @@ class TextureAtlasBuilder : public Tool {
 public:
 	GEN_GUI_NAME("TextureAtlasBuilder", ICON_FA_IMAGE " Texture Atlas Builder")
 
-	TextureAtlasBuilder() : _canvas(ImVec2(1000, 1000)) {}
+	TextureAtlasBuilder()
+	: _canvas(std::make_unique<Canvas>(ImVec2(1024, 1024))), _atlasFileSelector("AtlasFileSelector"), _textureFolderSelector("TextureFolderSelector") {}
 
 	void render() override;
 	const char* getName() override { return GUI_NAME; }
 
 private:
-	Canvas _canvas;
+	std::unique_ptr<Canvas> _canvas;
+	FileSelector _atlasFileSelector;
 	FileSelector _textureFolderSelector;
 
 	void loadTextures(const char* path);

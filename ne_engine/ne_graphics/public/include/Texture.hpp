@@ -1,7 +1,7 @@
 #ifndef TEXTURE_H
 #define TEXTURE_H
 
-
+#include "Image.hpp"
 #include "Resource.hpp"
 #include "utils.hpp"
 
@@ -9,9 +9,10 @@
 class Texture : public Resource {
 public:
 
-    // Constructor to load texture from file
+	// Class factory methods
     enum class CreateError { IMAGE_LOAD_FAILURE };
-   	static Result<Texture, CreateError> create(const std::string& filepath);
+   	[[nodiscard]] static Result<Texture, CreateError> create(const std::string& filepath);
+	[[nodiscard]] static Result<Texture, CreateError> createFromImage(const Image& image);
 
     // Destructor to free GPU texture memory
 	~Texture() override;

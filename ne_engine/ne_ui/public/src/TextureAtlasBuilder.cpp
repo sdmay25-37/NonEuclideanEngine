@@ -32,12 +32,20 @@ void TextureAtlasBuilder::render() {
 
 	}
 
-	_canvas.render();
+	if(_canvas != nullptr) {
+		_canvas->render();
+	}
 
 	ImGui::Begin(ICON_FA_SLIDERS_H " Menu###Menu");
 
 	ImGui::SeparatorText("Atlas");
-	ImGui::Text(ICON_FA_FOLDER_PLUS " Open");
+	_atlasFileSelector.render();
+
+	ImGui::SameLine();
+	if(ImGui::Button("Save")) {
+		//loadTextures(_textureFolderSelector.getBuffer());
+		_atlasFileSelector.clear();
+	}
 
 	ImGui::SeparatorText("Textures");
 
@@ -57,6 +65,8 @@ void TextureAtlasBuilder::render() {
 }
 
 void TextureAtlasBuilder::loadTextures(const char* path) {
+	if(_canvas == nullptr) return;
+
 	try {
 		for(const auto &entry : std::filesystem::directory_iterator(path)) {
 			if(is_regular_file(entry.status())) {
@@ -67,7 +77,7 @@ void TextureAtlasBuilder::loadTextures(const char* path) {
 
 				if(texture_result.is_ok()) {
 
-					_canvas.addItem(std::move(texture_result.ok()));
+					_canvas->addItem(std::move(texture_result.ok()));
 				} else {
 					std::cerr << "Failed to load image file: " << filepath << std::endl;
 				}

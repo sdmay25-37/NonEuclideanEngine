@@ -1,22 +1,29 @@
 
 #include <glad/glad.h>
+#include <stb_image.h>
 
 #include "Texture.hpp"
 
-#include <stb_image.h>
 
 Result<Texture, Texture::CreateError> Texture::create(const std::string& filepath) {
 	using Result = Result<Texture, CreateError>;
 
-	unsigned int textureId;
-	int width, height;
-
-	unsigned char *image_data = stbi_load(filepath.c_str(), &width, &height, nullptr, 4);
-	if (!image_data) {
+	// Load image
+	auto image_result = Image::create(filepath);
+	if(image_result.is_error()) {
 		return Result::Error(CreateError::IMAGE_LOAD_FAILURE);
 	}
 
-	// Create texture from image data
+	const Image image = image_result.ok();
+
+	// Create texture from image
+	return createFromImage(image);
+}
+
+Result<Texture, Texture::CreateError> Texture::createFromImage(const Image& image) {
+	using Result = Result<Texture, CreateError>;
+
+	unsigned int textureId;
 	glGenTextures(1, &textureId);
 	glBindTexture(GL_TEXTURE_2D, textureId);
 
@@ -25,12 +32,9 @@ Result<Texture, Texture::CreateError> Texture::create(const std::string& filepat
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
-	// glGenerateMipmap(GL_TEXTURE_2D);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image.width(), image.height(), 0, GL_RGBA, GL_UNSIGNED_BYTE, image.data());
 
-	stbi_image_free(image_data);
-
-	return Result::Ok(Texture(textureId, width, height));
+	return Result::Ok(Texture(textureId, image.width(), image.height()));
 }
 
 Texture::~Texture() {

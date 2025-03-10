@@ -30,6 +30,7 @@ private:
 	explicit Result(E error) : _value(std::move(error)) {}
 };
 
+// Todo:  better error type, allow for layered messages
 template<typename E>
 class Error {
 public:
