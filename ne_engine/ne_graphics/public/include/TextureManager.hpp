@@ -17,7 +17,6 @@ struct AtlasedTexture {
 class TextureManager {
 public:
 	Result<std::nullptr_t, std::string> loadAtlas(const char* path);
-
 	std::optional<AtlasedTexture> getTexture(const std::string& name);
 
 private:

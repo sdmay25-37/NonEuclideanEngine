@@ -121,8 +121,15 @@ void App::init() {
 	int map_height = map_width * ASPECT_RATIO;
 
 	float rect_size = 2.0 / (map_width - 1);
-
 	int num_sprites = map_width * map_height;
+
+	auto result = _texture_manager.loadAtlas("../res/atlases/atlas.json");
+	if(result.is_error()) {
+		std::cerr << "Error: " << result.error();
+	}
+
+	auto texture_result = _texture_manager.getTexture("tile0.png");
+	AtlasedTexture texture = texture_result.value();
 
 	for(int i = 0; i < num_sprites; i++) {
 
@@ -150,7 +157,8 @@ void App::init() {
 		_uvRanges.emplace_back(uv_min.x, uv_min.y, uv_max.x, uv_max.y);
 
 		const auto entity = _registry.create();
-		_registry.emplace<Sprite>(entity, model_mat, uv_min, uv_max);
+		// _registry.emplace<Sprite>(entity, model_mat, uv_min, uv_max);
+		_registry.emplace<AtlasSprite>(entity, model_mat, texture);
 	}
 
 	_renderSystem = new Render();
@@ -167,22 +175,11 @@ void App::init() {
 
 	auto bindings = loader.processFileArray();
 
-	// _charInput->bindKeyPress("QUIT", [&_window]() {
-	// 	glfwSetWindowShouldClose(_window, true);
-	// });
+	_charInput->bindKeyPress("QUIT", [this]() {
+		glfwSetWindowShouldClose(_window, true);
+	});
 
 	_charInput->bindContexts(bindings);
-
-
-	auto result = _texture_manager.loadAtlas("../res/atlases/atlas.json");
-	if(result.is_error()) {
-		std::cerr << "Error: " << result.error();
-	}
-
-	auto texture = _texture_manager.getTexture("tile0.png");
-	if(texture.has_value()) {
-		std::cout << "Texture found with Atlas ID " << texture.value().atlas_id << std::endl;
-	}
 }
 
 void App::update() {
@@ -233,11 +230,14 @@ void App::render() {
 
 void App::cleanup() {
 	delete _charInput;
+	_charInput = nullptr;
 
 	_shaders->cleanup();
 	delete _shaders;
+	_shaders = nullptr;
 
 	delete _renderSystem;
+	_renderSystem = nullptr;
 
 	glfwTerminate();
 }

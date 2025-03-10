@@ -1,5 +1,6 @@
 #include "Render.hpp"
 
+#include <TextureManager.hpp>
 #include <glad/glad.h>
 
 Render::Render() {
@@ -70,24 +71,40 @@ Render::~Render() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void Render::render(entt::registry &registry) {
-	auto view = registry.view<Sprite>();
+// Todo: Not sure how I feel about this method
+// I don't like having to copy UV data every frame when it likely doesn't change
+void Render::render(entt::registry& registry) const {
+	auto const view = registry.view<AtlasSprite>();
 
-	std::vector<glm::mat4> model_mats;
-	std::vector<glm::vec4> uv_ranges;
+	std::unordered_map<unsigned int, std::pair<std::vector<glm::mat4>, std::vector<glm::vec4>>> atlas_data;
 
-	for(auto [entity, sprite]: view.each()) {
+	// Group sprite texture data by atlas
+	for(auto [entity, sprite] : view.each()) {
+		auto& [model_mats, uv_ranges] = atlas_data[sprite.texture.atlas_id];
 		model_mats.push_back(sprite.model_mat);
-		uv_ranges.emplace_back(sprite.uv_min.x, sprite.uv_min.y, sprite.uv_max.x, sprite.uv_max.y);
+		uv_ranges.emplace_back(sprite.texture.uv_min.x, sprite.texture.uv_min.y, sprite.texture.uv_max.x, sprite.texture.uv_max.y);
 	}
 
-	glBindBuffer(GL_ARRAY_BUFFER, MODEL_MAT_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_mats.size(), model_mats.data(), GL_DYNAMIC_DRAW);
+	// Render one atlas at a time
+	for(const auto& [atlas_id, val] : atlas_data) {
+		const auto& [model_mats, uv_ranges] = val;
 
-	glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
+		// Todo: If we are feeling really crazy we could double buffer this data to reduce latency
+		// Buffer model matrix data
+		glBindBuffer(GL_ARRAY_BUFFER, MODEL_MAT_VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_mats.size(), model_mats.data(), GL_DYNAMIC_DRAW);
 
-	glDrawElementsInstanced(GL_TRIANGLES, N_INDICES, GL_UNSIGNED_INT, nullptr, view.size());
+		// Buffer UV data
+		glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
+
+		// Bind atlas texture
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, atlas_id);
+
+		// Render sprites
+		glDrawElementsInstanced(GL_TRIANGLES, N_INDICES, GL_UNSIGNED_INT, nullptr, model_mats.size());
+	}
 }
 
 void Render::bind() {
