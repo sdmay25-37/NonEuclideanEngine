@@ -10,7 +10,7 @@
 #include "Input.hpp"
 #include "Render.hpp"
 #include "ShaderProgram.hpp"
-
+#include "TextureManager.hpp"
 
 constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;
@@ -37,6 +37,7 @@ private:
 	float _uvWidth, _uvHeight;
 	ShaderProgram* _shaders;
 	Input* _charInput;
+	TextureManager _texture_manager;
 
 
   	void init();

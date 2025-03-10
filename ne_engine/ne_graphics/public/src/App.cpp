@@ -159,6 +159,7 @@ void App::init() {
 	_shaders->bind();
 	_shaders->setUniform1i("texture_atlas", 0);
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _texture);glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _texture);
 
 	_charInput = new Input(_window);
@@ -171,6 +172,17 @@ void App::init() {
 	// });
 
 	_charInput->bindContexts(bindings);
+
+
+	auto result = _texture_manager.loadAtlas("../res/atlases/atlas.json");
+	if(result.is_error()) {
+		std::cerr << "Error: " << result.error();
+	}
+
+	auto texture = _texture_manager.getTexture("tile0.png");
+	if(texture.has_value()) {
+		std::cout << "Texture found with Atlas ID " << texture.value().atlas_id << std::endl;
+	}
 }
 
 void App::update() {
@@ -198,6 +210,9 @@ void App::update() {
 void App::render() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, _texture);
 
 	glm::vec3 camera_pos(0.0, 0.0, 1.0);
 	glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);

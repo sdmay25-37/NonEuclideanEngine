@@ -1,21 +1,22 @@
-set(GL_SRC_DIR      ${CMAKE_CURRENT_SOURCE_DIR}/ne_graphics/public/src)
-set(INPUT_SRC_DIR   ${CMAKE_CURRENT_SOURCE_DIR}/ne_input/public/src)
-set(MATH_SRC_DIR    ${CMAKE_CURRENT_SOURCE_DIR}/ne_math/public/src)
-set(RES_SRC_DIR     ${CMAKE_CURRENT_SOURCE_DIR}/ne_resource/public/src)
-set(UI_SRC_DIR      ${CMAKE_CURRENT_SOURCE_DIR}/ne_ui/public/src)
+set(GRAPHICS_SRC_DIR    ${CMAKE_CURRENT_SOURCE_DIR}/ne_graphics/public/src)
+set(INPUT_SRC_DIR       ${CMAKE_CURRENT_SOURCE_DIR}/ne_input/public/src)
+set(MATH_SRC_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/ne_math/public/src)
+set(RES_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_resource/public/src)
+set(UI_SRC_DIR          ${CMAKE_CURRENT_SOURCE_DIR}/ne_ui/public/src)
 
 add_library(
     ne_engine STATIC
 
-    # ne_gl
-    "${GL_SRC_DIR}/Animation.cpp"
-    "${GL_SRC_DIR}/App.cpp"
-    "${GL_SRC_DIR}/Engine.cpp"
-    "${GL_SRC_DIR}/GLFWContext.cpp"
-    "${GL_SRC_DIR}/Render.cpp"
-    "${GL_SRC_DIR}/ShaderProgram.cpp"
-    "${GL_SRC_DIR}/Texture.cpp"
-    "${GL_SRC_DIR}/Triangle.cpp"
+    # ne_graphics
+    "${GRAPHICS_SRC_DIR}/Animation.cpp"
+    "${GRAPHICS_SRC_DIR}/App.cpp"
+    "${GRAPHICS_SRC_DIR}/Engine.cpp"
+    "${GRAPHICS_SRC_DIR}/GLFWContext.cpp"
+    "${GRAPHICS_SRC_DIR}/Render.cpp"
+    "${GRAPHICS_SRC_DIR}/ShaderProgram.cpp"
+    "${GRAPHICS_SRC_DIR}/Texture.cpp"
+    "${GRAPHICS_SRC_DIR}/TextureManager.cpp"
+    "${GRAPHICS_SRC_DIR}/Triangle.cpp"
 
     # ne_input
     "${INPUT_SRC_DIR}/Input.cpp"

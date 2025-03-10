@@ -14,7 +14,7 @@ public:
    	static Result<Texture, CreateError> create(const std::string& filepath);
 
     // Destructor to free GPU texture memory
-	~Texture();
+	~Texture() override;
 
 	// Delete copy constructor and copy assignment
 	Texture(const Texture&) = delete;

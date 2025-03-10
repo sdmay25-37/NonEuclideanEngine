@@ -1,0 +1,6 @@
+{
+  "atlas":"../res/textures/Slime.png",
+  "textures":[
+    ["tile0.png", [0.0, 0.0], [1.0, 1.0]]
+  ]
+}
