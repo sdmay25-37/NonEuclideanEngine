@@ -45,8 +45,6 @@ endforeach(SOURCE ${SOURCES})
 
 enable_testing(true)
 include(CTest)
-
-add_subdirectory(lib/Catch2)
-# include(Catch2)
+find_package(Catch2)
 
 add_subdirectory(unitTests)
