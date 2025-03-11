@@ -42,3 +42,11 @@ foreach(SOURCE ${SOURCES})
     target_link_libraries(${EXECUTABLE} ne_engine stb_image entt)
 
 endforeach(SOURCE ${SOURCES})
+
+enable_testing(true)
+include(CTest)
+
+add_subdirectory(lib/Catch2)
+# include(Catch2)
+
+add_subdirectory(unitTests)
