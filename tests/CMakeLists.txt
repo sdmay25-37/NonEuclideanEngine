@@ -43,8 +43,5 @@ foreach(SOURCE ${SOURCES})
 
 endforeach(SOURCE ${SOURCES})
 
-enable_testing(true)
-include(CTest)
-find_package(Catch2)
 
 add_subdirectory(unitTests)
