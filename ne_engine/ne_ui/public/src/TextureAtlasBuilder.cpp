@@ -1,8 +1,10 @@
 #include <filesystem>
+#include <fstream>
 #include <iostream>
 
 #include <IconsFontAwesome5.h>
 #include <imgui_internal.h>
+#include <nlohmann/json.hpp>
 
 #include "Texture.hpp"
 #include "ui/components/Image.hpp"
@@ -43,7 +45,7 @@ void TextureAtlasBuilder::render() {
 
 	ImGui::SameLine();
 	if(ImGui::Button("Save")) {
-		//loadTextures(_textureFolderSelector.getBuffer());
+		saveAtlas(_atlasFileSelector.getBuffer(), "../res/textures/atlas.png");
 		_atlasFileSelector.clear();
 	}
 
@@ -64,6 +66,7 @@ void TextureAtlasBuilder::render() {
 	ImGui::End();
 }
 
+// Todo: use result type
 void TextureAtlasBuilder::loadTextures(const char* path) {
 	if(_canvas == nullptr) return;
 
@@ -73,11 +76,10 @@ void TextureAtlasBuilder::loadTextures(const char* path) {
 				std::string filepath = entry.path().string();
 				std::string filename = entry.path().filename().string();
 
-				auto texture_result = Texture::create(filepath);
+				auto image_result = Image::create(filepath);
 
-				if(texture_result.is_ok()) {
-
-					_canvas->addItem(std::move(texture_result.ok()));
+				if(image_result.is_ok()) {
+					_canvas->addItem(std::move(image_result.ok()));
 				} else {
 					std::cerr << "Failed to load image file: " << filepath << std::endl;
 				}
@@ -85,5 +87,30 @@ void TextureAtlasBuilder::loadTextures(const char* path) {
 		}
 	} catch(const std::exception &e) {
 		std::cerr << "Failed to load file: " << e.what() << std::endl;
+	}
+}
+
+// Todo: use result type
+void TextureAtlasBuilder::saveAtlas(const char* json_path, const char* texture_path) {
+	nlohmann::json json_data;
+
+	json_data["atlas"] = texture_path;
+	json_data["textures"] = nlohmann::json::array();
+
+	const std::vector<TextureUVs> items = _canvas->getItemUVs();
+	for(auto& item : items) {
+		json_data["textures"].push_back({
+			item.filepath,
+			{item.uv_min.x, item.uv_min.y},
+			{item.uv_max.x, item.uv_max.y}
+		});
+	}
+
+
+	// Write JSON to file
+	std::ofstream json_file(json_path);
+	if(json_file.is_open()) {
+		json_file << json_data.dump();
+		json_file.close();
 	}
 }

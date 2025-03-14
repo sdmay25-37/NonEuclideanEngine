@@ -11,5 +11,5 @@ Result<Image, Image::CreateError> Image::create(const std::string& filepath, con
 		return Result::Error(CreateError::IMAGE_LOAD_FAILURE);
 	}
 
-	return Result::Ok(Image(image_data, width, height, desired_channels));
+	return Result::Ok(Image(filepath, image_data, width, height, desired_channels));
 }

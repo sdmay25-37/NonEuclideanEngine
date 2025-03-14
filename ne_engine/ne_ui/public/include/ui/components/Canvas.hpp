@@ -7,6 +7,7 @@
 #include <IconsFontAwesome5.h>
 #include <Texture.hpp>
 
+#include "glm/vec2.hpp"
 #include "ui/UIComponent.hpp"
 
 class ScreenCamera {
@@ -27,15 +28,21 @@ private:
 };
 
 struct CanvasItem {
+	Image image;
 	Texture texture;
 	ImVec2 p0, p1;
 	bool dragging = false;
 
-	explicit CanvasItem(Texture&& texture)
-		: texture(std::move(texture)), p0({0, 0}), p1({0, 0}) {
+	explicit CanvasItem(Image&& image, Texture&& texture)
+		: image(std::move(image)), texture(std::move(texture)), p0({0, 0}), p1({0, 0}) {
 		p1 = ImVec2(p0.x + texture.getWidth(), p0.y + texture.getHeight());
 	}
 
+};
+
+struct TextureUVs {
+	std::string filepath;
+	glm::vec2 uv_min, uv_max;
 };
 
 class Canvas : public UIComponent {
@@ -48,9 +55,9 @@ public:
 
 	explicit Canvas(const ImVec2 size) : _size(size) {}
 
-	void addItem(Texture&& texture) {
-		_items.emplace_back(std::move(texture));
-	}
+	// Todo: use result type
+	void addItem(Image&& image);
+	[[nodiscard]] std::vector<TextureUVs> getItemUVs() const;
 
 private:
     ScreenCamera _camera;
@@ -59,7 +66,7 @@ private:
 	ImVec2 _size;
 	ImVec2 _p0, _p1;
 
-  void handleInput(ImDrawList* draw_list);
+	void handleInput(ImDrawList* draw_list);
 	void snapToItems(ImDrawList* draw_list, ImVec2& p0_screen, ImVec2& p1_screen);
 };
 

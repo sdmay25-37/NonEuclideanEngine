@@ -8,6 +8,7 @@
 
 #include <ui/UIComponent.hpp>
 
+// Todo: add output logging window
 class Tool : public UIComponent {
 public:
 	virtual const char* getName() = 0;

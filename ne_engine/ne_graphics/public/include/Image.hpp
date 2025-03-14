@@ -3,6 +3,7 @@
 
 #include <memory>
 #include <string>
+#include <utility>
 
 #include <stb_image.h>
 
@@ -10,6 +11,7 @@
 
 
 struct Image {
+	std::string _filepath;
     unsigned char* _data;
 	int _width, _height, _channels;
 
@@ -22,13 +24,14 @@ struct Image {
 
 	// Move constructor
 	Image(Image&& other) noexcept
-		: _data(other._data), _width(other._width), _height(other._height), _channels(other._channels) {
+		: _filepath(std::move(other._filepath)), _data(other._data), _width(other._width), _height(other._height), _channels(other._channels) {
 		other._data = nullptr;  // Prevent the other destructor from freeing the data
 	}
 
 	// Move assignment operator
 	Image& operator=(Image&& other) noexcept {
 		if (this != &other) {
+			_filepath = std::move(other._filepath);
 			_data = other._data;
 			_width = other._width;
 			_height = other._height;
@@ -39,6 +42,7 @@ struct Image {
 		return *this;
 	}
 
+	[[nodiscard]] const std::string& filepath() const { return _filepath; }
 	[[nodiscard]] int width() const { return _width; }
 	[[nodiscard]] int height() const { return _height; }
 	[[nodiscard]] int channels() const { return _channels; }
@@ -48,8 +52,8 @@ struct Image {
 	static Result<Image, CreateError> create(const std::string& filepath, int desired_channels = 4);
 
 private:
-	Image(unsigned char* data, const int width, const int height, const int channels)
-		: _data(data), _width(width), _height(height), _channels(channels) {};
+	Image(std::string filepath, unsigned char* data, const int width, const int height, const int channels)
+		: _filepath(std::move(filepath)), _data(data), _width(width), _height(height), _channels(channels) {};
 };
 
 #endif //IMAGE_HPP

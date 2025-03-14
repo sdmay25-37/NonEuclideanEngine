@@ -38,12 +38,8 @@ void Canvas::render() {
 
 	ImGui::Begin(GUI_REFERENCE, nullptr, ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
 
-	ImVec2 window_pos = ImGui::GetWindowPos();
-	ImVec2 window_size = ImGui::GetContentRegionAvail();
-	ImVec2 center = ImVec2(window_pos.x + window_size.x / 2, window_pos.y + window_size.y / 2);
-
-	_p0 = ImVec2(center.x - _size.x / 2, center.y - _size.y / 2);
-	_p1 = ImVec2(center.x + _size.x / 2, center.y + _size.y / 2);
+	_p0 = ImVec2(0, 0);
+	_p1 = ImVec2(_size.x, _size.y);
 
 	ImVec2 canvas_p0_screen = _camera.worldToScreen(_p0);
 	ImVec2 canvas_p1_screen = _camera.worldToScreen(_p1);
@@ -64,7 +60,6 @@ void Canvas::render() {
 	}
 
 	for (auto& item : _items) {
-
 		ImVec2 p0_screen = _camera.worldToScreen(item.p0);
 		ImVec2 p1_screen = _camera.worldToScreen(item.p1);
 		draw_list->AddImage(item.texture.getId(), p0_screen, p1_screen);
@@ -215,5 +210,30 @@ void Canvas::snapToItems(ImDrawList* draw_list, ImVec2& p0_screen, ImVec2& p1_sc
 
 		snapOutside(draw_list, p0_screen, p1_screen, other_p0, other_p1, snapping);
 	}
+}
+
+void Canvas::addItem(Image&& image) {
+
+	auto texture_result = Texture::createFromImage(image);
+	if(texture_result.is_error()) {
+		std::cerr << "Failed to create texture from image" << std::endl;
+		return;
+	}
+
+	Texture texture = texture_result.ok();
+
+	_items.emplace_back(std::move(image), std::move(texture));
+}
+
+std::vector<TextureUVs> Canvas::getItemUVs() const {
+	std::vector<TextureUVs> uvs(_items.size());
+	for(auto& item : _items) {
+		const glm::vec2 uv_min = { item.p0.x / _size.x, item.p0.y / _size.y };
+		const glm::vec2 uv_max = { item.p1.x / _size.x, item.p1.y / _size.y };
+
+		uvs.emplace_back(TextureUVs{ item.image.filepath(), uv_min, uv_max });
+	}
+
+	return std::move(uvs);
 }
 
