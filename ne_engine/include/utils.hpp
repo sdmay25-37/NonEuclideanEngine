@@ -1,6 +1,8 @@
 #ifndef UTILS_HPP
 #define UTILS_HPP
 
+#include <condition_variable>
+#include <mutex>
 #include <random>
 #include <variant>
 
@@ -47,6 +49,55 @@ public:
 		std::uniform_int_distribution<int> dist(min, max);
 		return dist(gen);
 	}
+};
+
+class Signal {
+public:
+	Signal() : _fired(false) {}
+
+	void fire() {
+		std::lock_guard lock(_mtx);
+		_fired = true;
+		_cv.notify_all();
+	}
+
+	void wait() {
+		std::unique_lock lock(_mtx);
+		_cv.wait(lock, [this] { return _fired; });
+	}
+
+private:
+	std::mutex _mtx;
+	std::condition_variable _cv;
+	bool _fired;
+};
+
+class Synchronizer {
+public:
+	explicit Synchronizer(const unsigned int threads)
+	: _total(threads), _waiting(0), _cycle(0) {}
+
+	void wait() {
+		std::unique_lock lock(_mtx);
+		unsigned char current_cycle = _cycle;
+
+		_waiting++;
+		if(_waiting == _total) {
+			_waiting = 0;
+			_cycle++;
+			_cv.notify_all();
+		} else {
+			_cv.wait(lock, [this, current_cycle] { return _cycle != current_cycle; });
+		}
+	}
+
+private:
+	unsigned int _total;
+	unsigned int _waiting;
+	unsigned char _cycle;
+
+	std::mutex _mtx;
+	std::condition_variable _cv;
 };
 
 #endif //UTILS_HPP
