@@ -10,7 +10,6 @@ add_library(
     # ne_graphics
     "${GRAPHICS_SRC_DIR}/Animation.cpp"
     "${GRAPHICS_SRC_DIR}/App.cpp"
-    "${GRAPHICS_SRC_DIR}/Engine.cpp"
     "${GRAPHICS_SRC_DIR}/GLFWContext.cpp"
     "${GRAPHICS_SRC_DIR}/Image.cpp"
     "${GRAPHICS_SRC_DIR}/Render.cpp"

@@ -1,9 +1,15 @@
 #ifndef RENDER_HPP
 #define RENDER_HPP
 
-#include <TextureManager.hpp>
+#include <mutex>
+#include <condition_variable>
+#include <thread>
+
 #include <entt/entt.hpp>
 #include <glm/glm.hpp>
+
+#include "TextureManager.hpp"
+
 
 struct Vertex {
 	float x, y, z;
@@ -22,15 +28,25 @@ struct AtlasSprite {
 
 class Render {
 public:
-	Render();
+	Render() = default;
 	~Render();
 
+	void init();
 	void render(entt::registry &registry) const;
 	void bind();
+
+	// Stages //
+	void prepare();
+	void queue();
+	void batch_sort();
+	void render();
+	void cleanup();
+
 
 	static constexpr int N_INDICES = 6;
 
 private:
+
 	unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO;
 
 };

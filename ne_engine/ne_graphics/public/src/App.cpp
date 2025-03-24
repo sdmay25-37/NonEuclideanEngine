@@ -1,5 +1,6 @@
 #include <ctime>
 #include <iostream>
+#include <thread>
 
 #include <glad/glad.h>
 #include <stb_image.h>
@@ -16,35 +17,29 @@ constexpr int MAX_FRAMESKIP = 5;
 void App::run() {
 
 	init();
+	glfwMakeContextCurrent(NULL);
 
-	// TESTING
-	unsigned long updates = 0;
-	double startTime = glfwGetTime();
+	Synchronizer frameSynch(2);
 
-	double last_time = glfwGetTime();
-	double acc = 0.0;
-	int frames_skipped = 0;
+	std::thread render_thread([&] {
+		glfwMakeContextCurrent(_window);
+		while(true) {
+			std::cout << "Render finish\n";
+		}
+
+
+
+		render();
+	});
+
 
 	while (!glfwWindowShouldClose(_window)) {
-		double current_time = glfwGetTime();
-		double delta_time = current_time - last_time;
+		std::cout << "Frame start\n";
 
-		last_time = current_time;
-		acc += delta_time;
+		update();
 
-		while(acc > SECONDS_PER_UPDATE && frames_skipped < MAX_FRAMESKIP) {
-			update();
-			updates++;
-			acc -= SECONDS_PER_UPDATE;
-			frames_skipped++;
-		}
-
-		// Only render if at least one update has occurred
-		if(frames_skipped > 0) {
-			render();
-			frames_skipped = 0;
-			// std::cout << "UPS: " << updates / (current_time - startTime) << std::endl;
-		}
+		std::cout << "Update finish\n";
+		frameSynch.wait();
 
 	}
 
@@ -161,7 +156,9 @@ void App::init() {
 		_registry.emplace<AtlasSprite>(entity, model_mat, texture);
 	}
 
-	_renderSystem = new Render();
+	_frameSynch = std::make_shared<Synchronizer>(2);
+	_renderSystem = new Render(_frameSynch);
+	_renderSystem->init();
 	_renderSystem->bind();
 
 	_shaders->bind();
@@ -184,23 +181,23 @@ void App::init() {
 
 void App::update() {
 	glfwPollEvents();
-	_count++;
-
-	if(_count % 25 == 0) {
-		_uvRanges.clear();
-
-		auto view = _registry.view<Sprite>();
-		for(auto [entity, sprite] : view.each()) {
-			int tile_x = rand() % _tileWidth;
-			int tile_y = rand() % _tileHeight;
-
-			float u = tile_x * _uvWidth;
-			float v = tile_y * _uvHeight;
-
-			sprite.uv_min = glm::vec2(u, v);
-			sprite.uv_max = glm::vec2(u + _uvWidth, v + _uvHeight);
-		}
-	}
+	// _count++;
+	//
+	// if(_count % 25 == 0) {
+	// 	_uvRanges.clear();
+	//
+	// 	auto view = _registry.view<Sprite>();
+	// 	for(auto [entity, sprite] : view.each()) {
+	// 		int tile_x = rand() % _tileWidth;
+	// 		int tile_y = rand() % _tileHeight;
+	//
+	// 		float u = tile_x * _uvWidth;
+	// 		float v = tile_y * _uvHeight;
+	//
+	// 		sprite.uv_min = glm::vec2(u, v);
+	// 		sprite.uv_max = glm::vec2(u + _uvWidth, v + _uvHeight);
+	// 	}
+	// }
 
 }
 

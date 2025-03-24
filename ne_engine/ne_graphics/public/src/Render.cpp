@@ -3,7 +3,15 @@
 #include <TextureManager.hpp>
 #include <glad/glad.h>
 
-Render::Render() {
+Render::~Render() {
+	glDeleteVertexArrays(1, &VAO);
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &UV_VBO);
+	glDeleteBuffers(1, &MODEL_MAT_VBO);
+	glDeleteBuffers(1, &EBO);
+}
+
+void Render::init() {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &UV_VBO);
@@ -61,14 +69,6 @@ Render::Render() {
 	};
 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
-}
-
-Render::~Render() {
-	glDeleteVertexArrays(1, &VAO);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &UV_VBO);
-	glDeleteBuffers(1, &MODEL_MAT_VBO);
-	glDeleteBuffers(1, &EBO);
 }
 
 // Todo: Not sure how I feel about this method
