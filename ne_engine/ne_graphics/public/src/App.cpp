@@ -24,17 +24,16 @@ void App::run() {
 	std::thread render_thread([&] {
 		glfwMakeContextCurrent(_window);
 		while(true) {
+			render();
+
 			std::cout << "Render finish\n";
+			frameSynch.wait();
 		}
-
-
-
-		render();
 	});
 
 
 	while (!glfwWindowShouldClose(_window)) {
-		std::cout << "Frame start\n";
+		// std::cout << "Frame start\n";
 
 		update();
 
@@ -156,8 +155,7 @@ void App::init() {
 		_registry.emplace<AtlasSprite>(entity, model_mat, texture);
 	}
 
-	_frameSynch = std::make_shared<Synchronizer>(2);
-	_renderSystem = new Render(_frameSynch);
+	_renderSystem = new Render();
 	_renderSystem->init();
 	_renderSystem->bind();
 

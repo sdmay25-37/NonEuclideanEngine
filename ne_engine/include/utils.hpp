@@ -2,9 +2,14 @@
 #define UTILS_HPP
 
 #include <condition_variable>
+#include <functional>
+#include <future>
 #include <mutex>
+#include <queue>
 #include <random>
+#include <thread>
 #include <variant>
+
 
 template<typename T, typename E>
 class Result {
@@ -99,5 +104,80 @@ private:
 	std::mutex _mtx;
 	std::condition_variable _cv;
 };
+
+class ThreadPool {
+public:
+	explicit ThreadPool(size_t threads);
+	~ThreadPool();
+
+	template<class F, class... Args>
+	auto enqueue(F&& f, Args&&... args) -> std::future<typename std::result_of<F(Args...)>::type>;
+
+
+private:
+	std::vector<std::thread> _threads;
+	std::queue<std::function<void()>> _tasks;
+
+	std::mutex _mtx;
+	std::condition_variable _cv;
+	bool _stop;
+
+};
+
+inline ThreadPool::ThreadPool(const size_t threads)
+	: _stop(false) {
+
+	for(size_t i = 0; i < threads; i++) {
+		_threads.emplace_back([this] {
+			while(true) {
+				std::function<void()> task;
+
+				{
+					std::unique_lock lock(_mtx);
+					_cv.wait(lock, [this] { return _stop || !_tasks.empty(); });
+
+					if(_stop && _tasks.empty()) return;
+
+					task = std::move(_tasks.front());
+					_tasks.pop();
+				}
+
+				task();
+			}
+		});
+	}
+}
+
+inline ThreadPool::~ThreadPool() {
+	{
+		std::unique_lock lock(_mtx);
+		_stop = true;
+		_cv.notify_all();
+	}
+
+	for(std::thread& thread : _threads) {
+		thread.join();
+	}
+}
+
+template<class F, class... Args>
+auto ThreadPool::enqueue(F &&f, Args &&... args) -> std::future<std::result_of_t<F(Args...)>> {
+	using return_type = std::result_of_t<F(Args...)>;
+
+	auto task = std::make_shared<std::packaged_task<return_type()>>(
+		std::bind(std::forward<F>(f), std::forward<Args>(args)...)
+	);
+
+	std::future<return_type> result = task->get_future();
+
+	{
+		std::unique_lock lock(_mtx);
+		_tasks.emplace([task]() { (*task)(); });
+		_cv.notify_one();
+	}
+
+	return result;
+}
+
 
 #endif //UTILS_HPP
