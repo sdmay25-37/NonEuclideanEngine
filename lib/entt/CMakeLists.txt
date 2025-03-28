@@ -1,4 +1,4 @@
-set(ENTT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/entt/src)
+set(ENTT_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 
 add_library(entt INTERFACE)
 
