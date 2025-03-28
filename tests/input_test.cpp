@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "ne_engine.hpp"
+
 #include "ShaderProgram.hpp"
 #include "Input.hpp"
 #include "Triangle.hpp"
@@ -50,10 +52,14 @@ int main() {
     Triangle newTriangle(vertArr, 0.05f);
     triangle = newTriangle;
 
-    ShaderProgram shaders (
-        "../shaders/color.vert",
-        "../shaders/color.frag"
+    auto shaderResult = ShaderProgram::create(
+    "../shaders/color.vert",
+    "../shaders/color.frag"
     );
+    if(shaderResult.is_error()) {
+        std::cerr << "Failed to create shader program:" << shaderResult.error() << std::endl;
+    }
+    ShaderProgram shaders = shaderResult.ok();
 
     glGenBuffers(1, &vertBuff);
     glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
@@ -88,18 +94,18 @@ int main() {
     // charInput.bindKeyPress("MOVE_RIGHT", std::bind(&CharWrapper::moveRightWrapper, &wrapper));
     // charInput.bindKeyPress("MOVE_UP", std::bind(&CharWrapper::moveUpWrapper, &wrapper));
     // charInput.bindKeyPress("MOVE_DOWN", std::bind(&CharWrapper::moveDownWrapper, &wrapper));
-    charInput.bindKeyPress("SWITCH", std::bind(&Input::switchBindings, &charInput));
+    // charInput.bindKeyPress("SWITCH", std::bind(&Input::switchBindings, &charInput));
 
     // Bind keys to the action strings through a list of list of pairs <string -> key>
     charInput.bindContexts(bindings);
 
-    bool set = false;
+
 
     while (!glfwWindowShouldClose(window)) {
 
         glfwWaitEvents();
         glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
-        glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), wrapper.getTriangle().getVerts().data(), GL_STATIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), newTriangle.getVerts().data(), GL_STATIC_DRAW);
 
         glClear(GL_COLOR_BUFFER_BIT);
         glBindVertexArray(vao);
