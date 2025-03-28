@@ -8,7 +8,7 @@
 
 
 template<typename NodeType>
-class SystemDAG {
+class DAG {
 public:
 	using NodeId = std::size_t;
 
@@ -18,6 +18,7 @@ public:
 	std::vector<std::size_t> GetInDegrees() const { return std::vector(_in_degrees); }
 	const std::vector<NodeId>& GetNodeNeighbors(NodeId u) const;
 	const NodeType& GetNodeValue(NodeId u) const;
+	const NodeType* GetNodeValuePtr(NodeId u) const;
 
 private:
 	struct EdgeHash {
@@ -42,20 +43,20 @@ public:
 	~SystemThreadPool();
 
 	// Execute the system plan defined in a DAG
-	void execute(const SystemDAG<SystemType>& dag);
+	void execute(const DAG<SystemType>& dag);
 
 private:
 	// List of active threads
 	std::vector<std::thread> _threads;
 
 	// Queue of systems ready to be run
-	std::queue<std::pair<SystemId, const SystemType&>> _system_queue;
+	std::queue<std::pair<SystemId, const SystemType*>> _system_queue;
 
 	// Stores the number of dependencies still needed before this system can be run
 	std::vector<std::size_t> _system_dependency_counts;
 
 	// Immutable reference to current DAG being executed
-	const SystemDAG<SystemType>* _dag;
+	const DAG<SystemType>* _dag;
 
 	// Number of systems waiting to be run this pass
 	std::size_t _remaining;
@@ -67,7 +68,7 @@ private:
 	bool _stop;
 
 	// Method to add a system to a task queue
-	void enqueue(SystemId id, const SystemType& func);
+	void enqueue(SystemId id, const SystemType* func);
 };
 
 

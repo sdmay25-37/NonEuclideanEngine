@@ -3,7 +3,7 @@
 #include <assert.h>
 
 template<typename NodeType>
-typename SystemDAG<NodeType>::NodeId SystemDAG<NodeType>::AddNode(NodeType&& n) {
+typename DAG<NodeType>::NodeId DAG<NodeType>::AddNode(NodeType&& n) {
 	NodeId id = _nodes.size();
 
 	_nodes.emplace_back(n);
@@ -14,9 +14,9 @@ typename SystemDAG<NodeType>::NodeId SystemDAG<NodeType>::AddNode(NodeType&& n) 
 }
 
 template<typename NodeType>
-void SystemDAG<NodeType>::AddEdge(NodeId u, NodeId v) {
+void DAG<NodeType>::AddEdge(NodeId u, NodeId v) {
 	// Check for existing edge
-	assert(_edge_set.find({u, v}) != _edge_set.end());
+	assert(!_edge_set.contains({u, v}));
 
 	// Check if graph contains U and V
 	assert(u < _adjacency_lists.size() && v < _adjacency_lists.size());
@@ -27,7 +27,7 @@ void SystemDAG<NodeType>::AddEdge(NodeId u, NodeId v) {
 }
 
 template<typename NodeType>
-const std::vector<typename SystemDAG<NodeType>::NodeId> & SystemDAG<NodeType>::GetNodeNeighbors(NodeId u) const {
+const std::vector<typename DAG<NodeType>::NodeId> & DAG<NodeType>::GetNodeNeighbors(NodeId u) const {
 	// Check if graph contains U
 	assert(u < _adjacency_lists.size());
 
@@ -35,21 +35,28 @@ const std::vector<typename SystemDAG<NodeType>::NodeId> & SystemDAG<NodeType>::G
 }
 
 template<typename NodeType>
-const NodeType& SystemDAG<NodeType>::GetNodeValue(NodeId u) const {
+const NodeType& DAG<NodeType>::GetNodeValue(NodeId u) const {
 	// Check if graph contains U
 	assert(u < _nodes.size());
 	return _nodes[u];
 }
 
+template<typename NodeType>
+const NodeType * DAG<NodeType>::GetNodeValuePtr(NodeId u) const {
+	// Check if graph contains U
+	assert(u < _nodes.size());
+	return &_nodes[u];
+}
+
 
 SystemThreadPool::SystemThreadPool(size_t threads)
-	: _stop(false) {
+	: _dag(nullptr), _remaining(0), _stop(false) {
 
 	for(size_t i = 0; i < threads; i++) {
 		_threads.emplace_back([this] {
 			while(true) {
 				SystemId id;
-				SystemType task;
+				const std::function<void()>* task;
 
 				{
 					// Wait for available system or stop signal
@@ -61,12 +68,12 @@ SystemThreadPool::SystemThreadPool(size_t threads)
 
 					// Take next system
 					id = _system_queue.front().first;
-					task = std::move(_system_queue.front().second);
+					task = _system_queue.front().second;
 					_system_queue.pop();
 				}
 
 				// Run task
-				task();
+				(*task)();
 
 				{
 					std::unique_lock lock(_mtx);
@@ -80,7 +87,7 @@ SystemThreadPool::SystemThreadPool(size_t threads)
 
 						// If neighbor has no more dependencies add it to the queue
 						if(_system_dependency_counts[neighbor] == 0) {
-							enqueue(neighbor, _dag->GetNodeValue(neighbor));
+							enqueue(neighbor, _dag->GetNodeValuePtr(neighbor));
 						}
 					}
 				}
@@ -90,10 +97,18 @@ SystemThreadPool::SystemThreadPool(size_t threads)
 }
 
 SystemThreadPool::~SystemThreadPool() {
-	std::unique_lock lock(_mtx);
+	{
+		std::unique_lock lock(_mtx);
+		_stop = true;
+		_queue_cv.notify_all();
+	}
+
+	for(std::thread& thread : _threads) {
+		thread.join();
+	}
 }
 
-void SystemThreadPool::execute(const SystemDAG<SystemType>& dag) {
+void SystemThreadPool::execute(const DAG<SystemType>& dag) {
 	_dag = &dag;
 	_system_dependency_counts = dag.GetInDegrees();
 
@@ -102,7 +117,7 @@ void SystemThreadPool::execute(const SystemDAG<SystemType>& dag) {
 
 	for(std::size_t i = 0; i < _system_dependency_counts.size(); i++) {
 		if(_system_dependency_counts[i] == 0) {
-			enqueue(i, _dag->GetNodeValue(i));
+			enqueue(i, _dag->GetNodeValuePtr(i));
 		}
 	}
 
@@ -111,7 +126,7 @@ void SystemThreadPool::execute(const SystemDAG<SystemType>& dag) {
 }
 
 
-void SystemThreadPool::enqueue(SystemId id, const SystemType& func) {
+void SystemThreadPool::enqueue(SystemId id, const SystemType* func) {
 	std::unique_lock lock(_mtx);
 	_system_queue.emplace(id, func);
 	_queue_cv.notify_one();
