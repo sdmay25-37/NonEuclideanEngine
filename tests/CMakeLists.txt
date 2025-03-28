@@ -42,3 +42,6 @@ foreach(SOURCE ${SOURCES})
     target_link_libraries(${EXECUTABLE} ne_engine stb_image entt)
 
 endforeach(SOURCE ${SOURCES})
+
+
+add_subdirectory(unitTests)

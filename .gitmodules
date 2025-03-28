@@ -16,3 +16,6 @@
 [submodule "lib/entt/entt"]
 	path = lib/entt/entt
 	url = https://github.com/skypjack/entt.git
+[submodule "lib/QuadTree"]
+	path = lib/QuadTree
+	url = https://github.com/pvigier/Quadtree
