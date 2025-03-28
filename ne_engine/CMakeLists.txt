@@ -37,6 +37,8 @@ add_library(
     "${UI_SRC_DIR}/KeyMappingsManager.cpp"
     "${UI_SRC_DIR}/ToolManager.cpp"
 
+    "system/SystemThreadPool.cpp"
+
 )
 
 target_include_directories(ne_engine
