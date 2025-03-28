@@ -38,6 +38,7 @@ add_library(
     "${UI_SRC_DIR}/ToolManager.cpp"
 
     "system/SystemThreadPool.cpp"
+    "system/SystemSet.cpp"
 
 )
 

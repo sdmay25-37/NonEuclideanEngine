@@ -41,7 +41,7 @@ SystemThreadPool::SystemThreadPool(size_t threads)
 
 						// If neighbor has no more dependencies add it to the queue
 						if(_system_dependency_counts[neighbor] == 0) {
-							enqueue(neighbor, _dag->GetNodeValuePtr(neighbor));
+							Enqueue(neighbor, _dag->GetNodeValuePtr(neighbor));
 							_queue_cv.notify_one();
 						}
 					}
@@ -63,7 +63,7 @@ SystemThreadPool::~SystemThreadPool() {
 	}
 }
 
-void SystemThreadPool::execute(const DAG<SystemType>& dag) {
+void SystemThreadPool::Execute(const DAG<SystemType>& dag) {
 	_dag = &dag;
 	_system_dependency_counts = dag.GetInDegrees();
 
@@ -72,7 +72,7 @@ void SystemThreadPool::execute(const DAG<SystemType>& dag) {
 
 	for(std::size_t i = 0; i < _system_dependency_counts.size(); i++) {
 		if(_system_dependency_counts[i] == 0) {
-			enqueue(i, _dag->GetNodeValuePtr(i));
+			Enqueue(i, _dag->GetNodeValuePtr(i));
 			_queue_cv.notify_one();
 		}
 	}
@@ -82,7 +82,7 @@ void SystemThreadPool::execute(const DAG<SystemType>& dag) {
 }
 
 
-void SystemThreadPool::enqueue(SystemId id, const SystemType* func) {
+void SystemThreadPool::Enqueue(SystemId id, const SystemType* func) {
 	_system_queue.emplace(id, func);
 	_queue_cv.notify_one();
 }

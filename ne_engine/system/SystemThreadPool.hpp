@@ -18,7 +18,7 @@ public:
 	~SystemThreadPool();
 
 	// Execute the system plan defined in a DAG
-	void execute(const DAG<SystemType>& dag);
+	void Execute(const DAG<SystemType>& dag);
 
 private:
 	// List of active threads
@@ -43,7 +43,7 @@ private:
 	bool _stop;
 
 	// Method to add a system to a task queue
-	void enqueue(SystemId id, const SystemType* func);
+	void Enqueue(SystemId id, const SystemType* func);
 };
 
 

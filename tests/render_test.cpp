@@ -6,7 +6,7 @@
 #include "App.hpp"
 #include "DAG.hpp"
 #include "SystemThreadPool.hpp"
-
+#include "SystemSet.hpp"
 
 int main() {
     using SystemType = std::function<void()>;
@@ -30,16 +30,22 @@ int main() {
         std::cout << "System 3: end" << std::endl;
     };
 
-    DAG<SystemType> dag;
-
-    SystemId s1 = dag.AddNode(std::move(f1));
-    SystemId s2 = dag.AddNode(std::move(f2));
-    SystemId s3 = dag.AddNode(std::move(f3));
-
-    dag.AddEdge(s1, s3);
+    // DAG<SystemType> dag;
+    //
+    // SystemId s1 = dag.AddNode(std::move(f1));
+    // SystemId s2 = dag.AddNode(std::move(f2));
+    // SystemId s3 = dag.AddNode(std::move(f3));
+    //
+    // dag.AddEdge(s1, s3);
 
     SystemThreadPool thread_pool(2);
-    thread_pool.execute(dag);
+
+    SystemSet set = std::move(
+        SystemSet(std::move(f1), std::move(f2))
+        .Before(std::move(f3))
+    );
+
+    thread_pool.Execute(set.GetSystemGraph());
 
     // App app;
     // app.run();
