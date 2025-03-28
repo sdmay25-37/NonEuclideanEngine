@@ -44,7 +44,7 @@ add_library(
 target_include_directories(ne_engine
 
     PUBLIC
-    include ne_graphics/public/include ne_math/public/include ne_input/public/include ne_resource/public/include ne_ui/public/include
+    include ne_graphics/public/include ne_math/public/include ne_input/public/include ne_resource/public/include ne_ui/public/include system
 
     PRIVATE
     ne_graphics/private/include ne_math/private/include ne_input/private/include ne_resource/private/include ne_ui/private/include
