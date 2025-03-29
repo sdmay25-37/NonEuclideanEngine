@@ -3,7 +3,7 @@
 #include "ne_system/SystemSchedule.hpp"
 
 
-SystemSchedule::SystemSchedule(DAG<System>&& schedule_graph)
+SystemSchedule::SystemSchedule(DirectedGraph<System>&& schedule_graph)
 	: _schedule_graph(std::move(schedule_graph)) {
 	Build();
 }

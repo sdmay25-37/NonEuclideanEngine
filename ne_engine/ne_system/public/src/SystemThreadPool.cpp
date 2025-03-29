@@ -61,7 +61,7 @@ SystemThreadPool::~SystemThreadPool() {
 	}
 }
 
-void SystemThreadPool::Execute(const DAG<SystemType>& dag) {
+void SystemThreadPool::Execute(const DirectedGraph<SystemType>& dag) {
 	_dag = &dag;
 	_system_dependency_counts = dag.GetInDegrees();
 

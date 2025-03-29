@@ -8,7 +8,7 @@
 
 
 template<typename NodeType>
-class DAG {
+class DirectedGraph {
 public:
 	using NodeId = std::size_t;
 
@@ -35,7 +35,7 @@ private:
 };
 
 template<typename NodeType>
-typename DAG<NodeType>::NodeId DAG<NodeType>::AddNode(NodeType&& n) {
+typename DirectedGraph<NodeType>::NodeId DirectedGraph<NodeType>::AddNode(NodeType&& n) {
 	NodeId id = _nodes.size();
 
 	_nodes.emplace_back(std::move(n));
@@ -46,7 +46,7 @@ typename DAG<NodeType>::NodeId DAG<NodeType>::AddNode(NodeType&& n) {
 }
 
 template<typename NodeType>
-void DAG<NodeType>::AddEdge(NodeId u, NodeId v) {
+void DirectedGraph<NodeType>::AddEdge(NodeId u, NodeId v) {
 	// Check for existing edge
 	assert(_edge_set.find({u, v}) == _edge_set.end());
 
@@ -59,7 +59,7 @@ void DAG<NodeType>::AddEdge(NodeId u, NodeId v) {
 }
 
 template<typename NodeType>
-const std::vector<typename DAG<NodeType>::NodeId> & DAG<NodeType>::GetNodeNeighbors(NodeId u) const {
+const std::vector<typename DirectedGraph<NodeType>::NodeId> & DirectedGraph<NodeType>::GetNodeNeighbors(NodeId u) const {
 	// Check if graph contains U
 	assert(u < _adjacency_lists.size());
 
@@ -67,14 +67,14 @@ const std::vector<typename DAG<NodeType>::NodeId> & DAG<NodeType>::GetNodeNeighb
 }
 
 template<typename NodeType>
-const NodeType& DAG<NodeType>::GetNodeValue(NodeId u) const {
+const NodeType& DirectedGraph<NodeType>::GetNodeValue(NodeId u) const {
 	// Check if graph contains U
 	assert(u < _nodes.size());
 	return _nodes[u];
 }
 
 template<typename NodeType>
-const NodeType * DAG<NodeType>::GetNodeValuePtr(NodeId u) const {
+const NodeType* DirectedGraph<NodeType>::GetNodeValuePtr(NodeId u) const {
 	// Check if graph contains U
 	assert(u < _nodes.size());
 	return &_nodes[u];

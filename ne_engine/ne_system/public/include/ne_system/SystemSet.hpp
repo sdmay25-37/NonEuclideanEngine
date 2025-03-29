@@ -5,7 +5,7 @@
 #include <functional>
 #include <vector>
 
-#include "DAG.hpp"
+#include "ne_util/DirectedGraph.hpp"
 
 
 // class System {
@@ -43,11 +43,11 @@ public:
 
 	SystemSet& RunIf(RunCondition&& rc);
 
-	[[nodiscard]] const DAG<System>& GetSystemGraph() const { return _system_graph; }
+	[[nodiscard]] const DirectedGraph<System>& GetSystemGraph() const { return _system_graph; }
 
 private:
-	using SystemId = DAG<System>::NodeId;
-	DAG<System> _system_graph;
+	using SystemId = DirectedGraph<System>::NodeId;
+	DirectedGraph<System> _system_graph;
 	std::vector<SystemId> _system_ids;
 };
 

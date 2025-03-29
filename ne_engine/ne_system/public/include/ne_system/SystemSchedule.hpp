@@ -4,20 +4,20 @@
 
 #include <functional>
 
-#include "ne_system/DAG.hpp"
+#include "ne_util/DirectedGraph.hpp"
 
 
 class SystemSchedule {
 public:
 	using System = std::function<void()>;
-	using SystemId = DAG<System>::NodeId;
+	using SystemId = DirectedGraph<System>::NodeId;
 
-	explicit SystemSchedule(DAG<System>&& schedule_graph);
+	explicit SystemSchedule(DirectedGraph<System>&& schedule_graph);
 
 	void Execute() const;
 
 private:
-	DAG<System> _schedule_graph;
+	DirectedGraph<System> _schedule_graph;
 	std::vector<const System*> _cached_topsort;
 
 	void Build();

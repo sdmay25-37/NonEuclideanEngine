@@ -5,14 +5,14 @@
 
 #include "App.hpp"
 
-#include "ne_system/DAG.hpp"
 #include "ne_system/SystemSet.hpp"
 #include "ne_system/SystemSchedule.hpp"
+#include "ne_util/DirectedGraph.hpp"
 
 
 int main() {
     using SystemType = std::function<void()>;
-    using SystemId = DAG<SystemType>::NodeId;
+    using SystemId = DirectedGraph<SystemType>::NodeId;
 
     SystemType f1 = [] {
         std::cout << "System 1: start" << std::endl;
@@ -39,7 +39,7 @@ int main() {
 
 
 
-    DAG<SystemType> dag;
+    DirectedGraph<SystemType> dag;
     SystemId id1 = dag.AddNode(std::move(f1));
     SystemId id2 = dag.AddNode(std::move(f2));
     SystemId id3 = dag.AddNode(std::move(f3));

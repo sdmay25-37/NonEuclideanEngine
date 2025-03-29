@@ -6,7 +6,7 @@
 #include <future>
 #include <queue>
 
-#include "DAG.hpp"
+#include "ne_util/DirectedGraph.hpp"
 
 
 class SystemThreadPool {
@@ -18,7 +18,7 @@ public:
 	~SystemThreadPool();
 
 	// Execute the system plan defined in a DAG
-	void Execute(const DAG<SystemType>& dag);
+	void Execute(const DirectedGraph<SystemType>& dag);
 
 private:
 	// List of active threads
@@ -31,7 +31,7 @@ private:
 	std::vector<std::size_t> _system_dependency_counts;
 
 	// Immutable reference to current DAG being executed
-	const DAG<SystemType>* _dag;
+	const DirectedGraph<SystemType>* _dag;
 
 	// Number of systems waiting to be run this pass
 	std::size_t _remaining;
