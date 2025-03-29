@@ -8,30 +8,15 @@
 #include "ne_util/DirectedGraph.hpp"
 
 
-// class System {
-// public:
-// 	System() = default;
-//
-// 	// Delete copy constructor and copy assignment
-// 	System(const System& s) = delete;
-// 	System& operator=(const System& s) = delete;
-//
-// 	// Default move constructor and move assignment
-// 	System(System&&) noexcept = default;
-// 	System& operator=(System&&) noexcept = default;
-//
-// private:
-// 	std::function<void()> func;
-// };
+using System = std::function<void()>;
 
 class SystemSet {
 public:
 	using RunCondition = std::function<bool()>;
-	using System = std::function<void()>;
 
 	template<typename... Systems>
-	SystemSet(Systems&&... systems) {
-		static_assert((std::is_same_v<Systems, System> && ...));
+	explicit SystemSet(Systems&&... systems) {
+		static_assert((std::is_convertible_v<Systems, System> && ...));
 		(AddSystem(std::forward<Systems>(systems)), ...);
 	}
 
@@ -46,11 +31,11 @@ public:
 
 	SystemSet& RunIf(RunCondition&& rc);
 
-	[[nodiscard]] const DirectedGraph<System>& GetSystemGraph() const { return _system_graph; }
+	[[nodiscard]] const DirectedGraph<System>& GetDependencyGraph() const { return _dependency_graph; }
 
 private:
-	using SystemId = DirectedGraph<System>::NodeId;
-	DirectedGraph<System> _system_graph;
+	using SystemId = DirectedGraph<System*>::NodeId;
+	DirectedGraph<System> _dependency_graph;
 	std::vector<SystemId> _system_ids;
 };
 

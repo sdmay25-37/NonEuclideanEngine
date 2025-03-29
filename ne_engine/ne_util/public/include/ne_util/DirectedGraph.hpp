@@ -1,8 +1,9 @@
-#ifndef DAG_HPP
-#define DAG_HPP
+#ifndef DIRECTEDGRAPH_HPP
+#define DIRECTEDGRAPH_HPP
 
 
 #include <assert.h>
+#include <memory>
 #include <unordered_set>
 #include <vector>
 
@@ -39,7 +40,7 @@ typename DirectedGraph<NodeType>::NodeId DirectedGraph<NodeType>::AddNode(NodeTy
 	NodeId id = _nodes.size();
 
 	_nodes.emplace_back(std::move(n));
-	_adjacency_lists.push_back(std::vector<NodeId>());
+	_adjacency_lists.emplace_back();
 	_in_degrees.push_back(0);
 
 	return id;
@@ -80,4 +81,4 @@ const NodeType* DirectedGraph<NodeType>::GetNodeValuePtr(NodeId u) const {
 	return &_nodes[u];
 }
 
-#endif //DAG_HPP
+#endif //DIRECTEDGRAPH_HPP

@@ -10,7 +10,6 @@
 
 class SystemSchedule {
 public:
-	using System = std::function<void()>;
 	using SystemId = DirectedGraph<System>::NodeId;
 
 	explicit SystemSchedule(SystemSet&& root_set);

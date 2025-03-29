@@ -11,34 +11,30 @@
 #include "ne_util/DirectedGraph.hpp"
 
 
+void system1() {
+    std::cout << "System 1: start" << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::cout << "System 1: end" << std::endl;
+}
+
+void system2() {
+    std::cout << "System 2: start" << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(4));
+    std::cout << "System 2: end" << std::endl;
+}
+
+void system3() {
+    std::cout << "System 3: start" << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    std::cout << "System 3: end" << std::endl;
+}
+
 int main() {
-    using SystemType = std::function<void()>;
-    using SystemId = DirectedGraph<SystemType>::NodeId;
-
-    SystemType f1 = [] {
-        std::cout << "System 1: start" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-        std::cout << "System 1: end" << std::endl;
-    };
-
-    SystemType f2 = [] {
-        std::cout << "System 2: start" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(4));
-        std::cout << "System 2: end" << std::endl;
-    };
-
-    SystemType f3 = [] {
-        std::cout << "System 3: start" << std::endl;
-        std::this_thread::sleep_for(std::chrono::seconds(1));
-        std::cout << "System 3: end" << std::endl;
-    };
-
-    SystemSet set = std::move(
-        SystemSet(std::move(f1), std::move(f2))
-        .Before(std::move(f3))
+    SystemSchedule schedule(std::move(
+        SystemSet(system1, system2)
+        .Before(system3))
     );
 
-    SystemSchedule schedule(std::move(set));
     auto executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded);
     executor->Execute(schedule);
 
