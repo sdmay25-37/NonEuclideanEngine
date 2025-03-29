@@ -9,7 +9,7 @@ public:
 };
 
 void SingleThreadedExecutor::Execute(SystemSchedule& schedule) const {
-
+	schedule.Execute();
 }
 
 

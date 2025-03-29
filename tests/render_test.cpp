@@ -7,6 +7,7 @@
 
 #include "ne_system/SystemSet.hpp"
 #include "ne_system/SystemSchedule.hpp"
+#include "ne_system/SystemExecutor.hpp"
 #include "ne_util/DirectedGraph.hpp"
 
 
@@ -32,21 +33,14 @@ int main() {
         std::cout << "System 3: end" << std::endl;
     };
 
-    // SystemSet set = std::move(
-    //     SystemSet(std::move(f1), std::move(f2))
-    //     .Before(std::move(f3))
-    // );
+    SystemSet set = std::move(
+        SystemSet(std::move(f1), std::move(f2))
+        .Before(std::move(f3))
+    );
 
-
-
-    DirectedGraph<SystemType> dag;
-    SystemId id1 = dag.AddNode(std::move(f1));
-    SystemId id2 = dag.AddNode(std::move(f2));
-    SystemId id3 = dag.AddNode(std::move(f3));
-    dag.AddEdge(id1, id3);
-
-    SystemSchedule schedule(std::move(dag));
-    schedule.Execute();
+    SystemSchedule schedule(std::move(set));
+    auto executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded);
+    executor->Execute(schedule);
 
     // App app;
     // app.run();

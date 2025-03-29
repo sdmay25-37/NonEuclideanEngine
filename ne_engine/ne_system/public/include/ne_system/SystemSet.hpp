@@ -19,6 +19,9 @@
 // 	// Default move constructor and move assignment
 // 	System(System&&) noexcept = default;
 // 	System& operator=(System&&) noexcept = default;
+//
+// private:
+// 	std::function<void()> func;
 // };
 
 class SystemSet {
