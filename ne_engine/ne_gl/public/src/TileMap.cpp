@@ -10,6 +10,7 @@
 #include <string>
 #include <unordered_map>
 #include <nlohmann/json.hpp>
+#include <queue>
 
 using json = nlohmann::json;
 
@@ -75,13 +76,22 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
 
     // Start with the current tile
     visitedTiles[currentTile._tileId] = currentTile;
+    nearTiles.push_back(currentTile);
 
-    // DFS but order is up, down, left , right
-    std::function<void(Tile, int)> exploreTile = [&](Tile tile, int depth)
+    std::queue<std::pair<Tile, int>> queue; // Queue holds tile and depth
+    queue.push({currentTile, 0});           // Start BFS with currentTile at depth 0
+
+    while (!queue.empty())
     {
-        // Base case: if depth exceeds radius, stop recursion
+        std::pair<Tile, int> front = queue.front();
+        queue.pop();
+
+        Tile tile = front.first;
+        int depth = front.second;
+
+        // Stop if we've reached the max depth (radius)
         if (depth >= radius)
-            return;
+            continue;
 
         // Explore neighboring tiles (up, down, left, right)
         if (tile._upTileId != -1 && visitedTiles.find(tile._upTileId) == visitedTiles.end())
@@ -89,7 +99,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile upTile = getTileByID(tile._upTileId);
             visitedTiles[upTile._tileId] = upTile;
             nearTiles.push_back(upTile);
-            exploreTile(upTile, depth + 1);
+            queue.push({upTile, depth + 1});
         }
 
         if (tile._downTileId != -1 && visitedTiles.find(tile._downTileId) == visitedTiles.end())
@@ -97,7 +107,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile downTile = getTileByID(tile._downTileId);
             visitedTiles[downTile._tileId] = downTile;
             nearTiles.push_back(downTile);
-            exploreTile(downTile, depth + 1);
+            queue.push({downTile, depth + 1});
         }
 
         if (tile._leftTileId != -1 && visitedTiles.find(tile._leftTileId) == visitedTiles.end())
@@ -105,7 +115,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile leftTile = getTileByID(tile._leftTileId);
             visitedTiles[leftTile._tileId] = leftTile;
             nearTiles.push_back(leftTile);
-            exploreTile(leftTile, depth + 1);
+            queue.push({leftTile, depth + 1});
         }
 
         if (tile._rightTileId != -1 && visitedTiles.find(tile._rightTileId) == visitedTiles.end())
@@ -113,11 +123,9 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile rightTile = getTileByID(tile._rightTileId);
             visitedTiles[rightTile._tileId] = rightTile;
             nearTiles.push_back(rightTile);
-            exploreTile(rightTile, depth + 1);
+            queue.push({rightTile, depth + 1});
         }
-    };
-
-    exploreTile(currentTile, 0);
+    }
 
     return nearTiles;
 }

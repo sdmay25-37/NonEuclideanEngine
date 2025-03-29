@@ -40,7 +40,7 @@ int main()
     std::cout << '\n'
               << "Tile 5:" << startTile.to_string() << "\n";
     // Test the getNearTiles function with a radius of 1
-    int radius = 2;
+    int radius = 3;
     std::vector<Tile> nearTiles = tileMap2.getNearTiles(startTile, radius);
 
     // Print the results

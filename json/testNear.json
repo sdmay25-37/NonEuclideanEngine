@@ -42,7 +42,7 @@
     "tileId": 4,
     "upTileId": 1,
     "downTileId": 7,
-    "leftTileId": -1,
+    "leftTileId": 10,
     "rightTileId": 5,
     "tileType": "sand",
     "spriteId": 4,
@@ -109,6 +109,19 @@
     "downTileId": -1,
     "leftTileId": 8,
     "rightTileId": -1,
+    "tileType": "stone",
+    "spriteId": 9,
+    "properties": [
+      "non-walkable",
+      "gray"
+    ]
+  },
+  {
+    "tileId": 10,
+    "upTileId": -1,
+    "downTileId": -1,
+    "leftTileId": -1,
+    "rightTileId": 4,
     "tileType": "stone",
     "spriteId": 9,
     "properties": [
