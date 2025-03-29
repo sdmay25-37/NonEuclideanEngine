@@ -4,9 +4,11 @@
 #include <iostream>
 
 #include "App.hpp"
-#include "DAG.hpp"
-#include "SystemThreadPool.hpp"
-#include "SystemSet.hpp"
+
+#include "ne_system/DAG.hpp"
+#include "ne_system/SystemSet.hpp"
+#include "ne_system/SystemSchedule.hpp"
+
 
 int main() {
     using SystemType = std::function<void()>;
@@ -30,22 +32,21 @@ int main() {
         std::cout << "System 3: end" << std::endl;
     };
 
-    // DAG<SystemType> dag;
-    //
-    // SystemId s1 = dag.AddNode(std::move(f1));
-    // SystemId s2 = dag.AddNode(std::move(f2));
-    // SystemId s3 = dag.AddNode(std::move(f3));
-    //
-    // dag.AddEdge(s1, s3);
+    // SystemSet set = std::move(
+    //     SystemSet(std::move(f1), std::move(f2))
+    //     .Before(std::move(f3))
+    // );
 
-    SystemThreadPool thread_pool(2);
 
-    SystemSet set = std::move(
-        SystemSet(std::move(f1), std::move(f2))
-        .Before(std::move(f3))
-    );
 
-    thread_pool.Execute(set.GetSystemGraph());
+    DAG<SystemType> dag;
+    SystemId id1 = dag.AddNode(std::move(f1));
+    SystemId id2 = dag.AddNode(std::move(f2));
+    SystemId id3 = dag.AddNode(std::move(f3));
+    dag.AddEdge(id1, id3);
+
+    SystemSchedule schedule(std::move(dag));
+    schedule.Execute();
 
     // App app;
     // app.run();

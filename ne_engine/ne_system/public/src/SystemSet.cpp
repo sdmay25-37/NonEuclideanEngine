@@ -1,5 +1,5 @@
 
-#include "SystemSet.hpp"
+#include "ne_system/SystemSet.hpp"
 
 SystemSet& SystemSet::AddSystem(System&& system) {
 	_system_ids.push_back(

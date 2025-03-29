@@ -1,6 +1,4 @@
-#include "SystemThreadPool.hpp"
-
-#include <iostream>
+#include "ne_system/SystemThreadPool.hpp"
 
 
 SystemThreadPool::SystemThreadPool(size_t threads)
