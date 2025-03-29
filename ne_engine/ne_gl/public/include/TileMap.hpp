@@ -30,15 +30,20 @@ public:
     // NOT USED
     void saveTile(std::string filepath);
 
-    // TODO return a bunch of tiles from cureent tile
+    // return a bunch of tiles from cureent tile
     std::vector<Tile> getNearTiles(Tile currentTile, int radius);
 
     Tile getTileByID(uint8_t tileId);
+
+    // TODO Figure out how to buffer tiles from _renderedTileList
 
     std::vector<std::string> getTileMapInformation(); // Returns a vector of pairs of a <direction string, texture classification>
 
 private:
     std::unordered_map<int, Tile> _tileList;
+
+    // List of Tiles based on last getNearTiles() call
+    std::vector<Tile> _renderedTileList;
 
     // Dont Know Purpose
     std::vector<Tile> _seedList; // Standard : [origin (0, 0), up , left , right , down]

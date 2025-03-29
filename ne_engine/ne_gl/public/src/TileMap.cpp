@@ -69,6 +69,7 @@ std::vector<std::string> TileMap::getTileMapInformation()
     return returnTiles;
 }
 
+// Does bfs for near tiles
 std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
 {
     std::vector<Tile> nearTiles;
@@ -127,6 +128,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
         }
     }
 
+    _renderedTileList = nearTiles;
     return nearTiles;
 }
 
