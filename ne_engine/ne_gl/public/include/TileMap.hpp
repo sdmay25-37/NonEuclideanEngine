@@ -10,8 +10,6 @@
 #ifndef TILEMAP_HPP
 #define TILEMAP_HPP
 
-// #include "Quadtree.h"
-
 #include <vector>
 #include <string>
 #include <cstdint>

@@ -41,7 +41,7 @@ void TileMap::loadTiles(const std::string &filename)
         Tile tile;
         tile._tileId = item.at("tileId").get<uint8_t>();
         tile._spriteId = item.at("spriteId").get<uint8_t>();
-        tile._tileType = item.at("tileType").get<std::string>(); // Ensure TileType serialization is correct
+        tile._tileType = item.at("tileType").get<std::string>();
         tile._properties = item.at("properties").get<std::vector<std::string>>();
         tile._upTileId = item.at("upTileId").get<uint8_t>();
         tile._downTileId = item.at("downTileId").get<uint8_t>();
@@ -60,7 +60,7 @@ std::vector<std::string> TileMap::getTileMapInformation()
     int i = 0;
     for (const auto &pair : _tileList)
     {
-        const Tile &tile = pair.second; // Access the Tile object
+        const Tile &tile = pair.second;
         returnTiles.at(i) = tile.to_string();
         i++;
     }
@@ -76,7 +76,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
     // Start with the current tile
     visitedTiles[currentTile._tileId] = currentTile;
 
-    // Declare the lambda type explicitly to avoid auto deduction issue
+    // DFS but order is up, down, left , right
     std::function<void(Tile, int)> exploreTile = [&](Tile tile, int depth)
     {
         // Base case: if depth exceeds radius, stop recursion
@@ -89,7 +89,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile upTile = getTileByID(tile._upTileId);
             visitedTiles[upTile._tileId] = upTile;
             nearTiles.push_back(upTile);
-            exploreTile(upTile, depth + 1); // Recursive call using the lambda itself
+            exploreTile(upTile, depth + 1);
         }
 
         if (tile._downTileId != -1 && visitedTiles.find(tile._downTileId) == visitedTiles.end())
@@ -97,7 +97,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile downTile = getTileByID(tile._downTileId);
             visitedTiles[downTile._tileId] = downTile;
             nearTiles.push_back(downTile);
-            exploreTile(downTile, depth + 1); // Recursive call using the lambda itself
+            exploreTile(downTile, depth + 1);
         }
 
         if (tile._leftTileId != -1 && visitedTiles.find(tile._leftTileId) == visitedTiles.end())
@@ -105,7 +105,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile leftTile = getTileByID(tile._leftTileId);
             visitedTiles[leftTile._tileId] = leftTile;
             nearTiles.push_back(leftTile);
-            exploreTile(leftTile, depth + 1); // Recursive call using the lambda itself
+            exploreTile(leftTile, depth + 1);
         }
 
         if (tile._rightTileId != -1 && visitedTiles.find(tile._rightTileId) == visitedTiles.end())
@@ -113,11 +113,10 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile rightTile = getTileByID(tile._rightTileId);
             visitedTiles[rightTile._tileId] = rightTile;
             nearTiles.push_back(rightTile);
-            exploreTile(rightTile, depth + 1); // Recursive call using the lambda itself
+            exploreTile(rightTile, depth + 1);
         }
     };
 
-    // Start the exploration from the current tile at depth 0
     exploreTile(currentTile, 0);
 
     return nearTiles;
@@ -135,10 +134,9 @@ Tile TileMap::getTileByID(uint8_t tileId)
     }
     else
     {
-        // If not found, you can either return a default Tile or handle the error as needed
         std::cerr << "Error: Tile with ID " << static_cast<int>(tileId) << " not found!" << std::endl;
 
-        // Returning a default Tile (you can also throw an exception or return a nullptr)
+        // TODO FIGURE OUT WHAT TO SEND BACK
         return Tile(); // Assuming the default constructor of Tile initializes a valid empty object
     }
 }

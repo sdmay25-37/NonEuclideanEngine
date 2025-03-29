@@ -21,8 +21,6 @@ class Tile
 {
 public:
     Tile();
-    // Tile(std::vector<Tile> tileList, std::vector<Tile> seedList);
-    // TODO pregenerate a tile
 
     int8_t _tileId;
     int8_t _leftTileId;

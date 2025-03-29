@@ -9,6 +9,7 @@ Tile::Tile()
 {
 }
 
+// Used for testing
 std::string Tile::to_string() const
 {
     std::ostringstream oss;
