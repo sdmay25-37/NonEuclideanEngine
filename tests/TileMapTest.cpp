@@ -32,10 +32,10 @@ int main()
     }
     std::cout << "\n\n\n\n\n";
     TileMap tileMap2;
-    tileMap2.loadTiles("json/testNear.json"); // Ensure the path to your JSON file is correct
+    tileMap2.loadTiles("json/testNear.json");
 
     // Choose a starting tile to test
-    Tile startTile = tileMap2.getTileByID(5); // Assuming we start with tile ID 1
+    Tile startTile = tileMap2.getTileByID(5);
 
     std::cout << '\n'
               << "Tile 5:" << startTile.to_string() << "\n";
@@ -43,7 +43,6 @@ int main()
     int radius = 3;
     std::vector<Tile> nearTiles = tileMap2.getNearTiles(startTile, radius);
 
-    // Print the results
     std::cout << "Near tiles for Tile ID " << static_cast<int>(startTile._tileId) << " with radius " << radius << ":\n";
     for (const Tile &tile : nearTiles)
     {
