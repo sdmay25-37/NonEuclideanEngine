@@ -8,12 +8,6 @@ SystemSchedule::SystemSchedule(SystemSet&& root_set)
 	Build();
 }
 
-void SystemSchedule::Execute() const {
-	for(const auto system : _cached_topsort) {
-		(*system)();
-	}
-}
-
 void SystemSchedule::Build() {
 	// Create a topological sort using Kahn's algorithm
 	_cached_topsort.clear();

@@ -15,13 +15,14 @@ public:
    		MultiThreaded
     };
 
-    static std::unique_ptr<SystemExecutor> Create(Type type);
+    static std::unique_ptr<SystemExecutor> Create(Type type, entt::registry& registry);
 	virtual void Execute(SystemSchedule& schedule) const = 0;
 	virtual ~SystemExecutor() = default;
 
-private:
+protected:
+	entt::registry& _registry;
 
-
+	explicit SystemExecutor(entt::registry& registry) : _registry(registry) {};
 };
 
 

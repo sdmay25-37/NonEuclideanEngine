@@ -14,9 +14,7 @@ public:
 
 	explicit SystemSchedule(SystemSet&& root_set);
 
-	// [[nodiscard]] const DirectedGraph<System>& GetScheduleGraph() const { return _schedule_graph; }
-
-	void Execute() const;
+	[[nodiscard]] const std::vector<const System*>& GetCachedSchedule() const { return _cached_topsort; }
 
 private:
 	// DirectedGraph<System> _schedule_graph;

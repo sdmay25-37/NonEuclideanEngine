@@ -4,11 +4,12 @@
 
 #include <functional>
 #include <vector>
+#include <entt/entt.hpp>
 
 #include "ne_util/DirectedGraph.hpp"
 
 
-using System = std::function<void()>;
+using System = std::function<void(entt::registry&)>;
 
 class SystemSet {
 public:

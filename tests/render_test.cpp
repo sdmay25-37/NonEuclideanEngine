@@ -10,32 +10,36 @@
 #include "ne_system/SystemExecutor.hpp"
 #include "ne_util/DirectedGraph.hpp"
 
+struct Person {
+    std::string name;
+};
 
-void system1() {
-    std::cout << "System 1: start" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(2));
-    std::cout << "System 1: end" << std::endl;
+void system1(entt::registry& registry) {
+    const auto entity = registry.create();
+    registry.emplace<Person>(entity, "John Doe");
 }
 
-void system2() {
-    std::cout << "System 2: start" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(4));
-    std::cout << "System 2: end" << std::endl;
+void system2(entt::registry& registry) {
+    const auto entity = registry.create();
+    registry.emplace<Person>(entity, "Jane Doe");
 }
 
-void system3() {
-    std::cout << "System 3: start" << std::endl;
-    std::this_thread::sleep_for(std::chrono::seconds(1));
-    std::cout << "System 3: end" << std::endl;
+void system3(entt::registry& registry) {
+    for(auto [entity, person] : registry.view<const Person>().each()) {
+        std::cout << "Name: " << person.name << std::endl;
+    }
 }
 
 int main() {
+
+    entt::registry registry;
+
     SystemSchedule schedule(std::move(
         SystemSet(system1, system2)
-        .Before(system3))
-    );
+        .Before(system3)
+    ));
 
-    auto executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded);
+    auto executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded, registry);
     executor->Execute(schedule);
 
     // App app;
