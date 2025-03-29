@@ -1,0 +1,50 @@
+[
+    {
+        "tileId": 1,
+        "upTileId": 2,
+        "downTileId": -1,
+        "leftTileId": -1,
+        "rightTileId": 3,
+        "tileType": "grass",
+        "spriteId": 10,
+        "properties": [
+            "walkable"
+        ]
+    },
+    {
+        "tileId": 2,
+        "upTileId": -1,
+        "downTileId": 1,
+        "leftTileId": -1,
+        "rightTileId": 4,
+        "tileType": "sand",
+        "spriteId": 12,
+        "properties": [
+            "slow"
+        ]
+    },
+    {
+        "tileId": 3,
+        "upTileId": 4,
+        "downTileId": -1,
+        "leftTileId": 1,
+        "rightTileId": -1,
+        "tileType": "water",
+        "spriteId": 11,
+        "properties": [
+            "swimmable"
+        ]
+    },
+    {
+        "tileId": 4,
+        "upTileId": -1,
+        "downTileId": 3,
+        "leftTileId": 2,
+        "rightTileId": -1,
+        "tileType": "grass",
+        "spriteId": 13,
+        "properties": [
+            "walkable"
+        ]
+    }
+]

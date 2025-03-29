@@ -9,6 +9,8 @@ set(C_EXTENSIONS OFF)
 set(CXX_STANDARD 17)
 set(CXX_STANDARD_REQUIRED ON)
 set(CXX_EXTENSIONS OFF)
+set(CMAKE_CXX_STANDARD_REQUIRED True)
+
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
@@ -19,6 +21,7 @@ set(SOURCES
     # "point_square_demo.cpp"
     "SpriteTesting.cpp"
     "ResourceManagerTesting.cpp"
+    "TileMapTest.cpp"
 )
 
 set(VS_DEBUGGER_WORKING_DIRECTORY "..")

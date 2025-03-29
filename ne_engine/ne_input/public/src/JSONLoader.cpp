@@ -7,72 +7,86 @@
 
 #include <fstream>
 #include <iostream>
-
+#include <vector>
 static void initializeMaps();
 
-JSONLoader::JSONLoader() {
+JSONLoader::JSONLoader()
+{
     initializeMaps();
 }
 
-JSONLoader::JSONLoader(std::string filepath) {
+JSONLoader::JSONLoader(std::string filepath)
+{
     initializeMaps();
     _filepath = filepath;
 }
 
 // Use for processing a single file
 // E.g. one file has one set of bindings (or is 1 json object)
-std::vector <std::pair <std::string, int>> JSONLoader::processFile() {
-    std::ifstream f (_filepath);
+std::vector<std::pair<std::string, int>> JSONLoader::processFile()
+{
+    std::ifstream f(_filepath);
 
     nlohmann::json jsonData = nlohmann::json::parse(f);
 
-    if (jsonData.size() == 0) {
+    if (jsonData.size() == 0)
+    {
         // JSON File is empty
         std::cerr << "JSON File empty" << std::endl;
         throw std::length_error("JSON File empty");
     }
 
-    if (jsonData["actions"].size() != jsonData["keys"].size()) {
+    if (jsonData["actions"].size() != jsonData["keys"].size())
+    {
         std::cerr << "Action and Key arrays are not of equivalent size" << std::endl;
         throw std::length_error("Mismatching action/key sizes");
     }
 
-    std::vector <std::pair <std::string, int>> action_key_bindings;
+    std::vector<std::pair<std::string, int>> action_key_bindings;
 
-    for (int i = 0; i < jsonData["actions"].size(); i++) {
-        std::pair bind((std::string) (jsonData["actions"].at(i)), _stringToEnum.find(jsonData["keys"].at(i))->second);
+    for (int i = 0; i < jsonData["actions"].size(); i++)
+    {
+        std::pair<std::string, int> bind(
+            static_cast<std::string>(jsonData["actions"].at(i)),
+            _stringToEnum.find(jsonData["keys"].at(i))->second);
         action_key_bindings.push_back(bind);
-
     }
 
     return action_key_bindings;
 }
 
-std::vector <std::vector <std::pair <std::string, int>>> JSONLoader::processFileArray() {
-    std::ifstream f (_filepath);
+std::vector<std::vector<std::pair<std::string, int>>> JSONLoader::processFileArray()
+{
+    std::ifstream f(_filepath);
 
     nlohmann::json jsonData = nlohmann::json::parse(f);
 
-    if (jsonData.size() == 0) {
+    if (jsonData.size() == 0)
+    {
         // JSON File is empty
         std::cerr << "JSON File empty" << std::endl;
         throw std::length_error("JSON File empty");
     }
 
-    std::vector <std::vector <std::pair <std::string, int>>> action_key_bindings;
+    std::vector<std::vector<std::pair<std::string, int>>> action_key_bindings;
 
-    for (int j = 0; j < jsonData.size(); j++) {
+    for (int j = 0; j < jsonData.size(); j++)
+    {
         nlohmann::json single_set = jsonData.at(j);
 
-        if (single_set["actions"].size() != single_set["keys"].size()) {
+        if (single_set["actions"].size() != single_set["keys"].size())
+        {
             std::cerr << "Action and Key arrays are not of equivalent size" << std::endl;
             throw std::length_error("Mismatching action/key sizes");
         }
 
         std::vector<std::pair<std::string, int>> single_binding;
 
-        for (int i = 0; i < single_set["actions"].size(); i++) {
-            std::pair bind((std::string)(single_set["actions"].at(i)), _stringToEnum.find(single_set["keys"].at(i))->second);
+        for (int i = 0; i < single_set["actions"].size(); i++)
+        {
+            std::pair<std::string, int> bind(
+                static_cast<std::string>(single_set["actions"].at(i)),
+                _stringToEnum.find(single_set["keys"].at(i))->second);
             single_binding.push_back(bind);
         }
 
@@ -82,13 +96,15 @@ std::vector <std::vector <std::pair <std::string, int>>> JSONLoader::processFile
     return action_key_bindings;
 }
 
-void JSONLoader::outputBindings(std::vector <std::pair <std::string, int>> bindings) {
+void JSONLoader::outputBindings(std::vector<std::pair<std::string, int>> bindings)
+{
     nlohmann::json output;
 
-    std::vector <std::string> actions;
-    std::vector <std::string> keys;
+    std::vector<std::string> actions;
+    std::vector<std::string> keys;
 
-    for (int i = 0; i < bindings.size(); i++) {
+    for (int i = 0; i < bindings.size(); i++)
+    {
         actions.push_back(bindings.at(i).first);
         keys.push_back(_enumToString.find(bindings.at(i).second)->second);
     }
@@ -100,16 +116,19 @@ void JSONLoader::outputBindings(std::vector <std::pair <std::string, int>> bindi
     out << std::setw(4) << output << std::endl;
 }
 
-void JSONLoader::outputBindingsArray(std::vector <std::vector <std::pair <std::string, int>>> bindings) {
+void JSONLoader::outputBindingsArray(std::vector<std::vector<std::pair<std::string, int>>> bindings)
+{
     nlohmann::json output;
 
-    for (int i = 0; i < bindings.size(); i++) {
+    for (int i = 0; i < bindings.size(); i++)
+    {
         nlohmann::json obj;
 
-        std::vector <std::string> actions;
-        std::vector <std::string> keys;
+        std::vector<std::string> actions;
+        std::vector<std::string> keys;
 
-        for (int j = 0; j < bindings.at(i).size(); j++) {
+        for (int j = 0; j < bindings.at(i).size(); j++)
+        {
             actions.push_back(bindings.at(i).at(j).first);
             keys.push_back(_enumToString.find(bindings.at(i).at(j).second)->second);
         }
@@ -125,10 +144,11 @@ void JSONLoader::outputBindingsArray(std::vector <std::vector <std::pair <std::s
 }
 
 // Ignore this abysmal coding, I have no other idea as to how to do this.
-void JSONLoader::initializeMaps() {
+void JSONLoader::initializeMaps()
+{
     // Initialize maps from strings to enums
     _stringToEnum = {
-        {"SPACE",  32},
+        {"SPACE", 32},
         {"APOSTROPHE", 39},
         {"COMMA", 44},
         {"MINUS", 45},
@@ -254,8 +274,7 @@ void JSONLoader::initializeMaps() {
         {"MOUSE_BUTTON_8", 7},
         {"MOUSE_BUTTON_LEFT", 0},
         {"MOUSE_BUTTON_RIGHT", 1},
-        {"MOUSE_BUTTON_MIDDLE", 2}
-    };
+        {"MOUSE_BUTTON_MIDDLE", 2}};
 
     _enumToString = {
         {32, "SPACE"},
@@ -384,6 +403,5 @@ void JSONLoader::initializeMaps() {
         {7, "MOUSE_BUTTON_8"},
         {0, "MOUSE_BUTTON_LEFT"},
         {1, "MOUSE_BUTTON_RIGHT"},
-        {2, "MOUSE_BUTTON_MIDDLE"}
-    };
+        {2, "MOUSE_BUTTON_MIDDLE"}};
 }

@@ -15,29 +15,35 @@
 #include <vector>
 #include <string>
 #include <cstdint>
-
-struct Tile {
-    uint8_t tileId;
-    Tile* up;
-    Tile* down;
-    Tile* left;
-    Tile* right;
-    char* tileType;     // Maybe change into an enum?
-};
-
-class TileMap {
+#include "Tile.hpp"
+#include <unordered_map>
+#include <nlohmann/json.hpp>
+#include <iostream>
+#include <fstream>
+class TileMap
+{
 public:
     TileMap();
-    TileMap(std::vector<Tile> tileList, std::vector<Tile> seedList);
+    TileMap(std::unordered_map<int, Tile> tileList, std::vector<Tile> seedList);
 
-    void loadTiles(std::string filepath);  // Need to change this.  Trying to figure out a bit more about what the goal 
-    // of the function is or if we can just pass a vector in for creating the list.
+    // load tiles from json
+    void loadTiles(const std::string &filename);
 
-    std::vector <std::pair <char*, std::string>> getTileInformation();    // Returns a vector of pairs of a <direction string, texture classification>
+    // NOT USED
+    void saveTile(std::string filepath);
 
-private: 
-    std::vector<Tile> _tileList;
-    std::vector<Tile> _seedList;    // Standard : [origin (0, 0), up , left , right , down] 
+    // TODO return a bunch of tiles from cureent tile
+    std::vector<Tile> getNearTiles(Tile currentTile, int radius);
+
+    Tile getTileByID(uint8_t tileId);
+
+    std::vector<std::string> getTileMapInformation(); // Returns a vector of pairs of a <direction string, texture classification>
+
+private:
+    std::unordered_map<int, Tile> _tileList;
+
+    // Dont Know Purpose
+    std::vector<Tile> _seedList; // Standard : [origin (0, 0), up , left , right , down]
     // ; If there are multiple entrances, then the ordering is to go clockwise from the leftmost upper Entrances
 };
 

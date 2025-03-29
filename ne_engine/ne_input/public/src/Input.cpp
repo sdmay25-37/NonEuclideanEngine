@@ -6,79 +6,98 @@
 
 #include <iostream>
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 
-Input::Input() {
+Input::Input()
+{
 	_window = NULL;
 }
 
-Input::Input(GLFWwindow *window) {
+Input::Input(GLFWwindow *window)
+{
 	_window = window;
 	glfwSetWindowUserPointer(window, this);
 	glfwSetKeyCallback(window, key_callback);
 }
 
-bool Input::isKeyPressed(int key) {
+bool Input::isKeyPressed(int key)
+{
 	return glfwGetKey(_window, key) == GLFW_PRESS;
 }
 
-bool Input::isKeyReleased(int key) const {
+bool Input::isKeyReleased(int key) const
+{
 	return glfwGetKey(_window, key) == GLFW_RELEASE;
 }
 
-
-bool Input::isMouseButtonPressed(int button) const {
+bool Input::isMouseButtonPressed(int button) const
+{
 	return glfwGetMouseButton(_window, button) == GLFW_PRESS;
 }
 
-void Input::getMousePosition(double &x, double &y) const {
+void Input::getMousePosition(double &x, double &y) const
+{
 	glfwGetCursorPos(_window, &x, &y);
 }
 
-void Input::bindKeyPress(const std::string &action, int key, const ActionCallback& callback) {
+void Input::bindKeyPress(const std::string &action, int key, const ActionCallback &callback)
+{
 	_action_callback_map[action].push_back(callback);
 	_key_action_map[key] = action;
 }
 
-void Input::bindKeyPress(const std::string& action, int key) {
-	int formerKey = 0;
+void Input::bindKeyPress(const std::string &action, int key)
+{
+	int formerKey = -1; // Use -1 to indicate "no previous key found"
 
-	for (const auto& [oldkey, value] : _key_action_map) {
-		if (value == action && oldkey != key) {
-			formerKey = oldkey;
+	// Find the existing key bound to this action
+	for (auto it = _key_action_map.begin(); it != _key_action_map.end(); ++it)
+	{
+		if (it->second == action)
+		{
+			formerKey = it->first;
+			break; // No need to continue searching after the first match
 		}
+	}
 
-	}
-	if (formerKey != 0) {
-		_key_action_map[key] = _key_action_map[formerKey];
+	// If there's a former key, remove it before binding the new one
+	if (formerKey != -1)
+	{
 		_key_action_map.erase(formerKey);
-	} else {
-		_key_action_map[key] = action;
 	}
+
+	// Bind the new key to the action
+	_key_action_map[key] = action;
 }
 
-void Input::bindKeyPress(const std::string& action, const ActionCallback& callback) {
+void Input::bindKeyPress(const std::string &action, const ActionCallback &callback)
+{
 	_action_callback_map[action].push_back(callback);
 }
 
-void Input::bindKeyPress(std::vector<std::pair <std::string, int>> bindings, int newBinding) {
-	if (bindings.size() == 0) {
+void Input::bindKeyPress(std::vector<std::pair<std::string, int>> bindings, int newBinding)
+{
+	if (bindings.size() == 0)
+	{
 		std::cerr << "Empty bindings vector." << std::endl;
 		return;
 	}
 
-	for (int i = 0; i < bindings.size(); i++) {
-        this->bindKeyPress(bindings.at(i).first, bindings.at(i).second);
-    }
+	for (int i = 0; i < bindings.size(); i++)
+	{
+		this->bindKeyPress(bindings.at(i).first, bindings.at(i).second);
+	}
 
-	if (newBinding) {
+	if (newBinding)
+	{
 		_binding_contexts.push_back(bindings);
 	}
 }
 
-
-void Input::bindContexts(std::vector<std::vector<std::pair <std::string, int>>> bindings) {
-	for (int i = 0; i < bindings.size(); i++) {
+void Input::bindContexts(std::vector<std::vector<std::pair<std::string, int>>> bindings)
+{
+	for (int i = 0; i < bindings.size(); i++)
+	{
 		_binding_contexts.push_back(bindings.at(i));
 	}
 
@@ -86,46 +105,57 @@ void Input::bindContexts(std::vector<std::vector<std::pair <std::string, int>>> 
 	bindKeyPress(_binding_contexts.at(0), 0);
 }
 
-void Input::switchBindings() {
+void Input::switchBindings()
+{
 	bindKeyPress(_binding_contexts.at((_currentContext + 1) % _binding_contexts.size()), 0);
 	_currentContext = (_currentContext + 1) % _binding_contexts.size();
 }
 
-void Input::keyCallback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	if (!action) return;
+void Input::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+	if (!action)
+		return;
 	auto action_it = _key_action_map.find(key);
-	if(action_it == _key_action_map.end() || action != GLFW_PRESS || action == GLFW_RELEASE) return;
+	if (action_it == _key_action_map.end() || action != GLFW_PRESS || action == GLFW_RELEASE)
+		return;
 
 	auto callback_it = _action_callback_map.find(action_it->second);
-	if(callback_it == _action_callback_map.end()) return;
+	if (callback_it == _action_callback_map.end())
+		return;
 
-	for(const auto& callback : callback_it->second) {
-        callback();
-    }
+	for (const auto &callback : callback_it->second)
+	{
+		callback();
+	}
 }
 
-std::vector<std::pair <std::string, int>> Input::getBindings() {
-	std::vector<std::pair <std::string, int>> bindings;
+std::vector<std::pair<std::string, int>> Input::getBindings()
+{
+	std::vector<std::pair<std::string, int>> bindings;
 
-	for (auto element : _key_action_map) {
+	for (auto element : _key_action_map)
+	{
 		bindings.push_back(std::make_pair(element.second, element.first));
 	}
 
 	return bindings;
 }
 
-std::vector<std::vector<std::pair <std::string, int>>> Input::getBindingsArray() {
+std::vector<std::vector<std::pair<std::string, int>>> Input::getBindingsArray()
+{
 	return _binding_contexts;
 }
 
-
-std::pmr::unordered_map<int, std::string> Input::getKeyActionMap() {
+std::unordered_map<int, std::string> Input::getKeyActionMap()
+{
 	return _key_action_map;
 }
 
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
-	auto* input = static_cast<Input*>(glfwGetWindowUserPointer(window));
+void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+	auto *input = static_cast<Input *>(glfwGetWindowUserPointer(window));
 
-	if(!input) return;
+	if (!input)
+		return;
 	input->keyCallback(window, key, scancode, action, mods);
 }

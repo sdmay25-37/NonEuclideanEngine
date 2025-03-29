@@ -11,10 +11,13 @@
 #include <cstdlib>
 #include <ctime>
 #include <chrono>
+#include <vector>
 
 #include "stb_image.h"
 
 #include "ne_engine.hpp"
+
+#define GLM_FORCE_CTOR_INIT
 
 // #include "Sprite.h"
 
@@ -23,24 +26,26 @@
 // #include "stb_image.h"
 // #include "Input.h"
 
-
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
 // settings
 constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;
 constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 
-struct Vertex {
-	float x, y, z;
+struct Vertex
+{
+    float x, y, z;
     float u, v;
 };
 
-float rand_float() {
+float rand_float()
+{
     return (float)rand() / RAND_MAX;
 }
 
-int main() {
+int main()
+{
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -50,8 +55,9 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", nullptr, nullptr);
-    if (window == nullptr) {
+    GLFWwindow *window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", nullptr, nullptr);
+    if (window == nullptr)
+    {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
@@ -59,7 +65,8 @@ int main() {
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
@@ -78,21 +85,22 @@ int main() {
     stbi_set_flip_vertically_on_load(true);
     int width, height, nrChannels;
     unsigned char *data = stbi_load("../res/tiles.png", &width, &height, &nrChannels, 0);
-    if (data) {
+    if (data)
+    {
         GLenum format = (nrChannels == 3) ? GL_RGB : GL_RGBA;
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
         glGenerateMipmap(GL_TEXTURE_2D);
-    } else {
+    }
+    else
+    {
         std::cerr << "Failed to load texture" << std::endl;
     }
     stbi_image_free(data);
 
-
     // build and compile our shader program
     ShaderProgram shaders(
-			"../shaders/sprite.vert",
-			"../shaders/sprite.frag"
-	);
+        "../shaders/sprite.vert",
+        "../shaders/sprite.frag");
 
     std::srand(std::time(nullptr));
 
@@ -111,7 +119,8 @@ int main() {
     std::vector<glm::vec4> uv_ranges;
 
     std::vector<Sprite> sprites;
-    for(int i = 0; i < map_width * map_height; i++) {
+    for (int i = 0; i < map_width * map_height; i++)
+    {
 
         int x = i % map_width;
         int y = i / map_width;
@@ -141,16 +150,14 @@ int main() {
     }
 
     std::vector<Vertex> vertices = {
-        Vertex {  0.5,  0.5, 0.0, 1.0, 1.0 },
-        Vertex {  0.5, -0.5, 0.0, 1.0, 0.0 },
-        Vertex { -0.5, -0.5, 0.0, 0.0, 0.0 },
-        Vertex { -0.5,  0.5, 0.0, 0.0, 1.0 }
-    };
+        Vertex{0.5, 0.5, 0.0, 1.0, 1.0},
+        Vertex{0.5, -0.5, 0.0, 1.0, 0.0},
+        Vertex{-0.5, -0.5, 0.0, 0.0, 0.0},
+        Vertex{-0.5, 0.5, 0.0, 0.0, 1.0}};
 
     std::vector<unsigned int> indices = {
         0, 1, 3,
-        1, 2, 3
-    };
+        1, 2, 3};
 
     unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -165,12 +172,12 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
 
     // vertex texture coords attribute
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // sprite texture coords attribute
@@ -178,7 +185,7 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(2);
     glVertexAttribDivisor(2, 1);
 
@@ -187,9 +194,10 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, MODEL_MAT_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_mats.size(), model_mats.data(), GL_DYNAMIC_DRAW);
 
-    for(int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
         glEnableVertexAttribArray(3 + i);
-        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4) * i));
+        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(glm::vec4) * i));
         glVertexAttribDivisor(3 + i, 1);
     }
 
@@ -200,7 +208,6 @@ int main() {
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
-
 
     glBindVertexArray(VAO);
 
@@ -221,29 +228,34 @@ int main() {
 
     glm::mat4 proj_mat = glm::perspective(fov, ASPECT_RATIO, nearPlane, farPlane);
 
-    input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]() {
-        glfwSetWindowShouldClose(window, true);
-    });
+    input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]()
+                       { glfwSetWindowShouldClose(window, true); });
 
     // input.bindKeyPress("up", GLFW_KEY_W, [&window]() {
     //     camera_pos.y += camera_speed;
     // });
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window))
+    {
 
-        if(input.isKeyPressed(GLFW_KEY_S)) {
+        if (input.isKeyPressed(GLFW_KEY_S))
+        {
             camera_pos.y -= camera_speed;
         }
-        if(input.isKeyPressed(GLFW_KEY_A)) {
+        if (input.isKeyPressed(GLFW_KEY_A))
+        {
             camera_pos.x -= camera_speed;
         }
-        if(input.isKeyPressed(GLFW_KEY_D)) {
+        if (input.isKeyPressed(GLFW_KEY_D))
+        {
             camera_pos.x += camera_speed;
         }
-        if(input.isKeyPressed(GLFW_KEY_Q)) {
+        if (input.isKeyPressed(GLFW_KEY_Q))
+        {
             camera_pos.z += camera_speed;
         }
-        if(input.isKeyPressed(GLFW_KEY_E)) {
+        if (input.isKeyPressed(GLFW_KEY_E))
+        {
             camera_pos.z -= camera_speed;
         }
 
@@ -251,9 +263,11 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         count++;
-        if(count % 2500 == 0) {
+        if (count % 2500 == 0)
+        {
             uv_ranges.clear();
-            for(int i = 0; i < sprites.size(); i++) {
+            for (int i = 0; i < sprites.size(); i++)
+            {
                 int tile_x = rand() % tile_width;
                 int tile_y = rand() % tile_height;
 
@@ -268,8 +282,6 @@ int main() {
 
             glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
             glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
-
-
         }
 
         glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
@@ -281,7 +293,7 @@ int main() {
         glfwPollEvents();
     }
 
-	shaders.cleanup();
+    shaders.cleanup();
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &UV_VBO);
@@ -292,10 +304,11 @@ int main() {
     return 0;
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
     glViewport(0, 0, width, height);
 }
 
-void shiftCameraLeft() {
-
+void shiftCameraLeft()
+{
 }
