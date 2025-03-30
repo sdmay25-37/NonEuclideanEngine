@@ -4,27 +4,21 @@
 #include <iostream>
 
 #include "App.hpp"
-
 #include "ne_system/SystemSet.hpp"
-#include "ne_system/SystemSchedule.hpp"
-#include "ne_system/SystemExecutor.hpp"
-#include "ne_util/DirectedGraph.hpp"
 
 struct Person {
     std::string name;
 };
 
-void system1(entt::registry& registry) {
+void CreatePeople(entt::registry& registry) {
     const auto entity = registry.create();
     registry.emplace<Person>(entity, "John Doe");
+
+    const auto entity2 = registry.create();
+    registry.emplace<Person>(entity2, "Jane Doe");
 }
 
-void system2(entt::registry& registry) {
-    const auto entity = registry.create();
-    registry.emplace<Person>(entity, "Jane Doe");
-}
-
-void system3(entt::registry& registry) {
+void GreetPeople(entt::registry& registry) {
     for(auto [entity, person] : registry.view<const Person>().each()) {
         std::cout << "Name: " << person.name << std::endl;
     }
@@ -34,16 +28,10 @@ int main() {
 
     entt::registry registry;
 
-    SystemSchedule schedule(std::move(
-        SystemSet(system1, system2)
-        .Before(system3)
-    ));
-
-    auto executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded, registry);
-    executor->Execute(schedule);
-
-    // App app;
-    // app.run();
+    App()
+        .AddSystems(ScheduleLabel::STARTUP, SystemSet(CreatePeople))
+        .AddSystems(ScheduleLabel::UPDATE, SystemSet(GreetPeople))
+        .run();
 
     return 0;
 }

@@ -15,6 +15,8 @@ class SystemSet {
 public:
 	using RunCondition = std::function<bool()>;
 
+	SystemSet() = default;
+
 	template<typename... Systems>
 	explicit SystemSet(Systems&&... systems) {
 		static_assert((std::is_convertible_v<Systems, System> && ...));

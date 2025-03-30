@@ -12,6 +12,7 @@ class SystemSchedule {
 public:
 	using SystemId = DirectedGraph<System>::NodeId;
 
+	SystemSchedule() = default;
 	explicit SystemSchedule(SystemSet&& root_set);
 
 	[[nodiscard]] const std::vector<const System*>& GetCachedSchedule() const { return _cached_topsort; }

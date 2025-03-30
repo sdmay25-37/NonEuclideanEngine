@@ -23,25 +23,27 @@ void App::run() {
 
 	std::thread render_thread([&] {
 		glfwMakeContextCurrent(_window);
-		while(true) {
+		while(!glfwWindowShouldClose(_window)) {
 			render();
-
-			std::cout << "Render finish\n";
 			frameSynch.wait();
 		}
+
+		// TODO: this is a temporary fix as the main thread still makes some OpenGL calls
+		glfwMakeContextCurrent(NULL);
 	});
 
 
-	while (!glfwWindowShouldClose(_window)) {
-		// std::cout << "Frame start\n";
+	while(!glfwWindowShouldClose(_window)) {
 
 		update();
-
-		std::cout << "Update finish\n";
 		frameSynch.wait();
 
 	}
 
+
+	render_thread.join();
+
+	glfwMakeContextCurrent(_window);
 	cleanup();
 }
 
@@ -175,10 +177,16 @@ void App::init() {
 	});
 
 	_charInput->bindContexts(bindings);
+
+	_executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded, _registry);
+	_executor->Execute(_schedules[ScheduleLabel::STARTUP]);
 }
 
 void App::update() {
 	glfwPollEvents();
+
+	_executor->Execute(_schedules[ScheduleLabel::UPDATE]);
+
 	// _count++;
 	//
 	// if(_count % 25 == 0) {
