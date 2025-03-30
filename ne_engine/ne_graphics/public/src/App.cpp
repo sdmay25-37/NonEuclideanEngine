@@ -6,6 +6,9 @@
 #include <stb_image.h>
 
 #include "App.hpp"
+
+#include <Renderer.hpp>
+
 #include "JSONLoader.hpp"
 
 
@@ -14,13 +17,13 @@ constexpr double SECONDS_PER_UPDATE = 1.0 / UPDATES_PER_SECOND;
 constexpr int MAX_FRAMESKIP = 5;
 
 
-void App::run() {
+void App::Run() {
 
 	for(auto& plugin : _plugins) {
 		plugin->build(*this);
 	}
 
-	init();
+	Init();
 	glfwMakeContextCurrent(NULL);
 
 	Synchronizer frameSynch(2);
@@ -28,7 +31,7 @@ void App::run() {
 	std::thread render_thread([&] {
 		glfwMakeContextCurrent(_window);
 		while(!glfwWindowShouldClose(_window)) {
-			render();
+			Render();
 			frameSynch.wait();
 		}
 
@@ -39,7 +42,7 @@ void App::run() {
 
 	while(!glfwWindowShouldClose(_window)) {
 
-		update();
+		Update();
 		frameSynch.wait();
 
 	}
@@ -47,10 +50,10 @@ void App::run() {
 	render_thread.join();
 
 	glfwMakeContextCurrent(_window);
-	cleanup();
+	Cleanup();
 }
 
-void App::init() {
+void App::Init() {
 	glfwInit();
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -115,7 +118,7 @@ void App::init() {
 		std::cerr << "Error: " << result.error();
 	}
 
-	_renderSystem = new Render();
+	_renderSystem = new Renderer();
 	_renderSystem->init();
 	_renderSystem->bind();
 
@@ -139,12 +142,12 @@ void App::init() {
 	_executor->Execute(_schedules[ScheduleLabel::STARTUP]);
 }
 
-void App::update() {
+void App::Update() {
 	glfwPollEvents();
 	_executor->Execute(_schedules[ScheduleLabel::UPDATE]);
 }
 
-void App::render() {
+void App::Render() {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -168,7 +171,7 @@ void App::render() {
     glfwSwapBuffers(_window);
 }
 
-void App::cleanup() {
+void App::Cleanup() {
 	delete _charInput;
 	_charInput = nullptr;
 

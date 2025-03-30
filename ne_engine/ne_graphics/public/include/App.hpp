@@ -2,16 +2,16 @@
 #define APP_HPP
 
 #include <vector>
+
 #include <entt/entt.hpp>
 #include <GLFW/glfw3.h>
-#include <glm/glm.hpp>
-#include <ne_system/Resource.hpp>
-#include <ne_system/SystemExecutor.hpp>
 
 #include "Input.hpp"
-#include "Render.hpp"
+#include "Renderer.hpp"
 #include "ShaderProgram.hpp"
-#include "TextureManager.hpp"
+#include "ne_system/Resource.hpp"
+#include "ne_system/SystemExecutor.hpp"
+
 
 constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;
@@ -33,11 +33,9 @@ public:
 class App {
 public:
 	App()
-		: _window(nullptr), _renderSystem(nullptr), _executor(nullptr) {
-	};
-	// ~App();
+		: _window(nullptr), _renderSystem(nullptr), _executor(nullptr) {};
 
-	void run();
+	void Run();
 
 	App& AddSystems(const ScheduleLabel schedule, SystemSet&& system_set) {
 		_schedules[schedule] = SystemSchedule(std::move(system_set));
@@ -60,7 +58,7 @@ public:
 private:
 	GLFWwindow* _window;
 	entt::registry _registry;
-	Render* _renderSystem;
+	Renderer* _renderSystem;
 
 	std::unique_ptr<SystemExecutor> _executor;
 	EnumArray<ScheduleLabel, SystemSchedule> _schedules;
@@ -68,17 +66,15 @@ private:
 	ResourceManager _resource_manager;
 
 	// Temporary testing stuff
-	int _count = 0;
-	// std::vector<glm::vec4> _uvRanges;
 	unsigned int _texture;
 	ShaderProgram* _shaders;
 	Input* _charInput;
 
 
-  	void init();
-	void update();
-	void render();
-	void cleanup();
+  	void Init();
+	void Update();
+	void Render();
+	void Cleanup();
 
 };
 

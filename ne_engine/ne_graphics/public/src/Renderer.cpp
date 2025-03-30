@@ -1,9 +1,9 @@
-#include "Render.hpp"
+#include "Renderer.hpp"
 
 #include <TextureManager.hpp>
 #include <glad/glad.h>
 
-Render::~Render() {
+Renderer::~Renderer() {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &UV_VBO);
@@ -11,7 +11,7 @@ Render::~Render() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void Render::init() {
+void Renderer::init() {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &UV_VBO);
@@ -73,7 +73,7 @@ void Render::init() {
 
 // Todo: Not sure how I feel about this method
 // I don't like having to copy UV data every frame when it likely doesn't change
-void Render::render(entt::registry& registry) const {
+void Renderer::render(entt::registry& registry) const {
 	auto const view = registry.view<AtlasSprite>();
 
 	std::unordered_map<unsigned int, std::pair<std::vector<glm::mat4>, std::vector<glm::vec4>>> atlas_data;
@@ -105,8 +105,9 @@ void Render::render(entt::registry& registry) const {
 		// Render sprites
 		glDrawElementsInstanced(GL_TRIANGLES, N_INDICES, GL_UNSIGNED_INT, nullptr, model_mats.size());
 	}
+
 }
 
-void Render::bind() {
+void Renderer::bind() {
 	glBindVertexArray(VAO);
 }

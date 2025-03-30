@@ -46,14 +46,12 @@ private:
 };
 
 
-
 int main() {
 
     App()
         .AddPlugin<WorldPlugin>()
         .InsertResource<TextureManager>()
-        .run();
-
+        .Run();
 
     glfwTerminate();
     return 0;

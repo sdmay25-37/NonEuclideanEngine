@@ -26,10 +26,10 @@ struct AtlasSprite {
 	AtlasedTexture texture;
 };
 
-class Render {
+class Renderer {
 public:
-	Render() = default;
-	~Render();
+	Renderer() = default;
+	~Renderer();
 
 	void init();
 	void render(entt::registry &registry) const;
