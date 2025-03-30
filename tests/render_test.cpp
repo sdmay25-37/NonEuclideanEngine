@@ -5,6 +5,7 @@
 
 #include "App.hpp"
 #include "ne_system/SystemSet.hpp"
+#include "ne_system/Resource.hpp"
 
 struct Person {
     std::string name;
@@ -24,14 +25,25 @@ void GreetPeople(entt::registry& registry) {
     }
 }
 
+struct Sound {
+    // Testing resource class
+    float volume;
+    explicit Sound(float volume) : volume(volume) {}
+};
+
 int main() {
 
     entt::registry registry;
 
-    App()
-        .AddSystems(ScheduleLabel::STARTUP, SystemSet(CreatePeople))
-        .AddSystems(ScheduleLabel::UPDATE, SystemSet(GreetPeople))
-        .run();
+    ResourceManager resourceManager;
+    resourceManager.insert<Sound>(10.0f);
+
+    std::cout << "Volume: " << resourceManager.get<Sound>()->volume << std::endl;
+
+    // App()
+    //     .AddSystems(ScheduleLabel::STARTUP, SystemSet(CreatePeople))
+    //     .AddSystems(ScheduleLabel::UPDATE, SystemSet(GreetPeople))
+    //     .run();
 
     return 0;
 }
