@@ -27,9 +27,6 @@ add_library(
     # ne_math
     "${MATH_SRC_DIR}/HypRotate.cpp"
 
-    # ne_resource
-    "${RES_SRC_DIR}/ResourceManager.cpp"
-
     # ne_system
     "${SYS_SRC_DIR}/SystemSchedule.cpp"
     "${SYS_SRC_DIR}/SystemSet.cpp"
@@ -57,7 +54,6 @@ target_include_directories(ne_engine
     ne_graphics/public/include
     ne_math/public/include
     ne_input/public/include
-    ne_resource/public/include
     ne_system/public/include
     ne_ui/public/include
     ne_util/public/include
@@ -66,7 +62,6 @@ target_include_directories(ne_engine
     ne_graphics/private/include
     ne_math/private/include
     ne_input/private/include
-    ne_resource/private/include
     ne_ui/private/include
 )
 
