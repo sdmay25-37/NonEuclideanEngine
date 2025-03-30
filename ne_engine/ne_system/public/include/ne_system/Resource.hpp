@@ -1,13 +1,16 @@
 #ifndef RESOURCE_HPP
 #define RESOURCE_HPP
+
 #include <typeindex>
+#include <unordered_map>
 
 // TODO: when we want to implement multi-threading of systems, create a ResourceMut class
-
 
 template<typename T>
 class Resource {
 public:
+	using value_type = T;
+
 	explicit Resource(T* instance) : _instance(instance) {}
 
 	T* operator->() { return _instance; }

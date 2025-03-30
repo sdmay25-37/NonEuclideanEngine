@@ -178,7 +178,7 @@ void App::init() {
 
 	_charInput->bindContexts(bindings);
 
-	_executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded, _registry);
+	_executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded, _registry, _resource_manager);
 	_executor->Execute(_schedules[ScheduleLabel::STARTUP]);
 }
 

@@ -193,4 +193,19 @@ struct EnumArray : std::array<T, static_cast<std::size_t>(Enum::MAX_VALUE)> {
 };
 
 
+template<typename F> class FunctionTraits;
+
+template<typename Result, typename... Args>
+class FunctionTraits<Result(Args...)> {
+public:
+	using arguments = std::tuple<Args...>;
+};
+
+template<typename Result, typename... Args>
+class FunctionTraits<Result(&)(Args...)> {
+public:
+	using arguments = std::tuple<Args...>;
+};
+
+
 #endif //UTILS_HPP

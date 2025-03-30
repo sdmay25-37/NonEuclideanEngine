@@ -6,6 +6,7 @@
 #include <entt/entt.hpp>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
+#include <ne_system/Resource.hpp>
 #include <ne_system/SystemExecutor.hpp>
 
 #include "Input.hpp"
@@ -25,7 +26,7 @@ enum class ScheduleLabel {
 class App {
 public:
 	App()
-		: _window(nullptr), _renderSystem(nullptr), _executor(nullptr), _schedules{} {
+		: _window(nullptr), _renderSystem(nullptr), _executor(nullptr) {
 	};
 	// ~App();
 
@@ -40,8 +41,11 @@ private:
 	GLFWwindow* _window;
 	entt::registry _registry;
 	Render* _renderSystem;
+
 	std::unique_ptr<SystemExecutor> _executor;
 	EnumArray<ScheduleLabel, SystemSchedule> _schedules;
+
+	ResourceManager _resource_manager;
 
 	// Temporary testing stuff
 	int _count = 0;

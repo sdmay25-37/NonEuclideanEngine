@@ -7,9 +7,7 @@
 #include <entt/entt.hpp>
 
 #include "ne_util/DirectedGraph.hpp"
-
-
-using System = std::function<void(entt::registry&)>;
+#include "System.hpp"
 
 class SystemSet {
 public:
@@ -19,14 +17,42 @@ public:
 
 	template<typename... Systems>
 	explicit SystemSet(Systems&&... systems) {
-		static_assert((std::is_convertible_v<Systems, System> && ...));
 		(AddSystem(std::forward<Systems>(systems)), ...);
 	}
 
-	SystemSet& AddSystem(System&& system);
+	template<typename F>
+	SystemSet& AddSystem(F&& system) {
+		_system_ids.push_back(
+			_dependency_graph.AddNode(std::move(CreateSystem(system)))
+		);
+		return *this;
+	}
 
-	SystemSet& Before(System&& system);
-	SystemSet& After(System&& system);
+	template<typename F>
+	SystemSet& Before(F&& system) {
+		SystemId id = _dependency_graph.AddNode(std::move(CreateSystem(system)));
+
+		// Create dependency edges from current systems to this system
+		for(SystemId sys_id : _system_ids) {
+			_dependency_graph.AddEdge(sys_id, id);
+		}
+
+		_system_ids.push_back(id);
+		return *this;
+	}
+
+	template<typename F>
+	SystemSet& After(F&& system) {
+		SystemId id = _dependency_graph.AddNode(std::move(CreateSystem(system)));
+
+		// Create dependency edges from this system to current systems
+		for(SystemId sys_id : _system_ids) {
+			_dependency_graph.AddEdge(id, sys_id);
+		}
+
+		_system_ids.push_back(id);
+		return *this;
+	}
 
 	// TODO: implement ordering of system sets, which will require a dynamic 'Runnable' type for both Systems and SystemSets
 	// SystemSet& Before(SystemSet&& system);
@@ -34,13 +60,17 @@ public:
 
 	SystemSet& RunIf(RunCondition&& rc);
 
-	[[nodiscard]] const DirectedGraph<System>& GetDependencyGraph() const { return _dependency_graph; }
+	[[nodiscard]] const DirectedGraph<std::unique_ptr<SystemBase>>& GetDependencyGraph() const { return _dependency_graph; }
 
 private:
-	using SystemId = DirectedGraph<System*>::NodeId;
-	DirectedGraph<System> _dependency_graph;
+	using SystemId = DirectedGraph<std::unique_ptr<SystemBase>>::NodeId;
+	DirectedGraph<std::unique_ptr<SystemBase>> _dependency_graph;
 	std::vector<SystemId> _system_ids;
 };
+
+
+
+
 
 
 

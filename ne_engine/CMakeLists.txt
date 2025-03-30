@@ -29,7 +29,6 @@ add_library(
 
     # ne_system
     "${SYS_SRC_DIR}/SystemSchedule.cpp"
-    "${SYS_SRC_DIR}/SystemSet.cpp"
     "${SYS_SRC_DIR}/SystemThreadPool.cpp"
     "${SYS_SRC_DIR}/SystemExecutor.cpp"
 

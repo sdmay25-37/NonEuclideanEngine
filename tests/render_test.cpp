@@ -6,6 +6,7 @@
 #include "App.hpp"
 #include "ne_system/SystemSet.hpp"
 #include "ne_system/Resource.hpp"
+#include "ne_system/System.hpp"
 
 struct Person {
     std::string name;
@@ -31,19 +32,25 @@ struct Sound {
     explicit Sound(float volume) : volume(volume) {}
 };
 
-int main() {
+void sound_system(entt::registry& registry, Resource<Sound> sound) {
 
-    entt::registry registry;
+    std::cout << "Volume: " << sound->volume << std::endl;
+}
+
+void test(SystemBase&& system) {
+
+}
+
+int main() {
 
     ResourceManager resourceManager;
     resourceManager.insert<Sound>(10.0f);
 
-    std::cout << "Volume: " << resourceManager.get<Sound>()->volume << std::endl;
 
-    // App()
-    //     .AddSystems(ScheduleLabel::STARTUP, SystemSet(CreatePeople))
-    //     .AddSystems(ScheduleLabel::UPDATE, SystemSet(GreetPeople))
-    //     .run();
+    App()
+        .AddSystems(ScheduleLabel::STARTUP, SystemSet(CreatePeople))
+        .AddSystems(ScheduleLabel::UPDATE, SystemSet(GreetPeople))
+        .run();
 
     return 0;
 }
