@@ -37,6 +37,12 @@ public:
 		return *this;
 	}
 
+	template<typename T, typename... Args>
+	App& InsertResource(Args&&... args) {
+		_resource_manager.insert<T>(std::forward<Args>(args)...);
+		return *this;
+	}
+
 private:
 	GLFWwindow* _window;
 	entt::registry _registry;
