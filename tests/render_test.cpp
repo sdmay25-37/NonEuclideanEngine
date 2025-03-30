@@ -5,8 +5,13 @@
 
 #include "App.hpp"
 
-class WorldPlugin {
-    public:
+class WorldPlugin final : public Plugin {
+public:
+    void build(App &app) override {
+        app.AddSystems(ScheduleLabel::STARTUP, SystemSet(CreateTiles));
+    }
+
+private:
     static void CreateTiles(entt::registry& registry, Resource<TextureManager> texture_manager) {
         std::srand(std::time(nullptr));
         auto texture_result = texture_manager->getTexture("tile0.png");
@@ -45,7 +50,7 @@ class WorldPlugin {
 int main() {
 
     App()
-        .AddSystems(ScheduleLabel::STARTUP, SystemSet(WorldPlugin::CreateTiles))
+        .AddPlugin<WorldPlugin>()
         .InsertResource<TextureManager>()
         .run();
 

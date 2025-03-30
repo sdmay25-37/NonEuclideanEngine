@@ -16,6 +16,10 @@ constexpr int MAX_FRAMESKIP = 5;
 
 void App::run() {
 
+	for(auto& plugin : _plugins) {
+		plugin->build(*this);
+	}
+
 	init();
 	glfwMakeContextCurrent(NULL);
 
