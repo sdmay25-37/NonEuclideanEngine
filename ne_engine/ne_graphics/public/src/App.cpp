@@ -40,7 +40,6 @@ void App::run() {
 
 	}
 
-
 	render_thread.join();
 
 	glfwMakeContextCurrent(_window);
@@ -119,12 +118,13 @@ void App::init() {
 	float rect_size = 2.0 / (map_width - 1);
 	int num_sprites = map_width * map_height;
 
-	auto result = _texture_manager.loadAtlas("../res/atlases/atlas.json");
+	_texture_manager = new TextureManager();
+	auto result = _texture_manager->loadAtlas("../res/atlases/atlas.json");
 	if(result.is_error()) {
 		std::cerr << "Error: " << result.error();
 	}
 
-	auto texture_result = _texture_manager.getTexture("tile0.png");
+	auto texture_result = _texture_manager->getTexture("tile0.png");
 	AtlasedTexture texture = texture_result.value();
 
 	for(int i = 0; i < num_sprites; i++) {
@@ -241,6 +241,9 @@ void App::cleanup() {
 
 	delete _renderSystem;
 	_renderSystem = nullptr;
+
+	delete _texture_manager;
+	_texture_manager = nullptr;
 
 	glfwTerminate();
 }

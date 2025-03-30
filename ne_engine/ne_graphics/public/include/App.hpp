@@ -51,7 +51,7 @@ private:
 	float _uvWidth, _uvHeight;
 	ShaderProgram* _shaders;
 	Input* _charInput;
-	TextureManager _texture_manager;
+	TextureManager* _texture_manager;
 
 
   	void init();
