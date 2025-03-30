@@ -5,39 +5,51 @@
 
 #include "App.hpp"
 
- // -- Component -- //
-struct Person {
-    std::string name;
-};
+class WorldPlugin {
+    public:
+    static void CreateTiles(entt::registry& registry, Resource<TextureManager> texture_manager) {
+        std::srand(std::time(nullptr));
+        auto texture_result = texture_manager->getTexture("tile0.png");
+        AtlasedTexture texture = texture_result.value();
 
-// -- Resource -- //
-struct Greeting {
-    std::string str;
-    explicit Greeting(std::string str) : str(std::move(str)) {}
-};
+        int map_width = 20;
+        int map_height = map_width * ASPECT_RATIO;
 
-// -- Systems --//
-void CreatePeople(entt::registry& registry) {
-    const auto entity = registry.create();
-    registry.emplace<Person>(entity, "John Doe");
+        float rect_size = 2.0 / (map_width - 1);
+        int num_sprites = map_width * map_height;
 
-    const auto entity2 = registry.create();
-    registry.emplace<Person>(entity2, "Jane Doe");
-}
+        for(int i = 0; i < num_sprites; i++) {
 
-void GreetPeople(entt::registry& registry, Resource<Greeting> greeting) {
-    for(auto [entity, person] : registry.view<const Person>().each()) {
-        std::cout << greeting->str << " " << person.name << std::endl;
+            int x = i % map_width;
+            int y = i / map_width;
+
+            float rect_x = x * rect_size - 1.0;
+            float rect_y = y * rect_size - 1.0;
+
+
+            glm::vec3 position(rect_x, rect_y, 0.0);
+            glm::vec3 scale(rect_size, rect_size, 1.0);
+
+            glm::mat4 model_mat(1.0);
+            model_mat = glm::translate(model_mat, position);
+            model_mat = glm::scale(model_mat, scale);
+
+            const auto entity = registry.create();
+            registry.emplace<AtlasSprite>(entity, model_mat, texture);
+        }
     }
-}
+};
+
+
 
 int main() {
 
     App()
-        .AddSystems(ScheduleLabel::STARTUP, SystemSet(CreatePeople))
-        .AddSystems(ScheduleLabel::UPDATE, SystemSet(GreetPeople))
-        .InsertResource<Greeting>("Howdy")
+        .AddSystems(ScheduleLabel::STARTUP, SystemSet(WorldPlugin::CreateTiles))
+        .InsertResource<TextureManager>()
         .run();
 
+
+    glfwTerminate();
     return 0;
 }

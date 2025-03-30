@@ -55,13 +55,10 @@ private:
 
 	// Temporary testing stuff
 	int _count = 0;
-	std::vector<glm::vec4> _uvRanges;
+	// std::vector<glm::vec4> _uvRanges;
 	unsigned int _texture;
-	int _tileWidth, _tileHeight;
-	float _uvWidth, _uvHeight;
 	ShaderProgram* _shaders;
 	Input* _charInput;
-	TextureManager* _texture_manager;
 
 
   	void init();

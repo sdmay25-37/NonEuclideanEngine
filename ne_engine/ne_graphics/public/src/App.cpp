@@ -104,57 +104,11 @@ void App::init() {
 
 	_shaders = new ShaderProgram(shader_result.ok());
 
-	std::srand(std::time(nullptr));
+	auto texture_manager = _resource_manager.get<TextureManager>();
 
-	_tileWidth = width / 16;
-	_tileHeight = height / 16;
-
-	_uvWidth = 1.0 / _tileWidth;
-	_uvHeight = 1.0 / _tileHeight;
-
-	int map_width = 20;
-	int map_height = map_width * ASPECT_RATIO;
-
-	float rect_size = 2.0 / (map_width - 1);
-	int num_sprites = map_width * map_height;
-
-	_texture_manager = new TextureManager();
-	auto result = _texture_manager->loadAtlas("../res/atlases/atlas.json");
+	auto result = texture_manager->loadAtlas("../res/atlases/atlas.json");
 	if(result.is_error()) {
 		std::cerr << "Error: " << result.error();
-	}
-
-	auto texture_result = _texture_manager->getTexture("tile0.png");
-	AtlasedTexture texture = texture_result.value();
-
-	for(int i = 0; i < num_sprites; i++) {
-
-		int x = i % map_width;
-		int y = i / map_width;
-
-		float rect_x = x * rect_size - 1.0;
-		float rect_y = y * rect_size - 1.0;
-
-		int tile_x = rand() % _tileWidth;
-		int tile_y = rand() % _tileHeight;
-
-		float u = tile_x * _uvWidth;
-		float v = tile_y * _uvHeight;
-
-		glm::vec3 position(rect_x, rect_y, 0.0);
-		glm::vec3 scale(rect_size, rect_size, 1.0);
-		glm::vec2 uv_min(u, v);
-		glm::vec2 uv_max(u + _uvWidth, v + _uvHeight);
-
-		glm::mat4 model_mat(1.0);
-		model_mat = glm::translate(model_mat, position);
-		model_mat = glm::scale(model_mat, scale);
-
-		_uvRanges.emplace_back(uv_min.x, uv_min.y, uv_max.x, uv_max.y);
-
-		const auto entity = _registry.create();
-		// _registry.emplace<Sprite>(entity, model_mat, uv_min, uv_max);
-		_registry.emplace<AtlasSprite>(entity, model_mat, texture);
 	}
 
 	_renderSystem = new Render();
@@ -164,7 +118,6 @@ void App::init() {
 	_shaders->bind();
 	_shaders->setUniform1i("texture_atlas", 0);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, _texture);glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _texture);
 
 	_charInput = new Input(_window);
@@ -184,27 +137,7 @@ void App::init() {
 
 void App::update() {
 	glfwPollEvents();
-
 	_executor->Execute(_schedules[ScheduleLabel::UPDATE]);
-
-	// _count++;
-	//
-	// if(_count % 25 == 0) {
-	// 	_uvRanges.clear();
-	//
-	// 	auto view = _registry.view<Sprite>();
-	// 	for(auto [entity, sprite] : view.each()) {
-	// 		int tile_x = rand() % _tileWidth;
-	// 		int tile_y = rand() % _tileHeight;
-	//
-	// 		float u = tile_x * _uvWidth;
-	// 		float v = tile_y * _uvHeight;
-	//
-	// 		sprite.uv_min = glm::vec2(u, v);
-	// 		sprite.uv_max = glm::vec2(u + _uvWidth, v + _uvHeight);
-	// 	}
-	// }
-
 }
 
 void App::render() {
@@ -241,10 +174,5 @@ void App::cleanup() {
 
 	delete _renderSystem;
 	_renderSystem = nullptr;
-
-	delete _texture_manager;
-	_texture_manager = nullptr;
-
-	glfwTerminate();
 }
 
