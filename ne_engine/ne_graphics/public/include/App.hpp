@@ -9,6 +9,7 @@
 #include "Input.hpp"
 #include "Renderer.hpp"
 #include "ShaderProgram.hpp"
+#include "ne_system/Plugin.hpp"
 #include "ne_system/Resource.hpp"
 #include "ne_system/SystemExecutor.hpp"
 
@@ -20,14 +21,6 @@ constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 enum class ScheduleLabel {
 	STARTUP, UPDATE,
 	MAX_VALUE
-};
-
-class App;
-
-class Plugin {
-public:
-	virtual void build(App& app) = 0;
-	virtual ~Plugin() = default;
 };
 
 class App {

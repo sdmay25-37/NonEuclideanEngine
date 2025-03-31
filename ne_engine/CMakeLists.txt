@@ -19,6 +19,7 @@ add_library(
     "${GRAPHICS_SRC_DIR}/Texture.cpp"
     "${GRAPHICS_SRC_DIR}/TextureManager.cpp"
     "${GRAPHICS_SRC_DIR}/Triangle.cpp"
+    "${GRAPHICS_SRC_DIR}/Window.cpp"
 
     # ne_input
     "${INPUT_SRC_DIR}/Input.cpp"

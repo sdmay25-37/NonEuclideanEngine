@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "App.hpp"
+#include "Window.hpp"
 
 class WorldPlugin final : public Plugin {
 public:
