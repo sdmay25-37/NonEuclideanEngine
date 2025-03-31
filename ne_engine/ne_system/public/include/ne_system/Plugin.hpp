@@ -5,8 +5,14 @@ class App;
 
 class Plugin {
 public:
-	virtual void build(App& app) = 0;
+	virtual void Build(App& app) = 0;
 	virtual ~Plugin() = default;
+};
+
+enum class ScheduleLabel {
+	PRE_STARTUP, STARTUP,
+	UPDATE,
+	MAX_VALUE
 };
 
 

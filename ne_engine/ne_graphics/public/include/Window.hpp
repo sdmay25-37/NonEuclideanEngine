@@ -1,20 +1,19 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
+#define GLFW_INCLUDE_NONE
 #include <GLFW/glfw3.h>
-#include "ne_system/Plugin.hpp"
+
 
 struct Window {
-	GLFWwindow* ptr;
+	GLFWwindow* ptr = nullptr;
+	const int WIDTH = 800;
+	const int HEIGHT = 600;
 };
 
-class WindowPlugin final : public Plugin {
-public:
+class App;
 
-	void build(App& app) override {
 
-    }
-};
 
 
 

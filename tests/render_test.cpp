@@ -4,11 +4,11 @@
 #include <iostream>
 
 #include "App.hpp"
-#include "Window.hpp"
+#include "WindowPlugin.hpp"
 
 class WorldPlugin final : public Plugin {
 public:
-    void build(App &app) override {
+    void Build(App &app) override {
         app.AddSystems(ScheduleLabel::STARTUP, SystemSet(CreateTiles));
     }
 
@@ -50,6 +50,7 @@ private:
 int main() {
 
     App()
+        .AddPlugin<WindowPlugin>()
         .AddPlugin<WorldPlugin>()
         .InsertResource<TextureManager>()
         .Run();

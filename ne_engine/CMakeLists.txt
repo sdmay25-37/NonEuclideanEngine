@@ -12,7 +12,6 @@ add_library(
     # ne_graphics
     "${GRAPHICS_SRC_DIR}/Animation.cpp"
     "${GRAPHICS_SRC_DIR}/App.cpp"
-    "${GRAPHICS_SRC_DIR}/GLFWContext.cpp"
     "${GRAPHICS_SRC_DIR}/Image.cpp"
     "${GRAPHICS_SRC_DIR}/Renderer.cpp"
     "${GRAPHICS_SRC_DIR}/ShaderProgram.cpp"
@@ -20,6 +19,7 @@ add_library(
     "${GRAPHICS_SRC_DIR}/TextureManager.cpp"
     "${GRAPHICS_SRC_DIR}/Triangle.cpp"
     "${GRAPHICS_SRC_DIR}/Window.cpp"
+    "${GRAPHICS_SRC_DIR}/WindowPlugin.cpp"
 
     # ne_input
     "${INPUT_SRC_DIR}/Input.cpp"

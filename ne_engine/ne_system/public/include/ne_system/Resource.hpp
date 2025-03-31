@@ -1,6 +1,7 @@
 #ifndef RESOURCE_HPP
 #define RESOURCE_HPP
 
+#include <memory>
 #include <typeindex>
 #include <unordered_map>
 

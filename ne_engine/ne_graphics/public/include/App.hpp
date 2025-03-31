@@ -4,7 +4,6 @@
 #include <vector>
 
 #include <entt/entt.hpp>
-#include <GLFW/glfw3.h>
 
 #include "Input.hpp"
 #include "Renderer.hpp"
@@ -18,15 +17,9 @@ constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;
 constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 
-enum class ScheduleLabel {
-	STARTUP, UPDATE,
-	MAX_VALUE
-};
-
 class App {
 public:
-	App()
-		: _window(nullptr), _renderSystem(nullptr), _executor(nullptr) {};
+	App() : _renderSystem(nullptr), _executor(nullptr) {}
 
 	void Run();
 
@@ -44,18 +37,18 @@ public:
 	template<typename T>
 	App& AddPlugin() {
 		static_assert(std::is_base_of_v<Plugin, T>, "T must be a Plugin");
-		_plugins.emplace_back(std::make_unique<T>());
+		std::unique_ptr<Plugin> plugin = std::make_unique<T>();
+		plugin->Build(*this);
 		return *this;
 	}
 
 private:
-	GLFWwindow* _window;
+	// GLFWwindow* _window;
 	entt::registry _registry;
 	Renderer* _renderSystem;
 
 	std::unique_ptr<SystemExecutor> _executor;
 	EnumArray<ScheduleLabel, SystemSchedule> _schedules;
-	std::vector<std::unique_ptr<Plugin>> _plugins;
 	ResourceManager _resource_manager;
 
 	// Temporary testing stuff

@@ -2,14 +2,17 @@
 #include <iostream>
 #include <thread>
 
-#include <glad/glad.h>
+
 #include <stb_image.h>
 
 #include "App.hpp"
 
 #include <Renderer.hpp>
+#include <Window.hpp>
 
 #include "JSONLoader.hpp"
+
+#include <glad/glad.h>
 
 
 constexpr int UPDATES_PER_SECOND = 60;
@@ -19,18 +22,14 @@ constexpr int MAX_FRAMESKIP = 5;
 
 void App::Run() {
 
-	for(auto& plugin : _plugins) {
-		plugin->build(*this);
-	}
-
 	Init();
 	glfwMakeContextCurrent(NULL);
+	auto window = _resource_manager.get<Window>();
 
 	Synchronizer frameSynch(2);
-
 	std::thread render_thread([&] {
-		glfwMakeContextCurrent(_window);
-		while(!glfwWindowShouldClose(_window)) {
+		glfwMakeContextCurrent(window->ptr);
+		while(!glfwWindowShouldClose(window->ptr)) {
 			Render();
 			frameSynch.wait();
 		}
@@ -40,7 +39,7 @@ void App::Run() {
 	});
 
 
-	while(!glfwWindowShouldClose(_window)) {
+	while(!glfwWindowShouldClose(window->ptr)) {
 
 		Update();
 		frameSynch.wait();
@@ -49,34 +48,14 @@ void App::Run() {
 
 	render_thread.join();
 
-	glfwMakeContextCurrent(_window);
+	glfwMakeContextCurrent(window->ptr);
 	Cleanup();
 }
 
 void App::Init() {
-	glfwInit();
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-#ifdef __APPLE__
-	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-#endif
 
-	_window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", nullptr, nullptr);
-	if (_window == nullptr) {
-		std::cout << "Failed to create GLFW window" << std::endl;
-		glfwTerminate();
-		return;
-	}
-	glfwMakeContextCurrent(_window);
-	glfwSetFramebufferSizeCallback(_window, [] (GLFWwindow* _, const int w, const int h) {
-		glViewport(0, 0, w, h);
-	});
-
-	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
-		std::cout << "Failed to initialize GLAD" << std::endl;
-		return;
-	}
+	_executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded, _registry, _resource_manager);
+	_executor->Execute(_schedules[ScheduleLabel::PRE_STARTUP]);
 
 	glGenTextures(1, &_texture);
 	glBindTexture(GL_TEXTURE_2D, _texture);
@@ -127,18 +106,19 @@ void App::Init() {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, _texture);
 
-	_charInput = new Input(_window);
+	auto window = _resource_manager.get<Window>();
+	_charInput = new Input(window->ptr);
 	JSONLoader loader("../tests/bindings/example_bindings.json");
 
 	auto bindings = loader.processFileArray();
 
-	_charInput->bindKeyPress("QUIT", [this]() {
-		glfwSetWindowShouldClose(_window, true);
+	_charInput->bindKeyPress("QUIT", [this, window]() {
+		glfwSetWindowShouldClose(window->ptr, true);
 	});
 
 	_charInput->bindContexts(bindings);
 
-	_executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded, _registry, _resource_manager);
+
 	_executor->Execute(_schedules[ScheduleLabel::STARTUP]);
 }
 
@@ -168,7 +148,8 @@ void App::Render() {
 
     _renderSystem->render(_registry);
 
-    glfwSwapBuffers(_window);
+	auto window = _resource_manager.get<Window>();
+    glfwSwapBuffers(window->ptr);
 }
 
 void App::Cleanup() {
