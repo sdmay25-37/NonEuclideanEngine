@@ -13,10 +13,6 @@
 #include "ne_system/SystemExecutor.hpp"
 
 
-constexpr unsigned int SCREEN_WIDTH = 800;
-constexpr unsigned int SCREEN_HEIGHT = 600;
-constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
-
 class App {
 public:
 	App() : _executor(nullptr) {}
@@ -43,21 +39,14 @@ public:
 	}
 
 private:
-	// GLFWwindow* _window;
+
 	entt::registry _registry;
-	// Renderer* _renderSystem;
+	ResourceManager _resource_manager;
 
 	std::unique_ptr<SystemExecutor> _executor;
 	EnumArray<ScheduleLabel, std::vector<SystemSchedule>> _schedules;
-	ResourceManager _resource_manager;
 
-	// Temporary testing stuff
-	unsigned int _texture;
-	ShaderProgram* _shaders;
-	Input* _charInput;
-
-
-  	void Init();
+  	void Startup();
 	void Update();
 	void Render();
 	void Cleanup();

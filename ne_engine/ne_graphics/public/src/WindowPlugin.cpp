@@ -30,3 +30,11 @@ void WindowPlugin::WindowSetup(Resource<Window> window) {
 		glViewport(0, 0, w, h);
 	});
 }
+
+void WindowPlugin::WindowUpdate() {
+	glfwPollEvents();
+}
+
+void WindowPlugin::WindowPostRender(Resource<Window> window) {
+	glfwSwapBuffers(window->ptr);
+}

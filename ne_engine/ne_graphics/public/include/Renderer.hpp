@@ -3,6 +3,7 @@
 
 #include <mutex>
 #include <condition_variable>
+#include <ShaderProgram.hpp>
 #include <thread>
 
 #include <entt/entt.hpp>
@@ -31,16 +32,15 @@ public:
 	Renderer() = default;
 	~Renderer();
 
-	void init();
-	void render(entt::registry &registry) const;
-	void bind();
+	void Init();
+	void Render(entt::registry &registry) const;
+	void Bind();
 
 	static constexpr int N_INDICES = 6;
 
 private:
-
 	unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO;
-
+	std::unique_ptr<ShaderProgram> _shader_program;
 };
 
 #endif //RENDER_HPP

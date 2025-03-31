@@ -1,5 +1,6 @@
 #include "Renderer.hpp"
 
+#include <iostream>
 #include <TextureManager.hpp>
 #include <glad/glad.h>
 
@@ -11,7 +12,7 @@ Renderer::~Renderer() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void Renderer::init() {
+void Renderer::Init() {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &UV_VBO);
@@ -69,11 +70,42 @@ void Renderer::init() {
 	};
 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+
+	// build and compile our shader program
+	auto shader_result = ShaderProgram::create(
+			"../shaders/sprite.vert",
+			"../shaders/sprite.frag"
+	);
+
+	if(shader_result.is_error()) {
+		std::cerr << "Failed to create shader program: " << shader_result.error() << std::endl;
+		return;
+	}
+
+	_shader_program = std::make_unique<ShaderProgram>(shader_result.ok());
+	_shader_program->bind();
+	_shader_program->setUniform1i("texture_atlas", 0);
 }
 
 // Todo: Not sure how I feel about this method
 // I don't like having to copy UV data every frame when it likely doesn't change
-void Renderer::render(entt::registry& registry) const {
+void Renderer::Render(entt::registry& registry) const {
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	glm::vec3 camera_pos(0.0, 0.0, 1.0);
+	glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
+
+	float fov = glm::radians(45.0f);
+	float nearPlane = 0.1f;
+	float farPlane = 100.0f;
+
+	glm::mat4 proj_mat = glm::perspective(fov, (800.0f / 600.0f), nearPlane, farPlane);
+
+	glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
+	_shader_program->setUniformMat4("proj_view_mat", proj_view_mat);
+
+
 	auto const view = registry.view<AtlasSprite>();
 
 	std::unordered_map<unsigned int, std::pair<std::vector<glm::mat4>, std::vector<glm::vec4>>> atlas_data;
@@ -108,6 +140,7 @@ void Renderer::render(entt::registry& registry) const {
 
 }
 
-void Renderer::bind() {
+void Renderer::Bind() {
 	glBindVertexArray(VAO);
+	_shader_program->bind();
 }
