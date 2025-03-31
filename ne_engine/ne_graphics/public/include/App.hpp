@@ -19,12 +19,12 @@ constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 
 class App {
 public:
-	App() : _renderSystem(nullptr), _executor(nullptr) {}
+	App() : _executor(nullptr) {}
 
 	void Run();
 
 	App& AddSystems(const ScheduleLabel schedule, SystemSet&& system_set) {
-		_schedules[schedule] = SystemSchedule(std::move(system_set));
+		_schedules[schedule].emplace_back(std::move(system_set));
 		return *this;
 	}
 
@@ -45,10 +45,10 @@ public:
 private:
 	// GLFWwindow* _window;
 	entt::registry _registry;
-	Renderer* _renderSystem;
+	// Renderer* _renderSystem;
 
 	std::unique_ptr<SystemExecutor> _executor;
-	EnumArray<ScheduleLabel, SystemSchedule> _schedules;
+	EnumArray<ScheduleLabel, std::vector<SystemSchedule>> _schedules;
 	ResourceManager _resource_manager;
 
 	// Temporary testing stuff

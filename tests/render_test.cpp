@@ -4,6 +4,7 @@
 #include <iostream>
 
 #include "App.hpp"
+#include "RenderPlugin.hpp"
 #include "WindowPlugin.hpp"
 
 class WorldPlugin final : public Plugin {
@@ -51,6 +52,7 @@ int main() {
 
     App()
         .AddPlugin<WindowPlugin>()
+        .AddPlugin<RenderPlugin>()
         .AddPlugin<WorldPlugin>()
         .InsertResource<TextureManager>()
         .Run();

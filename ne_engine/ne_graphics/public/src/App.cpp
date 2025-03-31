@@ -97,9 +97,10 @@ void App::Init() {
 		std::cerr << "Error: " << result.error();
 	}
 
-	_renderSystem = new Renderer();
-	_renderSystem->init();
-	_renderSystem->bind();
+	_executor->Execute(_schedules[ScheduleLabel::STARTUP]);
+
+	auto renderer = _resource_manager.get<Renderer>();
+	renderer->bind();
 
 	_shaders->bind();
 	_shaders->setUniform1i("texture_atlas", 0);
@@ -117,9 +118,6 @@ void App::Init() {
 	});
 
 	_charInput->bindContexts(bindings);
-
-
-	_executor->Execute(_schedules[ScheduleLabel::STARTUP]);
 }
 
 void App::Update() {
@@ -146,7 +144,7 @@ void App::Render() {
     glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
     _shaders->setUniformMat4("proj_view_mat", proj_view_mat);
 
-    _renderSystem->render(_registry);
+	_executor->Execute(_schedules[ScheduleLabel::RENDER]);
 
 	auto window = _resource_manager.get<Window>();
     glfwSwapBuffers(window->ptr);
@@ -159,8 +157,5 @@ void App::Cleanup() {
 	_shaders->cleanup();
 	delete _shaders;
 	_shaders = nullptr;
-
-	delete _renderSystem;
-	_renderSystem = nullptr;
 }
 

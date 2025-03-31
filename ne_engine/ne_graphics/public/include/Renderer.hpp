@@ -35,14 +35,6 @@ public:
 	void render(entt::registry &registry) const;
 	void bind();
 
-	// Stages //
-	void prepare();
-	void queue();
-	void batch_sort();
-	void render();
-	void cleanup();
-
-
 	static constexpr int N_INDICES = 6;
 
 private:

@@ -11,7 +11,7 @@ public:
 
 enum class ScheduleLabel {
 	PRE_STARTUP, STARTUP,
-	UPDATE,
+	UPDATE, RENDER,
 	MAX_VALUE
 };
 

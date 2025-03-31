@@ -1,10 +1,10 @@
 #ifndef WINDOWPLUGIN_HPP
 #define WINDOWPLUGIN_HPP
 
-#include <Window.hpp>
+#include "App.hpp"
+#include "Window.hpp"
 #include "ne_system/Plugin.hpp"
 #include "ne_system/Resource.hpp"
-#include "App.hpp"
 
 class WindowPlugin final : public Plugin {
 public:
