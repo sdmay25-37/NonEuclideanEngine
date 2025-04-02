@@ -10,7 +10,12 @@
     "properties": [
       "walkable",
       "green"
-    ]
+    ],
+    "worldPosition": [
+      0,
+      0
+    ],
+    "relationToCurrentTile": 0
   },
   {
     "tileId": 2,

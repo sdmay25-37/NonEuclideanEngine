@@ -24,7 +24,35 @@ TileMap::TileMap(std::unordered_map<int, Tile> tileList, std::vector<Tile> seedL
     _seedList = seedList;
 }
 
-// Loads tiles from JSON
+// // Loads tiles from JSON
+// void TileMap::loadTiles(const std::string &filename)
+// {
+// std::ifstream inputFile(filename);
+// nlohmann::json tileData = nlohmann::json::parse(inputFile);
+
+// if (tileData.size() == 0)
+// {
+//     // JSON File is empty
+//     std::cerr << "JSON File empty" << std::endl;
+//     throw std::length_error("JSON File empty");
+// }
+
+// for (const auto &item : tileData)
+//     {
+//         Tile tile;
+//         tile._tileId = item.at("tileId").get<uint8_t>();
+//         tile._spriteId = item.at("spriteId").get<uint8_t>();
+//         tile._tileType = item.at("tileType").get<std::string>();
+//         tile._properties = item.at("properties").get<std::vector<std::string>>();
+//         tile._upTileId = item.at("upTileId").get<uint8_t>();
+//         tile._downTileId = item.at("downTileId").get<uint8_t>();
+//         tile._leftTileId = item.at("leftTileId").get<uint8_t>();
+//         tile._rightTileId = item.at("rightTileId").get<uint8_t>();
+
+//         _tileList[tile._tileId] = tile;
+//     }
+// }
+
 void TileMap::loadTiles(const std::string &filename)
 {
     std::ifstream inputFile(filename);
@@ -39,15 +67,66 @@ void TileMap::loadTiles(const std::string &filename)
 
     for (const auto &item : tileData)
     {
+
         Tile tile;
-        tile._tileId = item.at("tileId").get<uint8_t>();
-        tile._spriteId = item.at("spriteId").get<uint8_t>();
-        tile._tileType = item.at("tileType").get<std::string>();
-        tile._properties = item.at("properties").get<std::vector<std::string>>();
-        tile._upTileId = item.at("upTileId").get<uint8_t>();
-        tile._downTileId = item.at("downTileId").get<uint8_t>();
-        tile._leftTileId = item.at("leftTileId").get<uint8_t>();
-        tile._rightTileId = item.at("rightTileId").get<uint8_t>();
+
+        // Ensure each key exists before accessing it
+        if (item.contains("tileId"))
+            tile._tileId = item["tileId"].get<int8_t>();
+        else
+            tile._tileId = -1; // Default invalid ID
+
+        if (item.contains("spriteId"))
+            tile._spriteId = item["spriteId"].get<int8_t>();
+        else
+            tile._spriteId = -1; // Default sprite ID
+
+        if (item.contains("tileType"))
+            tile._tileType = item["tileType"].get<std::string>();
+        else
+            tile._tileType = "unknown"; // Default tile type
+
+        if (item.contains("properties") && item["properties"].is_array())
+            tile._properties = item["properties"].get<std::vector<std::string>>();
+        else
+            tile._properties = {}; // Empty properties if missing
+
+        if (item.contains("upTileId"))
+            tile._upTileId = item["upTileId"].get<int8_t>();
+        else
+            tile._upTileId = -1;
+
+        if (item.contains("downTileId"))
+            tile._downTileId = item["downTileId"].get<int8_t>();
+        else
+            tile._downTileId = -1;
+
+        if (item.contains("leftTileId"))
+            tile._leftTileId = item["leftTileId"].get<int8_t>();
+        else
+            tile._leftTileId = -1;
+
+        if (item.contains("rightTileId"))
+            tile._rightTileId = item["rightTileId"].get<int8_t>();
+        else
+            tile._rightTileId = -1;
+
+        // Parse world position if present
+        if (item.contains("worldPosition") && item["worldPosition"].is_array() && item["worldPosition"].size() == 2)
+        {
+            tile.worldPosition.first = item["worldPosition"][0].get<int8_t>();
+            tile.worldPosition.second = item["worldPosition"][1].get<int8_t>();
+        }
+        else
+        {
+            tile.worldPosition = {-1, -1}; // TODO change but for testing if it does not exist
+        }
+
+        // Parse relationToCurrentTile
+        if (item.contains("relationToCurrentTile"))
+            tile.relationToCurrentTile = item["relationToCurrentTile"].get<int8_t>();
+        else
+            tile.relationToCurrentTile = -1; // Default relation value
 
         _tileList[tile._tileId] = tile;
     }
@@ -77,6 +156,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
 
     // Start with the current tile
     visitedTiles[currentTile._tileId] = currentTile;
+    currentTile.relationToCurrentTile = 0;
     nearTiles.push_back(currentTile);
 
     std::queue<std::pair<Tile, int>> queue; // Queue holds tile and depth
@@ -99,6 +179,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
         {
             Tile upTile = getTileByID(tile._upTileId);
             visitedTiles[upTile._tileId] = upTile;
+            upTile.relationToCurrentTile = depth + 1;
             nearTiles.push_back(upTile);
             queue.push({upTile, depth + 1});
         }
@@ -107,6 +188,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
         {
             Tile downTile = getTileByID(tile._downTileId);
             visitedTiles[downTile._tileId] = downTile;
+            downTile.relationToCurrentTile = depth + 1;
             nearTiles.push_back(downTile);
             queue.push({downTile, depth + 1});
         }
@@ -115,6 +197,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
         {
             Tile leftTile = getTileByID(tile._leftTileId);
             visitedTiles[leftTile._tileId] = leftTile;
+            leftTile.relationToCurrentTile = depth + 1;
             nearTiles.push_back(leftTile);
             queue.push({leftTile, depth + 1});
         }
@@ -123,6 +206,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
         {
             Tile rightTile = getTileByID(tile._rightTileId);
             visitedTiles[rightTile._tileId] = rightTile;
+            rightTile.relationToCurrentTile = depth + 1;
             nearTiles.push_back(rightTile);
             queue.push({rightTile, depth + 1});
         }
