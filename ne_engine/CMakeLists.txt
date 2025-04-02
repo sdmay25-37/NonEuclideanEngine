@@ -5,13 +5,16 @@ set(RES_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_resource/public/src)
 set(SYS_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_system/public/src)
 set(UI_SRC_DIR          ${CMAKE_CURRENT_SOURCE_DIR}/ne_ui/public/src)
 set(UTIL_SRC_DIR       ${CMAKE_CURRENT_SOURCE_DIR}/ne_util/public/src)
+set(TILE_SRC_DIR       ${CMAKE_CURRENT_SOURCE_DIR}/ne_tile/public/src)
+
 
 add_library(
     ne_engine STATIC
 
 
-    "ne_gl/public/src/TileMap.cpp"
-    "ne_gl/public/src/Tile.cpp"
+    # ne_tile
+    "${TILE_SRC_DIR}/TileMap.cpp"
+    "${TILE_SRC_DIR }/Tile.cpp"
 
 
     # ne_graphics
