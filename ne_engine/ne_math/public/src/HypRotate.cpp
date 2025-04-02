@@ -58,6 +58,18 @@ void HypRotate::rotateZ(float theta)
     r_matrix = r_z * r_matrix;
 }
 
+void HypRotate::offset(const glm::vec4& offset)
+{
+    glm::mat4 r_off = glm::mat4(
+        {1, 0, 0, 0},
+        {0, 1, 0, 0},
+        {0, 0, 1, 0},
+        {offset[0], offset[1], offset[2], 1}
+    );
+
+    r_matrix = r_off * r_matrix;
+}
+
 glm::mat4 HypRotate::getRotation()
 {
     return r_matrix;
