@@ -23,25 +23,26 @@ void App::run() {
 
 	std::thread render_thread([&] {
 		glfwMakeContextCurrent(_window);
-		while(true) {
+		while(!glfwWindowShouldClose(_window)) {
 			render();
-
-			std::cout << "Render finish\n";
 			frameSynch.wait();
 		}
+
+		// TODO: this is a temporary fix as the main thread still makes some OpenGL calls
+		glfwMakeContextCurrent(NULL);
 	});
 
 
-	while (!glfwWindowShouldClose(_window)) {
-		// std::cout << "Frame start\n";
+	while(!glfwWindowShouldClose(_window)) {
 
 		update();
-
-		std::cout << "Update finish\n";
 		frameSynch.wait();
 
 	}
 
+	render_thread.join();
+
+	glfwMakeContextCurrent(_window);
 	cleanup();
 }
 
@@ -117,12 +118,13 @@ void App::init() {
 	float rect_size = 2.0 / (map_width - 1);
 	int num_sprites = map_width * map_height;
 
-	auto result = _texture_manager.loadAtlas("../res/atlases/atlas.json");
+	_texture_manager = new TextureManager();
+	auto result = _texture_manager->loadAtlas("../res/atlases/atlas.json");
 	if(result.is_error()) {
 		std::cerr << "Error: " << result.error();
 	}
 
-	auto texture_result = _texture_manager.getTexture("tile0.png");
+	auto texture_result = _texture_manager->getTexture("tile0.png");
 	AtlasedTexture texture = texture_result.value();
 
 	for(int i = 0; i < num_sprites; i++) {
@@ -175,10 +177,16 @@ void App::init() {
 	});
 
 	_charInput->bindContexts(bindings);
+
+	_executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded, _registry, _resource_manager);
+	_executor->Execute(_schedules[ScheduleLabel::STARTUP]);
 }
 
 void App::update() {
 	glfwPollEvents();
+
+	_executor->Execute(_schedules[ScheduleLabel::UPDATE]);
+
 	// _count++;
 	//
 	// if(_count % 25 == 0) {
@@ -233,6 +241,9 @@ void App::cleanup() {
 
 	delete _renderSystem;
 	_renderSystem = nullptr;
+
+	delete _texture_manager;
+	_texture_manager = nullptr;
 
 	glfwTerminate();
 }

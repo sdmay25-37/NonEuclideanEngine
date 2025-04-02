@@ -2,11 +2,10 @@
 #define TEXTURE_H
 
 #include "Image.hpp"
-#include "Resource.hpp"
 #include "utils.hpp"
 
 
-class Texture : public Resource {
+class Texture {
 public:
 
 	// Class factory methods
@@ -15,7 +14,7 @@ public:
 	[[nodiscard]] static Result<Texture, CreateError> createFromImage(const Image& image);
 
     // Destructor to free GPU texture memory
-	~Texture() override;
+	~Texture();
 
 	// Delete copy constructor and copy assignment
 	Texture(const Texture&) = delete;
@@ -38,7 +37,6 @@ public:
 		}
 		return *this;
 	}
-
 
     [[nodiscard]] unsigned int getId() const { return _textureId; }
 	[[nodiscard]] int getWidth() const { return _width; }

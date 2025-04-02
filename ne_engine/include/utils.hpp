@@ -179,5 +179,33 @@ auto ThreadPool::enqueue(F &&f, Args &&... args) -> std::future<std::result_of_t
 	return result;
 }
 
+template <class Enum, class T>
+struct EnumArray : std::array<T, static_cast<std::size_t>(Enum::MAX_VALUE)> {
+	using Base = std::array<T, static_cast<std::size_t>(Enum::MAX_VALUE)>;
+
+	T& operator[](const Enum& i) {
+		return Base::operator[](static_cast<std::size_t>(i));
+	}
+
+	const T& operator[](const Enum& i) const {
+		return Base::operator[](static_cast<std::size_t>(i));
+	}
+};
+
+
+template<typename F> class FunctionTraits;
+
+template<typename Result, typename... Args>
+class FunctionTraits<Result(Args...)> {
+public:
+	using arguments = std::tuple<Args...>;
+};
+
+template<typename Result, typename... Args>
+class FunctionTraits<Result(&)(Args...)> {
+public:
+	using arguments = std::tuple<Args...>;
+};
+
 
 #endif //UTILS_HPP
