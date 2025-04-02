@@ -57,27 +57,11 @@ int main() {
     Triangle newTriangle(vertArr, 0.05f);
     Input i;
 
-    //
-    //  Resource Manager Testing Portion
-    //
-    ResourceManager resManager; //("../tests/bindings/example_bindings.json");
-    resManager.setLoaderPath("../tests/bindings/example_bindings.json");
 
-    unsigned char* slimeArray = resManager.getResource("../res/Slime.png");
-    unsigned char* newSlimeArray = resManager.getResource("../res/Slime.png");
-
-    unsigned char* flip = resManager.getResource("../res/coinflip.png");
-
-    resManager.removeReference("../res/Slime.png");
-    resManager.removeReference("../res/Slime.png");
-    resManager.removeReference("../res/coinflip.png");
-    resManager.removeReference("../res/Slime.png");
-
-    // End Testing
+    JSONLoader loader("../tests/bindings/example_bindings.json");
+    std::vector<std::vector <std::pair <std::string, int>>> bindings = loader.processFileArray();
 
     Input input(window);
-    
-    auto bind = resManager.getBindingsArray();
 
     // Bind a ton of functions to the action string
     input.bindKeyPress("MOVE_LEFT", std::bind(&Triangle::moveLeft, &newTriangle));
@@ -85,13 +69,27 @@ int main() {
     input.bindKeyPress("MOVE_UP", std::bind(&Triangle::moveUp, &newTriangle));
     input.bindKeyPress("MOVE_DOWN", std::bind(&Triangle::moveDown, &newTriangle));
 
-    input.bindContexts(bind);
+    input.bindContexts(bindings);
 
+    ResourceManager resManager("../res/textures");
+    std::weak_ptr<Texture> textureRef = resManager.getResource<Texture>("tiles.png");
+    if(auto texture = textureRef.lock()) {
+        std::cout << "Texture ID: " << texture->getId() << std::endl;
+    } else {
+        std::cout << "Texture failed to load!" << std::endl;
+    }
 
-    ShaderProgram shaders (
+    auto shaderProgramResult = ShaderProgram::create(
         "../shaders/color.vert",
         "../shaders/color.frag"
     );
+
+    if(shaderProgramResult.is_error()) {
+        std::cerr << shaderProgramResult.error() << std::endl;
+        return -1;
+    }
+
+    ShaderProgram shaders = shaderProgramResult.ok();
 
     unsigned vertBuff;
     glGenBuffers(1, &vertBuff);

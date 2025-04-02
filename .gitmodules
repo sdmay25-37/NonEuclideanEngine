@@ -10,6 +10,10 @@
 [submodule "lib/json"]
 	path = lib/json
 	url = https://github.com/nlohmann/json.git
-[submodule "lib/QuadTree"]
-	path = lib/QuadTree
-	url = https://github.com/pvigier/Quadtree
+[submodule "lib/imgui/src"]
+	path = lib/imgui/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "lib/entt/entt"]
+	path = lib/entt/entt
+	url = https://github.com/skypjack/entt.git
+

@@ -1,6 +1,7 @@
 #define GLM_FORCE_CTOR_INIT
 
 #include <glad/glad.h>
+
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
@@ -63,9 +64,20 @@ int main()
     Input input(window);
 
     // build and compile our shader program
+<<<<<<< HEAD
     ShaderProgram shaders(
         "../shaders/sprite.vert",
         "../shaders/sprite.frag");
+=======
+    auto shaderResult = ShaderProgram::create(
+    "../shaders/sprite.vert",
+    "../shaders/sprite.frag"
+    );
+    if(shaderResult.is_error()) {
+        std::cerr << "Failed to create shader program:" << shaderResult.error() << std::endl;
+    }
+    ShaderProgram shaders = shaderResult.ok();
+>>>>>>> origin/main
 
     // std::vector <Sprite> giratinaSprites;
     // 24 Frames
@@ -89,7 +101,19 @@ int main()
     model_mats.push_back(model_mat);
 
     Animation slime(position, scale, uv_min, uv_max,
+<<<<<<< HEAD
                     slimeData, "../res/Slime.png");
+=======
+        slimeData, "../res/textures/Slime.png");
+
+
+    auto textureResult = Texture::create("../res/textures/Slime.png");
+    if(textureResult.is_error()) {
+        std::cerr << "Failed to create texture" << std::endl;
+    }
+    Texture texture = textureResult.ok();
+
+>>>>>>> origin/main
 
     slime.initAnimation();
     AnimationData checkInf = slime.getAnimationData();
@@ -162,7 +186,9 @@ int main()
     shaders.bind();
     shaders.setUniform1i("texture_atlas", 0);
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, slime.getTextureId());
+    // glBindTexture(GL_TEXTURE_2D, slime.getTextureId());
+    glBindTexture(GL_TEXTURE_2D, texture.getId());
+
 
     int count = 0;
 
