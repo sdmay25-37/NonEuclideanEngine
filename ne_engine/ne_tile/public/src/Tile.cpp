@@ -1,5 +1,5 @@
 //
-//  Author: Tasman Grinnell
+//  Authors: Tasman Grinnell, Cory Roth
 //  2/2/2025
 //
 

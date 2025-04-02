@@ -1,11 +1,7 @@
 //
-//  Author: Tasman Grinnell
+//  Authors: Tasman Grinnell, Cory Roth
 //  2/25/2025
 //
-
-/*
-    Change to Tree structure
-*/
 
 #ifndef TILEMAP_HPP
 #define TILEMAP_HPP
