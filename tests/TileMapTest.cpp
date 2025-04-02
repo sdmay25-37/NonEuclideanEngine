@@ -26,7 +26,7 @@ int main()
     std::cout << '\n'
               << "Tile 5:" << startTile.to_string() << "\n";
     // Test the getNearTiles function with a radius of 1
-    int radius = 3;
+    int radius = 1;
     std::vector<Tile> nearTiles = tileMap2.getNearTiles(startTile, radius);
 
     std::cout << "Near tiles for Tile ID " << static_cast<int>(startTile._tileId) << " with radius " << radius << ":\n";
@@ -35,6 +35,10 @@ int main()
         std::cout << tile.to_string() << "\n";
     }
 
+    Tile test = tileMap2.getTileinRenderedList(2);
+    Tile test2 = tileMap2.getTileinRenderedList(1);
+    std::cout << test.to_string();
+    std::cout << test2.to_string();
     return 0;
 
     return 0;

@@ -37,6 +37,8 @@ public:
 
     Tile getTileByID(uint8_t tileId);
 
+    Tile getTileinRenderedList(uint8_t tileID);
+
     // TODO Figure out how to buffer tiles from _renderedTileList
 
     std::vector<std::string> getTileMapInformation(); // Returns a vector of pairs of a <direction string, texture classification>

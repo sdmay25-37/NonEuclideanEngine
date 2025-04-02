@@ -234,3 +234,21 @@ Tile TileMap::getTileByID(uint8_t tileId)
         return Tile(); // Assuming the default constructor of Tile initializes a valid empty object
     }
 }
+
+Tile TileMap::getTileinRenderedList(uint8_t tileId)
+{
+    auto it = std::find_if(_renderedTileList.begin(), _renderedTileList.end(),
+                           [&](const Tile &tile)
+                           { return tile._tileId == tileId; });
+
+    if (it != _renderedTileList.end())
+    {
+        std::cout << "Tile found!\n";
+        return *it; // Return the found tile
+    }
+    else
+    {
+        std::cout << "Tile not found!\n";
+        return Tile(); // TODO Update Return a default Tile if not found
+    }
+}

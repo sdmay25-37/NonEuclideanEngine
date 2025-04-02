@@ -21,6 +21,11 @@ class Tile
 {
 public:
     Tile();
+    Tile(int id);
+    bool operator==(const Tile &other) const
+    {
+        return _tileId == other._tileId;
+    }
 
     int8_t _tileId;
     int8_t _leftTileId;
@@ -39,7 +44,7 @@ public:
     std::pair<int8_t, int8_t> worldPosition;
 
     // Number of tiles away from currentTiles
-    //    TODO make sure this is current and if a new currentTile is chosen this either gets updated or store current Tile\\
+    //     TODO make sure this is current and if a new currentTile is chosen this either gets updated or store current Tile\\
     //may not be usefull?
     // use worldPosition to do this?
 

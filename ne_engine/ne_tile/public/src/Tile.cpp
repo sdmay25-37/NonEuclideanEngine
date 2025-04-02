@@ -8,6 +8,7 @@
 Tile::Tile()
 {
 }
+Tile::Tile(int id) : _tileId(id) {}
 
 // Used for testing
 std::string Tile::to_string() const

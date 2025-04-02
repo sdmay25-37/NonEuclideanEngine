@@ -101,7 +101,9 @@
         "xstring": "cpp",
         "xtr1common": "cpp",
         "xtree": "cpp",
-        "xutility": "cpp"
+        "xutility": "cpp",
+        "future": "cpp",
+        "typeindex": "cpp"
     },
     "vim.useSystemClipboard": true,
     "vim.handleKeys": {
