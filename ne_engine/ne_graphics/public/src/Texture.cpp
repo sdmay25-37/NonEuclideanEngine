@@ -1,8 +1,8 @@
-
 #include <glad/glad.h>
-#include <stb/stb_image.h>
+#include <stb/stb_rect_pack.h>
 
 #include "Texture.hpp"
+
 
 Result<Texture, Texture::CreateError> Texture::create(const std::string& filepath) {
 	using Result = Result<Texture, CreateError>;

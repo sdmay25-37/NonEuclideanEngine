@@ -1,4 +1,3 @@
-#define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
 
 #include <iostream>
@@ -72,6 +71,10 @@ private:
         if(result.is_error()) {
             std::cerr << "Error: " << result.error();
         }
+
+        // -- Better texture loading -- //
+        texture_manager->LoadTextures("../res/textures");
+
     }
 };
 

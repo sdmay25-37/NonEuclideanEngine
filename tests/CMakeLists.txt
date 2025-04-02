@@ -39,6 +39,6 @@ foreach(SOURCE ${SOURCES})
         "-g"
     )
 
-    target_link_libraries(${EXECUTABLE} ne_engine entt)
+    target_link_libraries(${EXECUTABLE} ne_engine stb entt)
 
 endforeach(SOURCE ${SOURCES})

@@ -51,6 +51,8 @@ struct Image {
 	enum class CreateError { IMAGE_LOAD_FAILURE };
 	static Result<Image, CreateError> create(const std::string& filepath, int desired_channels = 4);
 
+	static Result<Image, std::nullptr_t> create_empty(int width, int height, int channels = 4);
+
 private:
 	Image(std::string filepath, unsigned char* data, const int width, const int height, const int channels)
 		: _filepath(std::move(filepath)), _data(data), _width(width), _height(height), _channels(channels) {};
