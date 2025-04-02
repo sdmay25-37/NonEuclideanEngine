@@ -5,7 +5,7 @@
 #include <string>
 #include <utility>
 
-#include <stb_image.h>
+#include <stb/stb_image.h>
 
 #include "utils.hpp"
 

@@ -66,4 +66,4 @@ target_include_directories(ne_engine
     ne_ui/private/include
 )
 
-target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb_image imgui entt)
+target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb imgui entt)
