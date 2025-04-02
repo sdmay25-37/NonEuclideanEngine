@@ -31,6 +31,9 @@ public:
     int8_t _spriteId;
     std::vector<std::string> _properties;
 
+    // TODO add world cordinates
+    // TODO add relation to currentTile
+
     // Used for testing
     std::string to_string() const;
 

@@ -32,6 +32,8 @@ public:
 
     // return a bunch of tiles from cureent tile
     std::vector<Tile> getNearTiles(Tile currentTile, int radius);
+    // TODO add world cordinates
+    // TODO add relation to currentTile
 
     Tile getTileByID(uint8_t tileId);
 
