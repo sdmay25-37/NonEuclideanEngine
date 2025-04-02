@@ -116,12 +116,8 @@ void Input::keyCallback(GLFWwindow *window, int key, int scancode, int action, i
 	if (!action)
 		return;
 	auto action_it = _key_action_map.find(key);
-<<<<<<< HEAD
-	if (action_it == _key_action_map.end() || action != GLFW_PRESS || action == GLFW_RELEASE)
+	if (action_it == _key_action_map.end() || action != GLFW_PRESS)
 		return;
-=======
-	if(action_it == _key_action_map.end() || action != GLFW_PRESS) return;
->>>>>>> origin/main
 
 	auto callback_it = _action_callback_map.find(action_it->second);
 	if (callback_it == _action_callback_map.end())

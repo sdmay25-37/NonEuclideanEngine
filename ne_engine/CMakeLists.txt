@@ -14,7 +14,7 @@ add_library(
 
     # ne_tile
     "${TILE_SRC_DIR}/TileMap.cpp"
-    "${TILE_SRC_DIR }/Tile.cpp"
+    "${TILE_SRC_DIR}/Tile.cpp"
 
 
     # ne_graphics
@@ -65,6 +65,7 @@ target_include_directories(ne_engine
     ne_system/public/include
     ne_ui/public/include
     ne_util/public/include
+    ne_tile/public/include
 
     PRIVATE
     ne_graphics/private/include
