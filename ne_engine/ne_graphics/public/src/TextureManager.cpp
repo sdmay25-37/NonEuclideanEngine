@@ -82,11 +82,12 @@ Result<std::nullptr_t, std::string> TextureManager::LoadTextures(const char *pat
 		images.emplace_back(std::move(image));
 	}
 
-	// TODO: query max texture size with OpenGL
+	// TODO: do something better with atlas size, GL_MAX_TEXTURE_SIZE is often too big for process RAM
 	int atlas_size;
 	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &atlas_size);
 
 	std::cout << "Atlas size: " << atlas_size << std::endl;
+	atlas_size = 4096;
 
 	stbrp_context packing_context;
 	std::vector<stbrp_rect> image_rects(images.size());
@@ -113,6 +114,11 @@ Result<std::nullptr_t, std::string> TextureManager::LoadTextures(const char *pat
 	// Pack
 	stbrp_pack_rects(&packing_context, image_rects.data(), image_rects.size());
 
+	// TODO: create new atlases for images that do not fit
+
+	auto atlas_result = Image::create_empty(atlas_size, atlas_size);
+	Image atlas = atlas_result.ok();
+
 	// Temp: Print packed rects
 	for(int i = 0; i < images.size(); i++) {
 		std::cout << images[i].filepath() << "\n"
@@ -120,28 +126,44 @@ Result<std::nullptr_t, std::string> TextureManager::LoadTextures(const char *pat
 			<< "\tsize: (" << image_rects[i].w << ", " << image_rects[i].h << ")\n"
 			<< "\tpos: (" << image_rects[i].x << ", " << image_rects[i].y << ")\n";
 
-
+		stbrp_rect& rect = image_rects[i];
+		atlas.CopySubImage(images[i], rect.x, rect.y);
 	}
-
-	auto atlas_result = Image::create_empty(atlas_size, atlas_size);
-	Image atlas = atlas_result.ok();
-
-	atlas.CopySubImage(images.back(), 0, 0);
 
 	auto texture_result = Texture::createFromImage(atlas);
 	Texture atlas_texture = texture_result.ok();
 
 	unsigned int atlas_id = atlas_texture.getId();
-
 	_atlases.emplace(atlas_id, std::move(atlas_texture));
+
+	for(int i = 0; i < images.size(); i++) {
+		std::filesystem::path img_path(images[i].filepath());
+
+		stbrp_rect& rect = image_rects[i];
+
+		float min_x = (float)rect.x / atlas_size;
+		float min_y = (float)rect.y / atlas_size;
+		float max_x = (float)(rect.x + rect.w) / atlas_size;
+		float max_y = (float)(rect.y + rect.h) / atlas_size;
+
+		_textures.emplace(
+			img_path.filename().string(),
+			AtlasedTexture {
+				atlas_id,
+				{ min_x, min_y },
+				{ max_x, max_y }
+			}
+		);
+	}
+
 	_textures.emplace(
-		std::string("test"),
-		AtlasedTexture {
-			atlas_id,
-			{0.0, 0.0},
-			{1.0, 1.0}
-		}
-	);
+			std::string("atlas"),
+			AtlasedTexture {
+				atlas_id,
+				{ 0.0, 0.0 },
+				{ 1.0, 1.0 }
+			}
+		);
 
 	return Result::Ok(nullptr);
 }

@@ -12,7 +12,7 @@ void WindowPlugin::WindowSetup(Resource<Window> window) {
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-	window->ptr = glfwCreateWindow(window->WIDTH, window->HEIGHT, "LearnOpenGL", nullptr, nullptr);
+	window->ptr = glfwCreateWindow(window->WIDTH, window->HEIGHT, "Non-Euclidean Engine", nullptr, nullptr);
 	if(window->ptr == nullptr) {
 		std::cerr << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();

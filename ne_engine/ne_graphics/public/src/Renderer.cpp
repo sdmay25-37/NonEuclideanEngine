@@ -90,10 +90,18 @@ void Renderer::Init() {
 // Todo: Not sure how I feel about this method
 // I don't like having to copy UV data every frame when it likely doesn't change
 void Renderer::Render(entt::registry& registry) const {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
+	// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	// glClear(GL_COLOR_BUFFER_BIT);
 
-	glm::vec3 camera_pos(0.0, 0.0, 1.0);
+	static float count = 0;
+	static long speed = 0;
+
+	count += std::abs(2.0 * std::sin(++speed / 50.0));
+
+	float x = 0.5 * std::sin(count / 50.0);
+	float y = 0.5 * std::cos(count / 50.0);
+
+	glm::vec3 camera_pos(x, y, 2.0);
 	glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
 
 	float fov = glm::radians(45.0f);

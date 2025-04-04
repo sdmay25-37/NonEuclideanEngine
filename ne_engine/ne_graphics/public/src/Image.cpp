@@ -19,16 +19,6 @@ Result<Image, std::nullptr_t> Image::create_empty(int width, int height, int cha
 
 	auto image_data = new unsigned char[width * height * channels];
 
-	try {
-		auto image_data = new unsigned char[static_cast<size_t>(width) *
-										   static_cast<size_t>(height) *
-										   static_cast<size_t>(channels)];
-		// ...
-	} catch (const std::bad_alloc&) {
-		std::cerr << "Allocation of 4GB atlas failed!" << std::endl;
-		return Result::Error(nullptr);
-	}
-
 	return Result::Ok(Image("", image_data, width, height, channels));
 }
 

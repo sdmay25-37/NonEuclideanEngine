@@ -16,23 +16,22 @@ public:
 private:
     static void CreateTiles(entt::registry& registry, Resource<TextureManager> texture_manager) {
         std::srand(std::time(nullptr));
-        auto texture_result = texture_manager->getTexture("test");
+        auto texture_result = texture_manager->getTexture("cy.jpg");
         AtlasedTexture texture = texture_result.value();
 
-        int map_width = 20;
-        int map_height = map_width * (800.0f / 600.0f);
+        int map_size = 2;
+        float rect_size = 0.5 / map_size;
+        float total_size = rect_size * map_size;
 
-        float rect_size = 2.0 / (map_width - 1);
-        int num_sprites = map_width * map_height;
+        int num_sprites = map_size * map_size;
 
         for(int i = 0; i < num_sprites; i++) {
 
-            int x = i % map_width;
-            int y = i / map_width;
+            int x = i % map_size;
+            int y = i / map_size;
 
-            float rect_x = x * rect_size - 1.0;
-            float rect_y = y * rect_size - 1.0;
-
+            float rect_x = x * rect_size - total_size / 2.0f + rect_size / 2.0f;
+            float rect_y = y * rect_size - total_size / 2.0f + rect_size / 2.0f;
 
             glm::vec3 position(rect_x, rect_y, 0.0);
             glm::vec3 scale(rect_size, rect_size, 1.0);
