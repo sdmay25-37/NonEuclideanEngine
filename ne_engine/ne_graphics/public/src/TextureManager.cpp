@@ -61,6 +61,33 @@ std::optional<AtlasedTexture> TextureManager::getTexture(const std::string& name
 	return std::nullopt;
 }
 
+unsigned int QueryAtlasSize(std::vector<Image>& images) {
+	// Set atlas size large enough to contain biggest texture
+	unsigned int atlas_size = 0;
+	for(auto& image : images) {
+		if(image.width() > atlas_size) atlas_size = image.width();
+		if(image.height() > atlas_size) atlas_size = image.height();
+	}
+
+	// Make atlas size a power of two for efficiency
+	atlas_size = NextPowerOfTwo(atlas_size);
+
+	int max_texture_size;
+	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &max_texture_size);
+	if(atlas_size > max_texture_size) std::cerr << "TEXTURE SIZE EXCEEDS MAXIMUM" << std::endl;
+
+	return atlas_size;
+}
+
+void RemoveImage(std::vector<Image>& images, std::vector<stbrp_rect>& rects, const std::size_t index) {
+	images[index] = std::move(images.back());
+	rects[index] = std::move(rects.back());
+
+	images.pop_back();
+	rects.pop_back();
+}
+
+// TODO: actual error handling
 Result<std::nullptr_t, std::string> TextureManager::LoadTextures(const char *path) {
 	using Result = Result<std::nullptr_t, std::string>;
 
@@ -82,25 +109,9 @@ Result<std::nullptr_t, std::string> TextureManager::LoadTextures(const char *pat
 		images.emplace_back(std::move(image));
 	}
 
-	// TODO: do something better with atlas size, GL_MAX_TEXTURE_SIZE is often too big for process RAM
-	int atlas_size;
-	glGetIntegerv(GL_MAX_TEXTURE_SIZE, &atlas_size);
-
-	std::cout << "Atlas size: " << atlas_size << std::endl;
-	atlas_size = 4096;
-
 	stbrp_context packing_context;
 	std::vector<stbrp_rect> image_rects(images.size());
 	std::vector<stbrp_node> rect_node_storage(images.size());
-
-	// Setup packing context with temporary node storage
-	stbrp_init_target(
-		&packing_context,
-		atlas_size,
-		atlas_size,
-		rect_node_storage.data(),
-		rect_node_storage.size()
-	);
 
 	// Initialize stb rects with image sizes
 	for(int i = 0; i < images.size(); i++) {
@@ -111,59 +122,70 @@ Result<std::nullptr_t, std::string> TextureManager::LoadTextures(const char *pat
 		rect.h = images[i].height();
 	}
 
-	// Pack
-	stbrp_pack_rects(&packing_context, image_rects.data(), image_rects.size());
+	while(!images.empty()) {
+		unsigned int atlas_size = QueryAtlasSize(images);
 
-	// TODO: create new atlases for images that do not fit
+		auto atlas_result = Image::create_empty(atlas_size, atlas_size);
+		Image atlas = atlas_result.ok();
 
-	auto atlas_result = Image::create_empty(atlas_size, atlas_size);
-	Image atlas = atlas_result.ok();
-
-	// Temp: Print packed rects
-	for(int i = 0; i < images.size(); i++) {
-		std::cout << images[i].filepath() << "\n"
-			<< "\tpacked?: " << ((image_rects[i].was_packed) ? "yes" : "no") << "\n"
-			<< "\tsize: (" << image_rects[i].w << ", " << image_rects[i].h << ")\n"
-			<< "\tpos: (" << image_rects[i].x << ", " << image_rects[i].y << ")\n";
-
-		stbrp_rect& rect = image_rects[i];
-		atlas.CopySubImage(images[i], rect.x, rect.y);
-	}
-
-	auto texture_result = Texture::createFromImage(atlas);
-	Texture atlas_texture = texture_result.ok();
-
-	unsigned int atlas_id = atlas_texture.getId();
-	_atlases.emplace(atlas_id, std::move(atlas_texture));
-
-	for(int i = 0; i < images.size(); i++) {
-		std::filesystem::path img_path(images[i].filepath());
-
-		stbrp_rect& rect = image_rects[i];
-
-		float min_x = (float)rect.x / atlas_size;
-		float min_y = (float)rect.y / atlas_size;
-		float max_x = (float)(rect.x + rect.w) / atlas_size;
-		float max_y = (float)(rect.y + rect.h) / atlas_size;
-
-		_textures.emplace(
-			img_path.filename().string(),
-			AtlasedTexture {
-				atlas_id,
-				{ min_x, min_y },
-				{ max_x, max_y }
-			}
+		// Setup packing context with temporary node storage
+		stbrp_init_target(
+			&packing_context,
+			atlas_size,
+			atlas_size,
+			rect_node_storage.data(),
+			rect_node_storage.size()
 		);
-	}
 
-	_textures.emplace(
-			std::string("atlas"),
-			AtlasedTexture {
-				atlas_id,
-				{ 0.0, 0.0 },
-				{ 1.0, 1.0 }
+		// Pack
+		stbrp_pack_rects(&packing_context, image_rects.data(), image_rects.size());
+
+		// Copy images to atlas
+		for(int i = 0; i < images.size(); i++) {
+			if(!image_rects[i].was_packed) continue; // Only copy if successfully packed
+			atlas.CopySubImage(images[i], image_rects[i].x, image_rects[i].y);
+		}
+
+		// Create OpenGL texture for atlas
+		auto atlas_texture_result = Texture::createFromImage(atlas);
+		Texture atlas_texture = atlas_texture_result.ok();
+
+		// Add texture to manager
+		unsigned int atlas_id = atlas_texture.getId();
+		_atlases.emplace(atlas_id, std::move(atlas_texture));
+
+		// Insert atlased textures into manager
+		for(int i = 0; i < images.size(); i++) {
+			if(!image_rects[i].was_packed) continue; // Only insert if successfully packed
+
+			std::filesystem::path img_path(images[i].filepath());
+
+			// Image pixel positions -> atlas UVs
+			stbrp_rect& rect = image_rects[i];
+			float min_x = (float)rect.x / atlas_size;
+			float min_y = (float)rect.y / atlas_size;
+			float max_x = (float)(rect.x + rect.w) / atlas_size;
+			float max_y = (float)(rect.y + rect.h) / atlas_size;
+
+			_textures.emplace(
+				img_path.filename().string(),
+				AtlasedTexture {
+					atlas_id,
+					{ min_x, min_y },
+					{ max_x, max_y }
+				}
+			);
+		}
+
+		// Remove packed images from list
+		for(int i = 0; i < images.size(); ) {
+			if(image_rects[i].was_packed) {
+				RemoveImage(images, image_rects, i);
+			} else {
+				i++;
 			}
-		);
+		}
+	}
 
 	return Result::Ok(nullptr);
 }
