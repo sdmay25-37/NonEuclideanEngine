@@ -17,7 +17,7 @@
 
 class TileMap {
 public:
-    TileMap();
+    TileMap() = default;
     TileMap(std::unordered_map<int, Tile> tileList, std::vector<Tile> seedList);
 
     // load tiles from json

@@ -1,5 +1,4 @@
 #include <iostream>
-#include <cstdlib>
 #include "ne_engine.hpp"
 #include "TileMap.hpp"
 #include "Tile.hpp"
@@ -35,11 +34,9 @@ int main()
         std::cout << tile.to_string() << "\n";
     }
 
-    Tile test = tileMap2.getTileinRenderedList(2);
-    Tile test2 = tileMap2.getTileinRenderedList(1);
+    Tile test = tileMap2.getTileInRenderedList(2);
+    Tile test2 = tileMap2.getTileInRenderedList(1);
     std::cout << test.to_string();
     std::cout << test2.to_string();
-    return 0;
-
     return 0;
 }
