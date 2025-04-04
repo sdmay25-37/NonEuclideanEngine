@@ -119,9 +119,11 @@ Result<std::nullptr_t, std::string> TextureManager::LoadTextures(const char *pat
 			<< "\tpacked?: " << ((image_rects[i].was_packed) ? "yes" : "no") << "\n"
 			<< "\tsize: (" << image_rects[i].w << ", " << image_rects[i].h << ")\n"
 			<< "\tpos: (" << image_rects[i].x << ", " << image_rects[i].y << ")\n";
+
+
 	}
 
-	auto atlas_result = Image::create_empty(images.back().width(), images.back().height());
+	auto atlas_result = Image::create_empty(atlas_size, atlas_size);
 	Image atlas = atlas_result.ok();
 
 	atlas.CopySubImage(images.back(), 0, 0);
