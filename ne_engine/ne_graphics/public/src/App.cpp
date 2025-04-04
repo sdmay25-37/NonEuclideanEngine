@@ -2,13 +2,9 @@
 #include <iostream>
 #include <thread>
 
-
-#include <stb/stb_image.h>
-
 #include "App.hpp"
-
-#include <Renderer.hpp>
-#include <Window.hpp>
+#include "Renderer.hpp"
+#include "plugin/window/Window.hpp"
 
 
 constexpr int UPDATES_PER_SECOND = 60;

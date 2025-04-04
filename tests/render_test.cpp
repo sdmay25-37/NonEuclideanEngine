@@ -4,7 +4,7 @@
 
 #include "App.hpp"
 #include "RenderPlugin.hpp"
-#include "WindowPlugin.hpp"
+#include "plugin/window/WindowPlugin.hpp"
 #include <glad/glad.h>
 
 class WorldPlugin final : public Plugin {

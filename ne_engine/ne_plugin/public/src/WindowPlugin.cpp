@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "WindowPlugin.hpp"
+#include "plugin/window/WindowPlugin.hpp"
 #include <glad/glad.h>
 
 void WindowPlugin::WindowSetup(Resource<Window> window) {

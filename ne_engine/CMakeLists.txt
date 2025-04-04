@@ -4,7 +4,8 @@ set(MATH_SRC_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/ne_math/public/src)
 set(RES_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_resource/public/src)
 set(SYS_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_system/public/src)
 set(UI_SRC_DIR          ${CMAKE_CURRENT_SOURCE_DIR}/ne_ui/public/src)
-set(UTIL_SRC_DIR       ${CMAKE_CURRENT_SOURCE_DIR}/ne_util/public/src)
+set(UTIL_SRC_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/ne_util/public/src)
+set(PLUGIN_SRC_DIR      ${CMAKE_CURRENT_SOURCE_DIR}/ne_plugin/public/src)
 
 add_library(
     ne_engine STATIC
@@ -19,8 +20,6 @@ add_library(
     "${GRAPHICS_SRC_DIR}/Texture.cpp"
     "${GRAPHICS_SRC_DIR}/TextureManager.cpp"
     "${GRAPHICS_SRC_DIR}/Triangle.cpp"
-    "${GRAPHICS_SRC_DIR}/Window.cpp"
-    "${GRAPHICS_SRC_DIR}/WindowPlugin.cpp"
 
     # ne_input
     "${INPUT_SRC_DIR}/Input.cpp"
@@ -43,7 +42,9 @@ add_library(
     "${UI_SRC_DIR}/KeyMappingsManager.cpp"
     "${UI_SRC_DIR}/ToolManager.cpp"
 
-    # ne_util
+    ## -- ne_plugin -- ##
+    # window
+    "${PLUGIN_SRC_DIR}/WindowPlugin.cpp"
 
 
 )
@@ -54,6 +55,7 @@ target_include_directories(ne_engine
     include
     ne_graphics/public/include
     ne_math/public/include
+    ne_plugin/public/include
     ne_input/public/include
     ne_system/public/include
     ne_ui/public/include
