@@ -1,3 +1,5 @@
+#define GLM_FORCE_CTOR_INIT
+
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
@@ -14,23 +16,26 @@
 
 #include "ne_engine.hpp"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
 // settings
 constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;
 constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 
-struct Vertex {
-	float x, y, z;
+struct Vertex
+{
+    float x, y, z;
     float u, v;
 };
 
-float rand_float() {
+float rand_float()
+{
     return (float)rand() / RAND_MAX;
 }
 
-int main() {
+int main()
+{
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -40,8 +45,9 @@ int main() {
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
-    GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", nullptr, nullptr);
-    if (window == nullptr) {
+    GLFWwindow *window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "LearnOpenGL", nullptr, nullptr);
+    if (window == nullptr)
+    {
         std::cout << "Failed to create GLFW window" << std::endl;
         glfwTerminate();
         return -1;
@@ -49,7 +55,8 @@ int main() {
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return -1;
     }
@@ -58,10 +65,10 @@ int main() {
 
     // build and compile our shader program
     auto shaderResult = ShaderProgram::create(
-    "../shaders/sprite.vert",
-    "../shaders/sprite.frag"
-    );
-    if(shaderResult.is_error()) {
+        "../shaders/sprite.vert",
+        "../shaders/sprite.frag");
+    if (shaderResult.is_error())
+    {
         std::cerr << "Failed to create shader program:" << shaderResult.error() << std::endl;
     }
     ShaderProgram shaders = shaderResult.ok();
@@ -71,12 +78,11 @@ int main() {
 
     std::srand(std::time(nullptr));
 
-
     std::vector<glm::mat4> model_mats;
     std::vector<glm::vec4> uv_ranges;
 
-                                    // startRow, frameWidth, rowHeight, numFramesInSheet, numFramesInAnimation, looping
-    struct AnimationData slimeData = {0,        1.0 / 33.0,  1.0 / 4.0, 33.0,             33.0, 1};
+    // startRow, frameWidth, rowHeight, numFramesInSheet, numFramesInAnimation, looping
+    struct AnimationData slimeData = {0, 1.0 / 33.0, 1.0 / 4.0, 33.0, 33.0, 1};
 
     glm::vec3 position(0.0, 0.0, 0.0);
     glm::vec3 scale(0.3, 0.3, 1.0);
@@ -89,33 +95,30 @@ int main() {
     model_mats.push_back(model_mat);
 
     Animation slime(position, scale, uv_min, uv_max,
-        slimeData, "../res/textures/Slime.png");
-
+                    slimeData, "../res/textures/Slime.png");
 
     auto textureResult = Texture::create("../res/textures/Slime.png");
-    if(textureResult.is_error()) {
+    if (textureResult.is_error())
+    {
         std::cerr << "Failed to create texture" << std::endl;
     }
     Texture texture = textureResult.ok();
-
 
     slime.initAnimation();
     AnimationData checkInf = slime.getAnimationData();
 
     uv_ranges.emplace_back(0.0, slime.getAnimationData().startRow,
-        slime.getAnimationData().frameWidth, slime.getAnimationData().startRow + slime.getAnimationData().rowHeight);    // 7 Frames
+                           slime.getAnimationData().frameWidth, slime.getAnimationData().startRow + slime.getAnimationData().rowHeight); // 7 Frames
 
     std::vector<Vertex> vertices = {
-        Vertex {  0.5,  0.5, 0.0, 1.0, 1.0 },
-        Vertex {  0.5, -0.5, 0.0, 1.0, 0.0 },
-        Vertex { -0.5, -0.5, 0.0, 0.0, 0.0 },
-        Vertex { -0.5,  0.5, 0.0, 0.0, 1.0 }
-    };
+        Vertex{0.5, 0.5, 0.0, 1.0, 1.0},
+        Vertex{0.5, -0.5, 0.0, 1.0, 0.0},
+        Vertex{-0.5, -0.5, 0.0, 0.0, 0.0},
+        Vertex{-0.5, 0.5, 0.0, 0.0, 1.0}};
 
     std::vector<unsigned int> indices = {
         0, 1, 3,
-        1, 2, 3
-    };
+        1, 2, 3};
 
     unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO;
     glGenVertexArrays(1, &VAO);
@@ -130,12 +133,12 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
 
     // vertex texture coords attribute
 
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     // sprite texture coords attribute
@@ -143,7 +146,7 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(2);
     glVertexAttribDivisor(2, 1);
 
@@ -152,9 +155,10 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, MODEL_MAT_VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * model_mats.size(), model_mats.data(), GL_DYNAMIC_DRAW);
 
-    for(int i = 0; i < 4; i++) {
+    for (int i = 0; i < 4; i++)
+    {
         glEnableVertexAttribArray(3 + i);
-        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void*)(sizeof(glm::vec4) * i));
+        glVertexAttribPointer(3 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (void *)(sizeof(glm::vec4) * i));
         glVertexAttribDivisor(3 + i, 1);
     }
 
@@ -174,7 +178,6 @@ int main() {
     // glBindTexture(GL_TEXTURE_2D, slime.getTextureId());
     glBindTexture(GL_TEXTURE_2D, texture.getId());
 
-
     int count = 0;
 
     glm::vec3 camera_pos(0.0, 0.0, 1.0);
@@ -187,18 +190,18 @@ int main() {
 
     glm::mat4 proj_mat = glm::perspective(fov, ASPECT_RATIO, nearPlane, farPlane);
 
-    input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]() {
-        glfwSetWindowShouldClose(window, true);
-    });
+    input.bindKeyPress("quit", GLFW_KEY_ESCAPE, [&window]()
+                       { glfwSetWindowShouldClose(window, true); });
 
     int ctr = 0;
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window))
+    {
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         uv_ranges.clear();
-        uv_ranges.emplace_back(ctr * slime.getAnimationData().frameWidth, slime.getAnimationData().startRow, (ctr + 1.0) * (float) slime.getAnimationData().frameWidth, slime.getAnimationData().startRow + (slime.getAnimationData().rowHeight));
+        uv_ranges.emplace_back(ctr * slime.getAnimationData().frameWidth, slime.getAnimationData().startRow, (ctr + 1.0) * (float)slime.getAnimationData().frameWidth, slime.getAnimationData().startRow + (slime.getAnimationData().rowHeight));
 
         glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
         glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data());
@@ -211,12 +214,12 @@ int main() {
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        // std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
-        ctr = (ctr + 1) % ((int) slime.getAnimationData().numFramesInAnimation);
+        ctr = (ctr + 1) % ((int)slime.getAnimationData().numFramesInAnimation);
     }
 
-	shaders.cleanup();
+    shaders.cleanup();
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteBuffers(1, &UV_VBO);
@@ -227,10 +230,11 @@ int main() {
     return 0;
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
     glViewport(0, 0, width, height);
 }
 
-void shiftCameraLeft() {
-
+void shiftCameraLeft()
+{
 }
