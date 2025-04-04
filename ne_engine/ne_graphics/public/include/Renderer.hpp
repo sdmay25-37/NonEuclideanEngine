@@ -8,8 +8,10 @@
 
 #include <entt/entt.hpp>
 #include <glm/glm.hpp>
+#include <ne_system/Resource.hpp>
 
 #include "TextureManager.hpp"
+#include "Camera.hpp"
 
 
 struct Vertex {
@@ -33,7 +35,7 @@ public:
 	~Renderer();
 
 	void Init();
-	void Render(entt::registry &registry) const;
+	void Render(entt::registry& registry, Resource<Camera> camera) const;
 	void Bind();
 
 	static constexpr int N_INDICES = 6;

@@ -14,7 +14,7 @@ public:
 	}
 
 	static void Setup(Resource<Renderer> renderer);
-	static void Render(entt::registry& registry, Resource<Renderer> renderer);
+	static void Render(entt::registry& registry, Resource<Renderer> renderer, Resource<Camera> camera);
 };
 
 

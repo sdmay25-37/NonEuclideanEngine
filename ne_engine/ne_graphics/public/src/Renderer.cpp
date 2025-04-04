@@ -89,30 +89,11 @@ void Renderer::Init() {
 
 // Todo: Not sure how I feel about this method
 // I don't like having to copy UV data every frame when it likely doesn't change
-void Renderer::Render(entt::registry& registry) const {
-	// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	// glClear(GL_COLOR_BUFFER_BIT);
+void Renderer::Render(entt::registry& registry, Resource<Camera> camera) const {
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
 
-	static float count = 0;
-	static long speed = 0;
-
-	count += std::abs(2.0 * std::sin(++speed / 50.0));
-
-	float x = 0.5 * std::sin(count / 50.0);
-	float y = 0.5 * std::cos(count / 50.0);
-
-	glm::vec3 camera_pos(x, y, 2.0);
-	glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
-
-	float fov = glm::radians(45.0f);
-	float nearPlane = 0.1f;
-	float farPlane = 100.0f;
-
-	glm::mat4 proj_mat = glm::perspective(fov, (800.0f / 600.0f), nearPlane, farPlane);
-
-	glm::mat4 proj_view_mat = proj_mat * glm::lookAt(camera_pos, glm::vec3(camera_pos.x, camera_pos.y, 0.0), xyz(camera_up));
-	_shader_program->setUniformMat4("proj_view_mat", proj_view_mat);
-
+	_shader_program->setUniformMat4("proj_view_mat", camera->GetViewProjMat());
 
 	auto const view = registry.view<AtlasSprite>();
 

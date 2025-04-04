@@ -10,7 +10,10 @@
 class WorldPlugin final : public Plugin {
 public:
     void Build(App &app) override {
-        app.AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles).After(LoadTileTexture)));
+        app
+            .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles).After(LoadTileTexture)))
+            .AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(MoveCamera)));
+
     }
 
 private:
@@ -44,6 +47,7 @@ private:
             registry.emplace<AtlasSprite>(entity, model_mat, texture);
         }
     }
+
     static void LoadTileTexture(Resource<TextureManager> texture_manager) {
         unsigned int texture;
         glGenTextures(1, &texture);
@@ -73,18 +77,39 @@ private:
 
         // -- Better texture loading -- //
         texture_manager->LoadTextures("../res/textures");
+    }
 
+    static void MoveCamera(Resource<Camera> camera) {
+        static float count = 0;
+        static long speed = 0;
+
+        count += std::abs(2.0 * std::sin(++speed / 50.0));
+
+        float x = 0.5 * std::sin(count / 50.0);
+        float y = 0.5 * std::cos(count / 50.0);
+
+        camera->position = glm::vec3(x, y, 2.0f);
     }
 };
 
 
 int main() {
 
+    glm::vec3 camera_pos(0.0, 0.0, 2.0);
+    glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
+
+    float fov = glm::radians(45.0f);
+    float nearPlane = 0.1f;
+    float farPlane = 100.0f;
+
+    glm::mat4 proj_mat = glm::perspective(fov, (800.0f / 600.0f), nearPlane, farPlane);
+
     App()
         .AddPlugin<WindowPlugin>()
         .AddPlugin<RenderPlugin>()
         .AddPlugin<WorldPlugin>()
         .InsertResource<TextureManager>()
+        .InsertResource<Camera>(camera_pos, camera_up, proj_mat)
         .Run();
 
     glfwTerminate();
