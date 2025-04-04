@@ -16,8 +16,13 @@ struct AtlasedTexture {
 
 class TextureManager {
 public:
+
+	TextureManager() { stbi_set_flip_vertically_on_load(true); }
+
 	Result<std::nullptr_t, std::string> loadAtlas(const char* path);
 	std::optional<AtlasedTexture> getTexture(const std::string& name);
+
+	Result<std::nullptr_t, std::string> LoadTextures(const char* path);
 
 private:
 	std::unordered_map<unsigned int, Texture> _atlases;

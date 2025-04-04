@@ -1,6 +1,5 @@
-
 #include <glad/glad.h>
-#include <stb_image.h>
+#include <stb/stb_rect_pack.h>
 
 #include "Texture.hpp"
 

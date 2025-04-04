@@ -17,7 +17,7 @@ public:
     };
 
     static std::unique_ptr<SystemExecutor> Create(Type type, entt::registry& registry, ResourceManager& resource_manager);
-	virtual void Execute(SystemSchedule& schedule) const = 0;
+	virtual void Execute(std::vector<SystemSchedule>& schedules) const = 0;
 	virtual ~SystemExecutor() = default;
 
 protected:
