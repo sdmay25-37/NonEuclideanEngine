@@ -16,7 +16,7 @@ public:
 private:
     static void CreateTiles(entt::registry& registry, Resource<TextureManager> texture_manager) {
         std::srand(std::time(nullptr));
-        auto texture_result = texture_manager->getTexture("tile0.png");
+        auto texture_result = texture_manager->getTexture("test");
         AtlasedTexture texture = texture_result.value();
 
         int map_width = 20;

@@ -21,3 +21,16 @@ Result<Image, std::nullptr_t> Image::create_empty(int width, int height, int cha
 
 	return Result::Ok(Image("", image_data, width, height, channels));
 }
+
+void Image::CopySubImage(const Image& other, std::size_t sub_x, std::size_t sub_y) {
+	// Copy image line by line
+	for(std::size_t other_y = 0; other_y < other.height(); other_y++) {
+
+		// Calculate starting destination
+		unsigned char* image_row = _data + ((sub_y + other_y) * _width + sub_x) * _channels;
+		const unsigned char* other_row = other.data() + (other_y * other.width() * _channels);
+
+		// Copy row
+		memcpy(image_row, other_row, other.width() * _channels);
+	}
+}

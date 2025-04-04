@@ -121,9 +121,26 @@ Result<std::nullptr_t, std::string> TextureManager::LoadTextures(const char *pat
 			<< "\tpos: (" << image_rects[i].x << ", " << image_rects[i].y << ")\n";
 	}
 
-	auto atlas_result = Image::create_empty(atlas_size, atlas_size);
+	auto atlas_result = Image::create_empty(images.back().width(), images.back().height());
 	Image atlas = atlas_result.ok();
 
+	atlas.CopySubImage(images.back(), 0, 0);
 
+	auto texture_result = Texture::createFromImage(atlas);
+	Texture atlas_texture = texture_result.ok();
+
+	unsigned int atlas_id = atlas_texture.getId();
+
+	_atlases.emplace(atlas_id, std::move(atlas_texture));
+	_textures.emplace(
+		std::string("test"),
+		AtlasedTexture {
+			atlas_id,
+			{0.0, 0.0},
+			{1.0, 1.0}
+		}
+	);
+
+	return Result::Ok(nullptr);
 }
 
