@@ -4,19 +4,12 @@
 //
 
 #include "TileMap.hpp"
-#include <iostream>
+
 #include <fstream>
-#include <vector>
-#include <string>
-#include <unordered_map>
-#include <nlohmann/json.hpp>
+#include <iostream>
 #include <queue>
 
 using json = nlohmann::json;
-
-TileMap::TileMap()
-{
-}
 
 TileMap::TileMap(std::unordered_map<int, Tile> tileList, std::vector<Tile> seedList)
 {
@@ -226,16 +219,15 @@ Tile TileMap::getTileByID(uint8_t tileId)
     {
         return it->second; // Return the Tile object associated with the tileId
     }
-    else
-    {
-        std::cerr << "Error: Tile with ID " << static_cast<int>(tileId) << " not found!" << std::endl;
 
-        // TODO FIGURE OUT WHAT TO SEND BACK
-        return Tile(); // Assuming the default constructor of Tile initializes a valid empty object
-    }
+    std::cerr << "Error: Tile with ID " << static_cast<int>(tileId) << " not found!" << std::endl;
+
+    // TODO FIGURE OUT WHAT TO SEND BACK
+    return Tile(); // Assuming the default constructor of Tile initializes a valid empty object
+
 }
 
-Tile TileMap::getTileinRenderedList(uint8_t tileId)
+Tile TileMap::getTileInRenderedList(uint8_t tileId)
 {
     auto it = std::find_if(_renderedTileList.begin(), _renderedTileList.end(),
                            [&](const Tile &tile)

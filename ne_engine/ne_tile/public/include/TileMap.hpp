@@ -6,16 +6,16 @@
 #ifndef TILEMAP_HPP
 #define TILEMAP_HPP
 
-#include <vector>
-#include <string>
 #include <cstdint>
-#include "Tile.hpp"
+#include <string>
 #include <unordered_map>
+#include <vector>
+
 #include <nlohmann/json.hpp>
-#include <iostream>
-#include <fstream>
-class TileMap
-{
+
+#include "Tile.hpp"
+
+class TileMap {
 public:
     TileMap();
     TileMap(std::unordered_map<int, Tile> tileList, std::vector<Tile> seedList);
@@ -26,16 +26,16 @@ public:
     // NOT USED
     void saveTile(std::string filepath);
 
-    // return a bunch of tiles from cureent tile
+    // return a bunch of tiles from current tile
     std::vector<Tile> getNearTiles(Tile currentTile, int radius);
-    // TODO add world cordinates
-    // TODO add relation to currentTile
+    // TODO: add world coordinates
+    // TODO: add relation to currentTile
 
     Tile getTileByID(uint8_t tileId);
 
-    Tile getTileinRenderedList(uint8_t tileID);
+    Tile getTileInRenderedList(uint8_t tileID);
 
-    // TODO Figure out how to buffer tiles from _renderedTileList
+    // TODO: Figure out how to buffer tiles from _renderedTileList
 
     std::vector<std::string> getTileMapInformation(); // Returns a vector of pairs of a <direction string, texture classification>
 
