@@ -17,9 +17,9 @@ void App::Run() {
 	// TODO: remove all references of window as it is now an optional plugin
 	Startup();
 
-	auto window = _resource_manager.get<Window>();
+	auto window = _resource_manager.Get<Window>();
 
-	while(!glfwWindowShouldClose(window->GetHandle())) {
+	while(!window->ShouldClose()) {
 		Update();
 		Render();
 	}

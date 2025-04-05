@@ -27,14 +27,23 @@ private:
 class ResourceManager {
 public:
 	template<typename T, typename... Args>
-	void insert(Args&&... args) {
-		_resources[std::type_index(typeid(T))] = std::make_unique<T>(std::forward<Args>(args)...);
-		_insertion_order.emplace_back(typeid(T));
+	void Insert(Args&&... args) {
+		const auto id = std::type_index(typeid(T));
+		_resources[id] = std::make_unique<T>(std::forward<Args>(args)...);
+		_insertion_order.emplace_back(id);
+	}
+
+	template<typename Base, typename Derived, typename... Args>
+	void InsertBase(Args&&... args) {
+		static_assert(std::is_base_of_v<Base, Derived>, "Derived must be derived from Base");
+		const auto id = std::type_index(typeid(Base));
+		_resources[id] = std::make_unique<Derived>(std::forward<Args>(args)...);
+		_insertion_order.emplace_back(id);
 	}
 
 	// TODO: return optional
 	template<typename T>
-	Resource<T> get() {
+	Resource<T> Get() {
 		return Resource<T>(static_cast<T*>(_resources[std::type_index(typeid(T))].get()));
 	}
 

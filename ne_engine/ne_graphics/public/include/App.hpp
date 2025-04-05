@@ -26,7 +26,13 @@ public:
 
 	template<typename T, typename... Args>
 	App& InsertResource(Args&&... args) {
-		_resource_manager.insert<T>(std::forward<Args>(args)...);
+		_resource_manager.Insert<T>(std::forward<Args>(args)...);
+		return *this;
+	}
+
+	template<typename Base, typename Derived, typename... Args>
+	App& InsertResourceBase(Args&&... args) {
+		_resource_manager.InsertBase<Base, Derived>(std::forward<Args>(args)...);
 		return *this;
 	}
 

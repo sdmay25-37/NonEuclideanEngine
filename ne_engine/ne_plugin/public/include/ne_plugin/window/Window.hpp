@@ -1,8 +1,7 @@
 #ifndef WINDOW_HPP
 #define WINDOW_HPP
 
-#define GLFW_INCLUDE_NONE
-#include <GLFW/glfw3.h>
+
 
 
 
@@ -10,15 +9,18 @@
 class Window {
 public:
 
-	Window(unsigned int width, unsigned int height);
-	~Window();
+	Window(unsigned int width, unsigned int height)
+		: _width(width), _height(height) {}
+
+	virtual ~Window() = default;
+
+	virtual void SwapBuffers() = 0;
+	virtual bool ShouldClose() = 0;
 
 	[[nodiscard]] unsigned int GetWidth() const { return _width; }
 	[[nodiscard]] unsigned int GetHeight() const { return _height; }
-	[[nodiscard]] GLFWwindow* GetHandle() const { return _ptr; }
 
 private:
-	GLFWwindow* _ptr;
 	unsigned int _width, _height;
 };
 

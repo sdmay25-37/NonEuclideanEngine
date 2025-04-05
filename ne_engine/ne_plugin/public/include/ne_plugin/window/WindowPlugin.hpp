@@ -2,6 +2,7 @@
 #define WINDOWPLUGIN_HPP
 
 #include "App.hpp"
+#include "GLFWWindow.hpp"
 #include "Window.hpp"
 #include "ne_system/Plugin.hpp"
 #include "ne_system/Resource.hpp"
@@ -12,15 +13,13 @@ public:
 	void Build(App& app) override {
 
 		app
-			.InsertResource<Window>(800, 600)
-			.AddSystems(ScheduleLabel::PRE_STARTUP, SystemSet(WindowSetup))
+			.InsertResourceBase<Window, GLFWWindow>(800, 600)
 			.AddSystems(ScheduleLabel::UPDATE, SystemSet(WindowUpdate))
 			.AddSystems(ScheduleLabel::POST_RENDER, SystemSet(WindowPostRender));
 	}
 
 private:
 
-	static void WindowSetup(Resource<Window> window);
 	static void WindowUpdate();
 	static void WindowPostRender(Resource<Window> window);
 
