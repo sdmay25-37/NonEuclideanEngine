@@ -16,29 +16,14 @@ void App::Run() {
 
 	// TODO: remove all references of window as it is now an optional plugin
 	Startup();
-	glfwMakeContextCurrent(NULL);
+
 	auto window = _resource_manager.get<Window>();
-
-	Synchronizer frameSynch(2);
-	std::thread render_thread([&] {
-		glfwMakeContextCurrent(window->ptr);
-		while(!glfwWindowShouldClose(window->ptr)) {
-			Render();
-			frameSynch.wait();
-		}
-
-		// TODO: this is a temporary fix as the main thread still makes some OpenGL calls
-		glfwMakeContextCurrent(NULL);
-	});
 
 	while(!glfwWindowShouldClose(window->ptr)) {
 		Update();
-		frameSynch.wait();
+		Render();
 	}
 
-	render_thread.join();
-
-	glfwMakeContextCurrent(window->ptr);
 	Cleanup();
 }
 

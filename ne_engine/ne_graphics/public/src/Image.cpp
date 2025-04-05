@@ -1,5 +1,5 @@
 #include "Image.hpp"
-
+#include <cstring>
 
 Result<Image, Image::CreateError> Image::create(const std::string& filepath, const int desired_channels) {
 	using Result = Result<Image, CreateError>;
