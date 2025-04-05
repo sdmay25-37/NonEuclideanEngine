@@ -29,6 +29,7 @@ public:
 	template<typename T, typename... Args>
 	void Insert(Args&&... args) {
 		const auto id = std::type_index(typeid(T));
+		if(_resources.find(id) != _resources.end()) return;
 		_resources[id] = std::make_unique<T>(std::forward<Args>(args)...);
 		_insertion_order.emplace_back(id);
 	}
@@ -37,6 +38,7 @@ public:
 	void InsertBase(Args&&... args) {
 		static_assert(std::is_base_of_v<Base, Derived>, "Derived must be derived from Base");
 		const auto id = std::type_index(typeid(Base));
+		if(_resources.find(id) != _resources.end()) return;
 		_resources[id] = std::make_unique<Derived>(std::forward<Args>(args)...);
 		_insertion_order.emplace_back(id);
 	}

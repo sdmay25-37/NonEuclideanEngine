@@ -4,7 +4,8 @@
 
 #include "App.hpp"
 #include "RenderPlugin.hpp"
-#include "ne_plugin/window/WindowPlugin.hpp"
+#include "ne_plugin/input/InputPlugin.hpp"
+#include "ne_plugin/window/GLFWWindow.hpp"
 #include <glad/glad.h>
 
 class WorldPlugin final : public Plugin {
@@ -79,7 +80,8 @@ int main() {
     glm::mat4 proj_mat = glm::perspective(fov, (800.0f / 600.0f), nearPlane, farPlane);
 
     App()
-        .AddPlugin<WindowPlugin>()
+        .InsertResourceBase<Window, GLFWWindow>(800, 600)
+        .AddPlugin<InputPlugin>()
         .AddPlugin<RenderPlugin>()
         .AddPlugin<WorldPlugin>()
         .InsertResource<TextureManager>()

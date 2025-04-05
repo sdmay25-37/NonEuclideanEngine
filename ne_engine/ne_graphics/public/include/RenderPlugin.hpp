@@ -1,6 +1,8 @@
 #ifndef RENDERPLUGIN_HPP
 #define RENDERPLUGIN_HPP
 
+#include <ne_plugin/window/Window.hpp>
+
 #include "App.hpp"
 #include "ne_system/Plugin.hpp"
 
@@ -14,7 +16,12 @@ public:
 	}
 
 	static void Setup(Resource<Renderer> renderer);
-	static void Render(entt::registry& registry, Resource<Renderer> renderer, Resource<Camera> camera);
+	static void Render(
+		entt::registry& registry,
+		Resource<Renderer> renderer,
+		Resource<Camera> camera,
+		Resource<Window> window
+	);
 };
 
 

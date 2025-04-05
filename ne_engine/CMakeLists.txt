@@ -45,9 +45,6 @@ add_library(
     ## -- ne_plugin -- ##
     # window
     "${PLUGIN_SRC_DIR}/GLFWWindow.cpp"
-    "${PLUGIN_SRC_DIR}/WindowPlugin.cpp"
-
-
 
 )
 

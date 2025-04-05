@@ -1,25 +1,13 @@
-#include <ctime>
-#include <iostream>
-#include <thread>
-
 #include "App.hpp"
 #include "Renderer.hpp"
-#include "ne_plugin/window/Window.hpp"
-
-
-constexpr int UPDATES_PER_SECOND = 60;
-constexpr double SECONDS_PER_UPDATE = 1.0 / UPDATES_PER_SECOND;
-constexpr int MAX_FRAMESKIP = 5;
-
 
 void App::Run() {
 
-	// TODO: remove all references of window as it is now an optional plugin
 	Startup();
 
-	auto window = _resource_manager.Get<Window>();
+	_resource_manager.Insert<AppClose>(false);
 
-	while(!window->ShouldClose()) {
+	while(!_resource_manager.Get<AppClose>()->value) {
 		Update();
 		Render();
 	}
@@ -36,6 +24,12 @@ void App::Startup() {
 
 void App::Update() {
 	_executor->Execute(_schedules[ScheduleLabel::UPDATE]);
+
+	// TODO: remove all references of window as it is now an optional plugin
+	// auto window = _resource_manager.Get<Window>();
+	// if(window->ShouldClose()) {
+	// 	_resource_manager.Insert<AppClose>(true);
+	// }
 }
 
 void App::Render() {

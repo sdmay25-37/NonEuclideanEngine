@@ -11,6 +11,7 @@ public:
 	GLFWWindow(unsigned int width, unsigned int height);
 	~GLFWWindow() override;
 
+	void PollEvents() override { glfwPollEvents(); }
 	void SwapBuffers() override { glfwSwapBuffers(_handle); }
 	bool ShouldClose() override { return glfwWindowShouldClose(_handle); }
 

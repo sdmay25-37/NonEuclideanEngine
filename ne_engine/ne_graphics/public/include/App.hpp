@@ -5,13 +5,9 @@
 
 #include <entt/entt.hpp>
 
-#include "Input.hpp"
 #include "Renderer.hpp"
-#include "ShaderProgram.hpp"
 #include "ne_system/Plugin.hpp"
-#include "ne_system/Resource.hpp"
 #include "ne_system/SystemExecutor.hpp"
-
 
 class App {
 public:
@@ -64,6 +60,12 @@ private:
 	void Render();
 	void Cleanup();
 
+};
+
+struct AppClose {
+	bool value;
+
+	explicit AppClose(bool value) : value(value) {}
 };
 
 #endif //APP_HPP
