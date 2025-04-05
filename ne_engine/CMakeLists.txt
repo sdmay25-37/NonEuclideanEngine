@@ -44,7 +44,9 @@ add_library(
 
     ## -- ne_plugin -- ##
     # window
+    "${PLUGIN_SRC_DIR}/Window.cpp"
     "${PLUGIN_SRC_DIR}/WindowPlugin.cpp"
+
 
 
 )

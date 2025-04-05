@@ -33,6 +33,11 @@ public:
 	template<typename T>
 	App& AddPlugin() {
 		static_assert(std::is_base_of_v<Plugin, T>, "T must be a Plugin");
+
+		// Ignore duplicate additions
+		if(_plugin_names.find(std::type_index(typeid(T))) != _plugin_names.end()) return *this;
+
+		_plugin_names.insert(std::type_index(typeid(T)));
 		std::unique_ptr<Plugin> plugin = std::make_unique<T>();
 		plugin->Build(*this);
 		return *this;
@@ -45,6 +50,8 @@ private:
 
 	std::unique_ptr<SystemExecutor> _executor;
 	EnumArray<ScheduleLabel, std::vector<SystemSchedule>> _schedules;
+
+	std::unordered_set<std::type_index> _plugin_names;
 
   	void Startup();
 	void Update();

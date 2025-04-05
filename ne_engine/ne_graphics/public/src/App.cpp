@@ -4,7 +4,7 @@
 
 #include "App.hpp"
 #include "Renderer.hpp"
-#include "plugin/window/Window.hpp"
+#include "ne_plugin/window/Window.hpp"
 
 
 constexpr int UPDATES_PER_SECOND = 60;
@@ -19,7 +19,7 @@ void App::Run() {
 
 	auto window = _resource_manager.get<Window>();
 
-	while(!glfwWindowShouldClose(window->ptr)) {
+	while(!glfwWindowShouldClose(window->GetHandle())) {
 		Update();
 		Render();
 	}
