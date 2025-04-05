@@ -6,7 +6,8 @@
 #include "RenderPlugin.hpp"
 #include "ne_plugin/input/InputPlugin.hpp"
 #include "ne_plugin/window/GLFWWindow.hpp"
-#include <glad/glad.h>
+#include "ne_plugin/DefaultPlugins.hpp"
+
 
 class WorldPlugin final : public Plugin {
 public:
@@ -14,7 +15,6 @@ public:
         app
             .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles).After(LoadTextures)))
             .AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(MoveCamera)));
-
     }
 
 private:
@@ -50,7 +50,6 @@ private:
     }
 
     static void LoadTextures(Resource<TextureManager> texture_manager) {
-        // -- Better texture loading -- //
         texture_manager->LoadTextures("../res/textures");
     }
 
@@ -81,8 +80,7 @@ int main() {
 
     App()
         .InsertResourceBase<Window, GLFWWindow>(800, 600)
-        .AddPlugin<InputPlugin>()
-        .AddPlugin<RenderPlugin>()
+        .AddPlugin<DefaultPlugins>()
         .AddPlugin<WorldPlugin>()
         .InsertResource<TextureManager>()
         .InsertResource<Camera>(camera_pos, camera_up, proj_mat)
