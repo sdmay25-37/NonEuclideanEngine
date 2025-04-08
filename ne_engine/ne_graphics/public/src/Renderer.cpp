@@ -1,9 +1,10 @@
-#include "Render.hpp"
+#include "Renderer.hpp"
 
+#include <iostream>
 #include <TextureManager.hpp>
 #include <glad/glad.h>
 
-Render::~Render() {
+Renderer::~Renderer() {
 	glDeleteVertexArrays(1, &VAO);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &UV_VBO);
@@ -11,7 +12,7 @@ Render::~Render() {
 	glDeleteBuffers(1, &EBO);
 }
 
-void Render::init() {
+void Renderer::Init() {
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &UV_VBO);
@@ -69,11 +70,31 @@ void Render::init() {
 	};
 
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * indices.size(), indices.data(), GL_STATIC_DRAW);
+
+	// build and compile our shader program
+	auto shader_result = ShaderProgram::create(
+			"../shaders/sprite.vert",
+			"../shaders/sprite.frag"
+	);
+
+	if(shader_result.is_error()) {
+		std::cerr << "Failed to create shader program: " << shader_result.error() << std::endl;
+		return;
+	}
+
+	_shader_program = std::make_unique<ShaderProgram>(shader_result.ok());
+	_shader_program->bind();
+	_shader_program->setUniform1i("texture_atlas", 0);
 }
 
 // Todo: Not sure how I feel about this method
 // I don't like having to copy UV data every frame when it likely doesn't change
-void Render::render(entt::registry& registry) const {
+void Renderer::Render(entt::registry& registry, Resource<Camera> camera) const {
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClear(GL_COLOR_BUFFER_BIT);
+
+	_shader_program->setUniformMat4("proj_view_mat", camera->GetViewProjMat());
+
 	auto const view = registry.view<AtlasSprite>();
 
 	std::unordered_map<unsigned int, std::pair<std::vector<glm::mat4>, std::vector<glm::vec4>>> atlas_data;
@@ -105,8 +126,10 @@ void Render::render(entt::registry& registry) const {
 		// Render sprites
 		glDrawElementsInstanced(GL_TRIANGLES, N_INDICES, GL_UNSIGNED_INT, nullptr, model_mats.size());
 	}
+
 }
 
-void Render::bind() {
+void Renderer::Bind() {
 	glBindVertexArray(VAO);
+	_shader_program->bind();
 }

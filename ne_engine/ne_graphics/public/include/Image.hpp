@@ -5,7 +5,7 @@
 #include <string>
 #include <utility>
 
-#include <stb_image.h>
+#include <stb/stb_image.h>
 
 #include "utils.hpp"
 
@@ -50,6 +50,10 @@ struct Image {
 
 	enum class CreateError { IMAGE_LOAD_FAILURE };
 	static Result<Image, CreateError> create(const std::string& filepath, int desired_channels = 4);
+	static Result<Image, std::nullptr_t> create_empty(int width, int height, int channels = 4);
+
+	// Copy another image into this starting at pixel (sub_x, sub_y)
+	void CopySubImage(const Image& other, std::size_t sub_x, std::size_t sub_y);
 
 private:
 	Image(std::string filepath, unsigned char* data, const int width, const int height, const int channels)

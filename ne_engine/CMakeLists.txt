@@ -4,7 +4,8 @@ set(MATH_SRC_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/ne_math/public/src)
 set(RES_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_resource/public/src)
 set(SYS_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_system/public/src)
 set(UI_SRC_DIR          ${CMAKE_CURRENT_SOURCE_DIR}/ne_ui/public/src)
-set(UTIL_SRC_DIR       ${CMAKE_CURRENT_SOURCE_DIR}/ne_util/public/src)
+set(UTIL_SRC_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/ne_util/public/src)
+set(PLUGIN_SRC_DIR      ${CMAKE_CURRENT_SOURCE_DIR}/ne_plugin/public/src)
 
 add_library(
     ne_engine STATIC
@@ -12,9 +13,9 @@ add_library(
     # ne_graphics
     "${GRAPHICS_SRC_DIR}/Animation.cpp"
     "${GRAPHICS_SRC_DIR}/App.cpp"
-    "${GRAPHICS_SRC_DIR}/GLFWContext.cpp"
     "${GRAPHICS_SRC_DIR}/Image.cpp"
-    "${GRAPHICS_SRC_DIR}/Render.cpp"
+    "${GRAPHICS_SRC_DIR}/Renderer.cpp"
+    "${GRAPHICS_SRC_DIR}/RenderPlugin.cpp"
     "${GRAPHICS_SRC_DIR}/ShaderProgram.cpp"
     "${GRAPHICS_SRC_DIR}/Texture.cpp"
     "${GRAPHICS_SRC_DIR}/TextureManager.cpp"
@@ -41,8 +42,9 @@ add_library(
     "${UI_SRC_DIR}/KeyMappingsManager.cpp"
     "${UI_SRC_DIR}/ToolManager.cpp"
 
-    # ne_util
-
+    ## -- ne_plugin -- ##
+    # window
+    "${PLUGIN_SRC_DIR}/GLFWWindow.cpp"
 
 )
 
@@ -52,6 +54,7 @@ target_include_directories(ne_engine
     include
     ne_graphics/public/include
     ne_math/public/include
+    ne_plugin/public/include
     ne_input/public/include
     ne_system/public/include
     ne_ui/public/include
@@ -64,4 +67,4 @@ target_include_directories(ne_engine
     ne_ui/private/include
 )
 
-target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb_image imgui entt)
+target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb imgui entt)
