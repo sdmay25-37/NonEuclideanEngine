@@ -18,7 +18,7 @@ int main() {
     GLFWContext context = GLFWContext();
     context.initAll(SCREEN_WIDTH, SCREEN_HEIGHT, "NE_Squares_Test");
 
-    Square sq = Square(2.0f, 100);
+    Square sq = Square(.4, 100);
     // sq.offset({1.0, 1.0, 0});
     sq.to_3d_hyperbolic();
 

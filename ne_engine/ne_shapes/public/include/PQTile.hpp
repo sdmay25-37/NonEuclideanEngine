@@ -8,12 +8,13 @@ class PQTile : public Polygon
     public:
     PQTile() = default;
     PQTile(int p, int q);
+    PQTile(int p, int q, const Color& color);
     ~PQTile();
 
     private:
 
     void gen_vertices();
-    void get_indices();
+    void gen_indices();
 
     int p;
     int q;

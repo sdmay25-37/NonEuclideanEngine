@@ -5,8 +5,14 @@
 #include "CircleArcs.hpp"
 
 PQTile::PQTile(int p, int q)
-: Polygon(p)
+: PQTile(p, q, COLOR::RED)
 {
+}
+
+PQTile::PQTile(int p, int q, const Color& color)
+: Polygon(p, color)
+{
+
     float tile_check = (p - 2) * (q - 2);
 
     if(tile_check <= 4)
@@ -18,7 +24,7 @@ PQTile::PQTile(int p, int q)
     this->q = q;
 
     gen_vertices();
-    get_indices();
+    gen_indices();
 }
 
 PQTile::~PQTile()
@@ -51,11 +57,11 @@ void PQTile::gen_vertices()
         float y = d * std::sin((1 + 2 * i) * angleA);
         float z = 0;
 
-        vertices.emplace_back(Point(x, y, z, PointType::POINCARE));
+        vertices.emplace_back(Point(x, y, z, color, PointType::POINCARE));
     }
 }
 
-void PQTile::get_indices()
+void PQTile::gen_indices()
 {
     CircleArcs circleArcs = CircleArcs(*this);
     mesh = Mesh(vertices);

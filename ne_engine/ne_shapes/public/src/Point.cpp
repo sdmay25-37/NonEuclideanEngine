@@ -3,21 +3,31 @@
 #include "Point.hpp"
 
 Point::Point()
-: Point(0.0f, 0.0f, 0.0f, PointType::NONE)
+: Point(0.0f, 0.0f, 0.0f)
 {
 }
 
 Point::Point(float x, float y, float z)
-: Point(x, y, z, PointType::EUCLIDEAN)
+: Point(x, y, z, COLOR::BLACK)
+{
+}
+
+Point::Point(float x, float y, float z, const Color& color)
+: Point(x, y, z, color, PointType::EUCLIDEAN)
 {
 }
 
 Point::Point(float x, float y, float z, PointType point_type)
+: Point(x, y, z, COLOR::BLACK, point_type)
+{
+}
+Point::Point(float x, float y, float z, const Color& color, PointType point_type)
 {
     this->x = x;
     this->y = y;
     this->z = z;
     this->w = 1.0;
+    this->color = color;
     this->type = point_type;
 }
 
@@ -32,7 +42,7 @@ void Point::to_weirstrass()
     {
         float denom = (1 - std::pow(x, 2) - std::pow(y, 2));
 
-        z = std::sqrt(1 + std::pow(x, 2) + std::pow(y, 2)) / denom;
+        z = (1 + std::pow(x, 2) + std::pow(y, 2)) / denom;
         x = (2 * x) / denom;
         y = (2 * y) / denom;
 
@@ -58,11 +68,6 @@ void Point::to_poincare()
     {
         type = PointType::POINCARE;
     }
-}
-
-PointType Point::point_type()
-{
-    return type;
 }
 
 float Point::mag() const

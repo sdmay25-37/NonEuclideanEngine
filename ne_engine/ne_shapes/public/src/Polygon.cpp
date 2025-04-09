@@ -1,8 +1,15 @@
 #include "Polygon.hpp"
 
 Polygon::Polygon(int num_vertices)
+:Polygon(num_vertices, COLOR::RED)
 {
     vertices.reserve(num_vertices);
+}
+
+Polygon::Polygon(int num_vertices, const Color& color)
+{
+    vertices.reserve(num_vertices);
+    this->color = color;
 }
 
 Polygon::~Polygon()

@@ -28,7 +28,8 @@ void HypRotate::rotateX(float theta)
         {0, 0               , 0               , 1}
     );
 
-    r_matrix = r_x * r_matrix;
+    // GLM matrix multiplication is reversed
+    r_matrix = r_matrix * r_x;
 }
 
 void HypRotate::rotateY(float theta)
@@ -42,7 +43,8 @@ void HypRotate::rotateY(float theta)
         {0               , 0, 0               , 1}
     );
 
-    r_matrix = r_y * r_matrix;
+    // GLM matrix multiplication is reversed
+    r_matrix = r_matrix * r_y;
 }
 void HypRotate::rotateZ(float theta)
 {
@@ -55,7 +57,8 @@ void HypRotate::rotateZ(float theta)
         {0               , 0               , 0, 1}
     );
 
-    r_matrix = r_z * r_matrix;
+    // GLM matrix multiplication is reversed
+    r_matrix = r_matrix * r_z;
 }
 
 void HypRotate::offset(const glm::vec4& offset)

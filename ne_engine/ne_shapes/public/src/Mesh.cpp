@@ -1,6 +1,6 @@
 #include "Mesh.hpp"
 
-#define DEFAULT_POINTS 1000
+#define DEFAULT_POINTS 250
 
 // Mesh::Mesh()
 // : Mesh(DEFAULT_POINTS, DEFAULT_POINTS)
@@ -22,6 +22,7 @@ Mesh::Mesh(const unsigned int num_x_points, const unsigned int num_y_points,
 , MAX_X(max_x)
 , MIN_Y(min_y)
 , MAX_Y(max_y)
+, color(color)
 {
     gen_mesh();
 }
@@ -34,7 +35,9 @@ Mesh::Mesh(const std::vector<Point>& points)
 , MIN_Y(1.0f)
 , MAX_Y(-1.0f)
 {
-    for(unsigned int i = 0; i < points.size(); i++)
+    unsigned int i;
+
+    for(i = 0; i < points.size(); i++)
     {
         float x = points[i].x;
         float y = points[i].y;
@@ -57,6 +60,7 @@ Mesh::Mesh(const std::vector<Point>& points)
             MIN_Y = y;
         }
     }
+    color = points[i-1].color;
     gen_mesh();
 }
 
@@ -115,7 +119,7 @@ void Mesh::gen_mesh()
                 x = MIN_X + j * INCR_X;
             }
 
-            MeshPoint p = MeshPoint(x, y, 0.0f, i * NUM_Y_POINTS + j);
+            MeshPoint p = MeshPoint(x, y, 0.0f, color, i * NUM_Y_POINTS + j);
 
             if(i == 0)
             {

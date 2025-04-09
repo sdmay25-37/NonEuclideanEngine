@@ -9,7 +9,7 @@
 struct MeshPoint : public Point
 {
     MeshPoint() = default;
-    MeshPoint(float x, float y, float z, unsigned int index) : Point(x, y, z, PointType::POINCARE)
+    MeshPoint(float x, float y, float z, const Color& color, unsigned int index) : Point(x, y, z, color, PointType::POINCARE)
     {
         this->index = index;
     }
@@ -51,6 +51,7 @@ class Mesh
         this->MAX_X        = mesh.MAX_X;
         this->MIN_Y        = mesh.MIN_Y;
         this->MAX_Y        = mesh.MAX_Y;
+        this->color        = mesh.color;
 
         this->gen_mesh();
 
@@ -67,8 +68,8 @@ class Mesh
     float MIN_Y;
     float MAX_Y;
 
+    Color color;
     std::vector<MeshPoint> mesh_points;
-
 };
 
 #endif

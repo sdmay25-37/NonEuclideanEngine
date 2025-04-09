@@ -12,6 +12,7 @@ class Polygon
 
     Polygon();
     Polygon(int num_vertices);
+    Polygon(int num_vertices, const Color& color);
     ~Polygon();
 
     void to_weirstrass();
@@ -29,6 +30,7 @@ class Polygon
 
     protected:
     std::vector<Point> vertices;
+    Color color;
 
     Mesh mesh;
     std::vector<unsigned int> mesh_indices;
