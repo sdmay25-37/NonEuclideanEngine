@@ -40,16 +40,18 @@ private:
         // }
         // std::cout << "\n\n\n\n\n";
 
-        int map_size = 3;
+        int map_size = 170;
         float rect_size = 1.5 / map_size;
         float total_size = rect_size * map_size;
 
         int num_sprites = map_size * map_size;
 
-        for (int i = 1; i < tilemap->numTiles + 1; i++)
+        std::cout << num_sprites << "\n";
+        for (int i = 0; i < tilemap->numTiles; i++)
         {
+
             Tile tile = tilemap->getTileByID(i);
-            std::cout << tile.to_string() << "\n";
+            // std::cout << tile.to_string() << "\n";
             int x = tile.worldPosition.first;
             int y = tile.worldPosition.second;
             // int x = i % map_size;
@@ -72,14 +74,15 @@ private:
         }
     }
 
-    static void LoadTextures(Resource<TextureManager> texture_manager)
+    static void
+    LoadTextures(Resource<TextureManager> texture_manager)
     {
         texture_manager->LoadTextures("../res/textures");
     }
 
     static void LoadTiles(Resource<TileMap> tileMap)
     {
-        tileMap->loadTiles("../tests/json/testNear2.json");
+        tileMap->loadTiles("../tests/json/maze_output.json");
     }
 
     static void MoveCamera(Resource<Camera> camera)

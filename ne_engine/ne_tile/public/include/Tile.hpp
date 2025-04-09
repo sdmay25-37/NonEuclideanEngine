@@ -27,13 +27,13 @@ public:
         return _tileId == other._tileId;
     }
 
-    int8_t _tileId;
-    int8_t _leftTileId;
-    int8_t _rightTileId;
-    int8_t _upTileId;
-    int8_t _downTileId;
+    int _tileId;
+    int _leftTileId;
+    int _rightTileId;
+    int _upTileId;
+    int _downTileId;
     std::string _tileType; // Maybe change into an enum?
-    int8_t _spriteId;
+    int _spriteId;
     std::string sprite;
     std::vector<std::string> _properties;
 
@@ -42,10 +42,10 @@ public:
     // 1,0 is the tile left to tile at 0,0
     // 0,1 is the tile down from tile at 0,0
     //-1,-1 is tile not in map
-    std::pair<int8_t, int8_t> worldPosition;
+    std::pair<int, int> worldPosition;
 
     // Number of tiles away from currentTiles
-    //      TODO make sure this is current and if a new currentTile is chosen this either gets updated or store current Tile\\
+    //            TODO make sure this is current and if a new currentTile is chosen this either gets updated or store current Tile\\
     //may not be usefull?
     // use worldPosition to do this?
 

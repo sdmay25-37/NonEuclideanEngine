@@ -66,7 +66,7 @@ void TileMap::loadTiles(const std::string &filename)
 
         // Ensure each key exists before accessing it
         if (item.contains("tileId"))
-            tile._tileId = item["tileId"].get<int8_t>();
+            tile._tileId = item["tileId"].get<int>();
         else
             tile._tileId = -1; // Default invalid ID
 
@@ -91,30 +91,30 @@ void TileMap::loadTiles(const std::string &filename)
             tile._properties = {}; // Empty properties if missing
 
         if (item.contains("upTileId"))
-            tile._upTileId = item["upTileId"].get<int8_t>();
+            tile._upTileId = item["upTileId"].get<int>();
         else
             tile._upTileId = -1;
 
         if (item.contains("downTileId"))
-            tile._downTileId = item["downTileId"].get<int8_t>();
+            tile._downTileId = item["downTileId"].get<int>();
         else
             tile._downTileId = -1;
 
         if (item.contains("leftTileId"))
-            tile._leftTileId = item["leftTileId"].get<int8_t>();
+            tile._leftTileId = item["leftTileId"].get<int>();
         else
             tile._leftTileId = -1;
 
         if (item.contains("rightTileId"))
-            tile._rightTileId = item["rightTileId"].get<int8_t>();
+            tile._rightTileId = item["rightTileId"].get<int>();
         else
             tile._rightTileId = -1;
 
         // Parse world position if present
         if (item.contains("worldPosition") && item["worldPosition"].is_array() && item["worldPosition"].size() == 2)
         {
-            tile.worldPosition.first = item["worldPosition"][0].get<int8_t>();
-            tile.worldPosition.second = item["worldPosition"][1].get<int8_t>();
+            tile.worldPosition.first = item["worldPosition"][0].get<int>();
+            tile.worldPosition.second = item["worldPosition"][1].get<int>();
         }
         else
         {
@@ -218,7 +218,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
     return nearTiles;
 }
 
-Tile TileMap::getTileByID(uint8_t tileId)
+Tile TileMap::getTileByID(int tileId)
 {
     // Check if the tileId exists in the tileList
     auto it = _tileList.find(tileId);
@@ -235,7 +235,7 @@ Tile TileMap::getTileByID(uint8_t tileId)
     return Tile(); // Assuming the default constructor of Tile initializes a valid empty object
 }
 
-Tile TileMap::getTileInRenderedList(uint8_t tileId)
+Tile TileMap::getTileInRenderedList(int tileId)
 {
     auto it = std::find_if(_renderedTileList.begin(), _renderedTileList.end(),
                            [&](const Tile &tile)

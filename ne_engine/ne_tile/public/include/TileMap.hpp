@@ -32,9 +32,9 @@ public:
     // TODO: add world coordinates
     // TODO: add relation to currentTile
 
-    Tile getTileByID(uint8_t tileId);
+    Tile getTileByID(int tileId);
 
-    Tile getTileInRenderedList(uint8_t tileID);
+    Tile getTileInRenderedList(int tileID);
 
     int numTiles;
 
