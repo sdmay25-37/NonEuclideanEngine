@@ -22,9 +22,12 @@ public:
     }
 
 private:
+    // used to render entire map
     static void CreateTiles(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
         std::srand(std::time(nullptr));
+
+        // map is 162 * 162 (image is 162 by 162)
         int map_size = 170;
         float rect_size = 1.5 / map_size;
         float total_size = rect_size * map_size;
@@ -53,12 +56,15 @@ private:
             model_mat = glm::scale(model_mat, scale);
 
             const auto entity = registry.create();
+            // tile.sprite is imagename.png, if imagename.png is not in res/textures might throw error
+            // if tile.sprite is not specificed in json, uses cy.png
             auto texture_result = texture_manager->getTexture(tile.sprite);
             AtlasedTexture texture = texture_result.value();
             registry.emplace<AtlasSprite>(entity, model_mat, texture);
         }
     }
 
+    // Used to render tiles in a specific distance from a tile
     static void CreateTiles2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
         std::srand(std::time(nullptr));
@@ -78,7 +84,7 @@ private:
             // Tile tile = tilemap->getTileInRenderedList(i);
             //  std::cout << tile.to_string() << "\n";
 
-            // TODO get bottom left most tile in nearTiles
+            // Centers the rendering position so that the current tile is in middle of map
             int x = tile.relationMappingToCurrentTile.first + (map_size / 2);
             int y = tile.relationMappingToCurrentTile.second + (map_size / 2);
             // int x = i % map_size;
@@ -109,9 +115,11 @@ private:
 
     static void LoadTiles(Resource<TileMap> tileMap)
     {
+        // Where Tiles are loaded from
         tileMap->loadTiles("../tests/json/maze_output.json");
     }
 
+    // TODO THIS DOES NOT WORK
     static void MoveCamera(Resource<Camera> camera)
     {
         static float count = 0;
