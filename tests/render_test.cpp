@@ -8,18 +8,21 @@
 #include "ne_plugin/window/GLFWWindow.hpp"
 #include "ne_plugin/DefaultPlugins.hpp"
 
+#include "TileMap.hpp"
+#include "Tile.hpp"
+
 class WorldPlugin final : public Plugin
 {
 public:
     void Build(App &app) override
     {
         app
-            .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles).After(LoadTextures)));
+            .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles).After(LoadTextures).After(LoadTiles)));
         //.AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(MoveCamera)));
     }
 
 private:
-    static void CreateTiles(entt::registry &registry, Resource<TextureManager> texture_manager)
+    static void CreateTiles(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
         std::srand(std::time(nullptr));
         auto texture_result = texture_manager->getTexture("floor2.jpg");
@@ -27,6 +30,15 @@ private:
 
         auto texture_result2 = texture_manager->getTexture("wall.jpg");
         AtlasedTexture texture2 = texture_result2.value();
+
+        // TODO Use tile maps
+        std::vector<std::string> info = tilemap->getTileMapInformation();
+
+        for (int i = 0; i < info.size(); i++)
+        {
+            std::cout << info.at(i);
+        }
+        std::cout << "\n\n\n\n\n";
 
         int map_size = 10;
         float rect_size = 1.5 / map_size;
@@ -68,6 +80,11 @@ private:
         texture_manager->LoadTextures("../res/textures");
     }
 
+    static void LoadTiles(Resource<TileMap> tileMap)
+    {
+        tileMap->loadTiles("../tests/json/testNear.json");
+    }
+
     static void MoveCamera(Resource<Camera> camera)
     {
         static float count = 0;
@@ -99,6 +116,7 @@ int main()
         .AddPlugin<DefaultPlugins>()
         .AddPlugin<WorldPlugin>()
         .InsertResource<TextureManager>()
+        .InsertResource<TileMap>()
         .InsertResource<Camera>(camera_pos, camera_up, proj_mat)
         .Run();
 

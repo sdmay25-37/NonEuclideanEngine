@@ -123,6 +123,9 @@ void TileMap::loadTiles(const std::string &filename)
 
         _tileList[tile._tileId] = tile;
     }
+
+    std::cout << "\n"
+              << "Tiles Loaded" << "\n";
 }
 
 // Used for testing
@@ -224,7 +227,6 @@ Tile TileMap::getTileByID(uint8_t tileId)
 
     // TODO FIGURE OUT WHAT TO SEND BACK
     return Tile(); // Assuming the default constructor of Tile initializes a valid empty object
-
 }
 
 Tile TileMap::getTileInRenderedList(uint8_t tileId)

@@ -1,7 +1,13 @@
 #include <iostream>
-#include "ne_engine.hpp"
+
+#include "App.hpp"
+#include "RenderPlugin.hpp"
+#include "ne_plugin/input/InputPlugin.hpp"
+#include "ne_plugin/window/GLFWWindow.hpp"
+#include "ne_plugin/DefaultPlugins.hpp"
 #include "TileMap.hpp"
 #include "Tile.hpp"
+#include <stb/stb_image.h>
 
 int main()
 {

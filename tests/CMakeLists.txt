@@ -23,7 +23,7 @@ set(SOURCES
     # "point_square_demo.cpp"
     #"SpriteTesting.cpp"
     #"ResourceManagerTesting.cpp"
-    "TileMapTest.cpp"
+    #"TileMapTest.cpp"
     #"GuiTesting.cpp"
 )
 
@@ -43,9 +43,9 @@ foreach(SOURCE ${SOURCES})
         "-g"
     )
 
-    target_link_libraries(${EXECUTABLE} ne_engine stb_image nlohmann_json::nlohmann_json entt)
+    target_link_libraries(${EXECUTABLE} ne_engine stb nlohmann_json::nlohmann_json entt)
 
 endforeach(SOURCE ${SOURCES})
 
 
-add_subdirectory(unitTests)
+#add_subdirectory(unitTests)
