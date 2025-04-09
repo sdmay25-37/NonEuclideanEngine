@@ -2,11 +2,13 @@
 #define NE_ENGINE_HPP
 
 // ne_gl
-#include "Engine.hpp"
-#include "GLFWContext.hpp"
+// #include "Engine.hpp"
+// #include "GLFWContext.hpp"
 #include "ShaderProgram.hpp"
 #include "Sprite.hpp"
 #include "Animation.hpp"
+#include "TileMap.hpp"
+#include <vector>
 
 // ne_input
 #include "Input.hpp"
@@ -15,6 +17,6 @@
 #include "HypRotate.hpp"
 
 // ne_resmanager
-#include "ResourceManager.hpp"
+// #include "ResourceManager.hpp"
 
 #endif

@@ -28,7 +28,7 @@ private:
 		if constexpr(std::is_same_v<T, entt::registry&>) {
 			return std::ref(registry);
 		} else {
-			return resource_manager.get<typename T::value_type>();
+			return resource_manager.Get<typename T::value_type>();
 		}
 	}
 };

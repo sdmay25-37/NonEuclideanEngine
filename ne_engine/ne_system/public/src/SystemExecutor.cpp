@@ -7,13 +7,15 @@ class SingleThreadedExecutor final : public SystemExecutor {
 public:
 	explicit SingleThreadedExecutor(entt::registry& registry, ResourceManager& resource_manager)
 		: SystemExecutor(registry, resource_manager) {}
-	void Execute(SystemSchedule& schedule) const override;
+	void Execute(std::vector<SystemSchedule>& schedules) const override;
 };
 
-void SingleThreadedExecutor::Execute(SystemSchedule& schedule) const {
-	auto schedule_list = schedule.GetCachedSchedule();
-	for(const auto system : schedule_list) {
-		system->Invoke(_registry, _resource_manager);
+void SingleThreadedExecutor::Execute(std::vector<SystemSchedule>& schedules) const {
+	for (auto& schedule : schedules) {
+		auto schedule_list = schedule.GetCachedSchedule();
+		for(const auto system : schedule_list) {
+			system->Invoke(_registry, _resource_manager);
+		}
 	}
 }
 
@@ -24,10 +26,10 @@ class MultiThreadedExecutor final : public SystemExecutor {
 public:
 	explicit MultiThreadedExecutor(entt::registry& registry, ResourceManager& resource_manager)
 		: SystemExecutor(registry, resource_manager) {}
-	void Execute(SystemSchedule& schedule) const override;
+	void Execute(std::vector<SystemSchedule>& schedules) const override;
 };
 
-void MultiThreadedExecutor::Execute(SystemSchedule& schedule) const {
+void MultiThreadedExecutor::Execute(std::vector<SystemSchedule>& schedules) const {
 	// TODO
 }
 

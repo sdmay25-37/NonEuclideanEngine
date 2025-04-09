@@ -1,0 +1,147 @@
+[
+  {
+    "tileId": 1,
+    "upTileId": -1,
+    "downTileId": 4,
+    "leftTileId": -1,
+    "rightTileId": 2,
+    "tileType": "grass",
+    "spriteId": 1,
+    "properties": [
+      "walkable",
+      "green"
+    ],
+    "worldPosition": [
+      0,
+      0
+    ],
+    "relationToCurrentTile": 0,
+    "sprite": "floor2.jpg"
+  },
+  {
+    "tileId": 2,
+    "upTileId": -1,
+    "downTileId": 5,
+    "leftTileId": 1,
+    "rightTileId": 3,
+    "tileType": "dirt",
+    "spriteId": 2,
+    "properties": [
+      "walkable",
+      "brown"
+    ],
+    "sprite": "floor2.jpg"
+  },
+  {
+    "tileId": 3,
+    "upTileId": -1,
+    "downTileId": 6,
+    "leftTileId": 2,
+    "rightTileId": -1,
+    "tileType": "water",
+    "spriteId": 3,
+    "properties": [
+      "non-walkable",
+      "blue"
+    ],
+    "sprite": "wall.jpg"
+  },
+  {
+    "tileId": 4,
+    "upTileId": 1,
+    "downTileId": 7,
+    "leftTileId": 10,
+    "rightTileId": 5,
+    "tileType": "sand",
+    "spriteId": 4,
+    "properties": [
+      "walkable",
+      "yellow"
+    ],
+    "sprite": "floor2.jpg"
+  },
+  {
+    "tileId": 5,
+    "upTileId": 2,
+    "downTileId": 8,
+    "leftTileId": 4,
+    "rightTileId": 6,
+    "tileType": "stone",
+    "spriteId": 5,
+    "properties": [
+      "non-walkable",
+      "gray"
+    ],
+    "sprite": "wall.jpg"
+  },
+  {
+    "tileId": 6,
+    "upTileId": 3,
+    "downTileId": 9,
+    "leftTileId": 5,
+    "rightTileId": -1,
+    "tileType": "grass",
+    "spriteId": 6,
+    "properties": [
+      "walkable",
+      "green"
+    ],
+    "sprite": "floor2.jpg"
+  },
+  {
+    "tileId": 7,
+    "upTileId": 4,
+    "downTileId": -1,
+    "leftTileId": -1,
+    "rightTileId": 8,
+    "tileType": "dirt",
+    "spriteId": 7,
+    "properties": [
+      "walkable",
+      "brown"
+    ],
+    "sprite": "floor2.jpg"
+  },
+  {
+    "tileId": 8,
+    "upTileId": 5,
+    "downTileId": -1,
+    "leftTileId": 7,
+    "rightTileId": 9,
+    "tileType": "sand",
+    "spriteId": 8,
+    "properties": [
+      "walkable",
+      "yellow"
+    ],
+    "sprite": "floor2.jpg"
+  },
+  {
+    "tileId": 9,
+    "upTileId": 6,
+    "downTileId": -1,
+    "leftTileId": 8,
+    "rightTileId": -1,
+    "tileType": "stone",
+    "spriteId": 9,
+    "properties": [
+      "non-walkable",
+      "gray"
+    ],
+    "sprite": "wall.jpg"
+  },
+  {
+    "tileId": 10,
+    "upTileId": -1,
+    "downTileId": -1,
+    "leftTileId": -1,
+    "rightTileId": 4,
+    "tileType": "stone",
+    "spriteId": 9,
+    "properties": [
+      "non-walkable",
+      "gray"
+    ],
+    "sprite": "wall.jpg"
+  }
+]

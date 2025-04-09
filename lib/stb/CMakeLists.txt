@@ -1,0 +1,3 @@
+add_library(stb STATIC "public/src/stb.c")
+
+target_include_directories(stb PUBLIC "public/include" PRIVATE "private/include")
