@@ -13,29 +13,36 @@
 
 #include "ne_engine.hpp"
 #include "Triangle.hpp"
+#include <ne_system/Resource.hpp>
+#include <Texture.hpp>
+#include "JSONLoader.hpp"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 
 // settings
 constexpr unsigned int SCREEN_WIDTH = 800;
 constexpr unsigned int SCREEN_HEIGHT = 600;
 constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 
-struct Vertex {
-	float x, y, z;
+struct Vertex
+{
+    float x, y, z;
     float u, v;
 };
 
-int main() {
+int main()
+{
     // GLFW Init
-    if (!glfwInit()) {
+    if (!glfwInit())
+    {
         std::cout << "GLFW Failed to initialize!" << std::endl;
     }
 
     // Create Window
-    GLFWwindow* window = glfwCreateWindow(SCREEN_HEIGHT, SCREEN_WIDTH, "What tf is going on", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(SCREEN_HEIGHT, SCREEN_WIDTH, "What tf is going on", NULL, NULL);
     // If fail
-    if (!window) {
+    if (!window)
+    {
         std::cout << "WHAT DID YOU DO" << std::endl;
     }
 
@@ -57,9 +64,8 @@ int main() {
     Triangle newTriangle(vertArr, 0.05f);
     Input i;
 
-
     JSONLoader loader("../tests/bindings/example_bindings.json");
-    std::vector<std::vector <std::pair <std::string, int>>> bindings = loader.processFileArray();
+    std::vector<std::vector<std::pair<std::string, int>>> bindings = loader.processFileArray();
 
     Input input(window);
 
@@ -73,18 +79,21 @@ int main() {
 
     ResourceManager resManager("../res/textures");
     std::weak_ptr<Texture> textureRef = resManager.getResource<Texture>("tiles.png");
-    if(auto texture = textureRef.lock()) {
+    if (auto texture = textureRef.lock())
+    {
         std::cout << "Texture ID: " << texture->getId() << std::endl;
-    } else {
+    }
+    else
+    {
         std::cout << "Texture failed to load!" << std::endl;
     }
 
     auto shaderProgramResult = ShaderProgram::create(
         "../shaders/color.vert",
-        "../shaders/color.frag"
-    );
+        "../shaders/color.frag");
 
-    if(shaderProgramResult.is_error()) {
+    if (shaderProgramResult.is_error())
+    {
         std::cerr << shaderProgramResult.error() << std::endl;
         return -1;
     }
@@ -102,19 +111,19 @@ int main() {
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid*) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid *)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*) (4 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid *)(4 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
-    input.bindKeyPress("QUIT", [&window]() {
-        glfwSetWindowShouldClose(window, true);
-    });
+    input.bindKeyPress("QUIT", [&window]()
+                       { glfwSetWindowShouldClose(window, true); });
 
     bool set = false;
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window))
+    {
 
         glfwWaitEvents();
         glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
@@ -126,17 +135,16 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
-
     }
 
     glfwTerminate();
-   
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
     glViewport(0, 0, width, height);
 }
 
-void shiftCameraLeft() {
-
+void shiftCameraLeft()
+{
 }
