@@ -1,3 +1,5 @@
+#define GLM_FORCE_CTOR_INIT
+
 #include <glad/glad.h>
 
 #include <GLFW/glfw3.h>
@@ -213,7 +215,7 @@ int main()
         glfwSwapBuffers(window);
         glfwPollEvents();
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        // std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
         ctr = (ctr + 1) % ((int)slime.getAnimationData().numFramesInAnimation);
     }

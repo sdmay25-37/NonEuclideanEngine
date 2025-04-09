@@ -7,6 +7,8 @@
 #include "ShaderProgram.hpp"
 #include "Sprite.hpp"
 #include "Animation.hpp"
+#include "TileMap.hpp"
+#include <vector>
 
 // ne_input
 #include "Input.hpp"

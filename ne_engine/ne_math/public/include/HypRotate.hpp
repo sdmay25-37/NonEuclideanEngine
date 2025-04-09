@@ -1,11 +1,12 @@
 #ifndef HYPROTATE_HPP
 #define HYPROTATE_HPP
 
+#define GLM_FORCE_CTOR_INIT
 #include <glm/glm.hpp>
 
 class HypRotate
 {
-    public:
+public:
     HypRotate();
     HypRotate(bool input_radian);
     ~HypRotate();
@@ -23,7 +24,7 @@ class HypRotate
         return vector_new;
     }
 
-    private:
+private:
     float thetaConversion(float theta);
 
     glm::mat4 r_matrix;
