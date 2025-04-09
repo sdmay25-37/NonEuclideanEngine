@@ -63,9 +63,9 @@ private:
     {
         std::srand(std::time(nullptr));
 
-        Tile currentTile = tilemap->getTileByID(90);
+        Tile currentTile = tilemap->getTileByID(6400);
 
-        std::vector<Tile> nearTiles = tilemap->getNearTiles(currentTile, 5);
+        std::vector<Tile> nearTiles = tilemap->getNearTiles(currentTile, 20);
         int map_size = 20;
         float rect_size = 1.5 / map_size;
         float total_size = rect_size * map_size;
