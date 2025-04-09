@@ -45,12 +45,13 @@ public:
     std::pair<int, int> worldPosition;
 
     // Number of tiles away from currentTiles
-    //            TODO make sure this is current and if a new currentTile is chosen this either gets updated or store current Tile\\
+    //             TODO make sure this is current and if a new currentTile is chosen this either gets updated or store current Tile\\
     //may not be usefull?
     // use worldPosition to do this?
 
     // Currently only has how many tiles away from currentTile
     int8_t relationToCurrentTile;
+    std::pair<int, int> relationMappingToCurrentTile;
 
     // Used for testing
     std::string to_string() const;

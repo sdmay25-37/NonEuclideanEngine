@@ -159,6 +159,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
     // Start with the current tile
     visitedTiles[currentTile._tileId] = currentTile;
     currentTile.relationToCurrentTile = 0;
+    currentTile.relationMappingToCurrentTile = {0, 0};
     nearTiles.push_back(currentTile);
 
     std::queue<std::pair<Tile, int>> queue; // Queue holds tile and depth
@@ -182,6 +183,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile upTile = getTileByID(tile._upTileId);
             visitedTiles[upTile._tileId] = upTile;
             upTile.relationToCurrentTile = depth + 1;
+            upTile.relationMappingToCurrentTile = {upTile.worldPosition.first - currentTile.worldPosition.first, upTile.worldPosition.second - currentTile.worldPosition.second};
             nearTiles.push_back(upTile);
             queue.push({upTile, depth + 1});
         }
@@ -191,6 +193,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile downTile = getTileByID(tile._downTileId);
             visitedTiles[downTile._tileId] = downTile;
             downTile.relationToCurrentTile = depth + 1;
+            downTile.relationMappingToCurrentTile = {downTile.worldPosition.first - currentTile.worldPosition.first, downTile.worldPosition.second - currentTile.worldPosition.second};
             nearTiles.push_back(downTile);
             queue.push({downTile, depth + 1});
         }
@@ -200,6 +203,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile leftTile = getTileByID(tile._leftTileId);
             visitedTiles[leftTile._tileId] = leftTile;
             leftTile.relationToCurrentTile = depth + 1;
+            leftTile.relationMappingToCurrentTile = {leftTile.worldPosition.first - currentTile.worldPosition.first, leftTile.worldPosition.second - currentTile.worldPosition.second};
             nearTiles.push_back(leftTile);
             queue.push({leftTile, depth + 1});
         }
@@ -209,6 +213,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
             Tile rightTile = getTileByID(tile._rightTileId);
             visitedTiles[rightTile._tileId] = rightTile;
             rightTile.relationToCurrentTile = depth + 1;
+            rightTile.relationMappingToCurrentTile = {rightTile.worldPosition.first - currentTile.worldPosition.first, rightTile.worldPosition.second - currentTile.worldPosition.second};
             nearTiles.push_back(rightTile);
             queue.push({rightTile, depth + 1});
         }

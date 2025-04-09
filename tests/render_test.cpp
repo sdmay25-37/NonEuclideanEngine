@@ -17,7 +17,7 @@ public:
     void Build(App &app) override
     {
         app
-            .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles).After(LoadTextures).After(LoadTiles)));
+            .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles2).After(LoadTextures).After(LoadTiles)));
         //.AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(MoveCamera)));
     }
 
@@ -25,21 +25,6 @@ private:
     static void CreateTiles(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
         std::srand(std::time(nullptr));
-        auto texture_result = texture_manager->getTexture("floor2.jpg");
-        AtlasedTexture texture = texture_result.value();
-
-        auto texture_result2 = texture_manager->getTexture("wall.jpg");
-        AtlasedTexture texture2 = texture_result2.value();
-
-        // TODO Use tile maps
-        std::vector<std::string> info = tilemap->getTileMapInformation();
-
-        // for (int i = 0; i < info.size(); i++)
-        // {
-        //     std::cout << info.at(i);
-        // }
-        // std::cout << "\n\n\n\n\n";
-
         int map_size = 170;
         float rect_size = 1.5 / map_size;
         float total_size = rect_size * map_size;
@@ -54,6 +39,48 @@ private:
             // std::cout << tile.to_string() << "\n";
             int x = tile.worldPosition.first;
             int y = tile.worldPosition.second;
+            // int x = i % map_size;
+            // int y = i / map_size;
+
+            float rect_x = x * rect_size - total_size / 2.0f + rect_size / 2.0f;
+            float rect_y = y * rect_size - total_size / 2.0f + rect_size / 2.0f;
+
+            glm::vec3 position(rect_x, rect_y, 0.0);
+            glm::vec3 scale(rect_size, rect_size, 1.0);
+
+            glm::mat4 model_mat(1.0);
+            model_mat = glm::translate(model_mat, position);
+            model_mat = glm::scale(model_mat, scale);
+
+            const auto entity = registry.create();
+            auto texture_result = texture_manager->getTexture(tile.sprite);
+            AtlasedTexture texture = texture_result.value();
+            registry.emplace<AtlasSprite>(entity, model_mat, texture);
+        }
+    }
+
+    static void CreateTiles2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
+    {
+        std::srand(std::time(nullptr));
+
+        Tile currentTile = tilemap->getTileByID(90);
+
+        std::vector<Tile> nearTiles = tilemap->getNearTiles(currentTile, 5);
+        int map_size = 20;
+        float rect_size = 1.5 / map_size;
+        float total_size = rect_size * map_size;
+
+        int num_sprites = map_size * map_size;
+
+        std::cout << num_sprites << "\n";
+        for (const Tile &tile : nearTiles)
+        {
+            // Tile tile = tilemap->getTileInRenderedList(i);
+            //  std::cout << tile.to_string() << "\n";
+
+            // TODO get bottom left most tile in nearTiles
+            int x = tile.relationMappingToCurrentTile.first + (map_size / 2);
+            int y = tile.relationMappingToCurrentTile.second + (map_size / 2);
             // int x = i % map_size;
             // int y = i / map_size;
 
