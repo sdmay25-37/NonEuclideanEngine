@@ -21,6 +21,7 @@ std::string Tile::to_string() const
         << ", Left: " << static_cast<int>(_leftTileId) << ", Right: " << static_cast<int>(_rightTileId) << "\n"
         << ",World Position: (" << static_cast<int>(worldPosition.first) << "," << static_cast<int>(worldPosition.second) << ")\n"
         << ", Distance from Current Tile: " << static_cast<int>(relationToCurrentTile) << "\n"
+        << ",Sprite: " << static_cast<std::string>(sprite) << "\n"
         << "Properties: ";
 
     for (const auto &prop : _properties)

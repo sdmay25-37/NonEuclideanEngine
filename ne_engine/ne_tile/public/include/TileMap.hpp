@@ -15,7 +15,8 @@
 
 #include "Tile.hpp"
 
-class TileMap {
+class TileMap
+{
 public:
     TileMap() = default;
     TileMap(std::unordered_map<int, Tile> tileList, std::vector<Tile> seedList);
@@ -35,9 +36,12 @@ public:
 
     Tile getTileInRenderedList(uint8_t tileID);
 
+    int numTiles;
+
     // TODO: Figure out how to buffer tiles from _renderedTileList
 
-    std::vector<std::string> getTileMapInformation(); // Returns a vector of pairs of a <direction string, texture classification>
+    std::vector<std::string>
+    getTileMapInformation(); // Returns a vector of pairs of a <direction string, texture classification>
 
 private:
     std::unordered_map<int, Tile> _tileList;

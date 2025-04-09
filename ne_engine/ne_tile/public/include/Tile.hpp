@@ -34,6 +34,7 @@ public:
     int8_t _downTileId;
     std::string _tileType; // Maybe change into an enum?
     int8_t _spriteId;
+    std::string sprite;
     std::vector<std::string> _properties;
 
     // world position coordinates
@@ -44,7 +45,7 @@ public:
     std::pair<int8_t, int8_t> worldPosition;
 
     // Number of tiles away from currentTiles
-    //     TODO make sure this is current and if a new currentTile is chosen this either gets updated or store current Tile\\
+    //      TODO make sure this is current and if a new currentTile is chosen this either gets updated or store current Tile\\
     //may not be usefull?
     // use worldPosition to do this?
 

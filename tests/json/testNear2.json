@@ -13,7 +13,7 @@
     ],
     "worldPosition": [
       0,
-      0
+      2
     ],
     "relationToCurrentTile": 0,
     "sprite": "floor2.jpg"
@@ -30,6 +30,11 @@
       "walkable",
       "brown"
     ],
+    "worldPosition": [
+      1,
+      2
+    ],
+    "relationToCurrentTile": 0,
     "sprite": "floor2.jpg"
   },
   {
@@ -44,6 +49,11 @@
       "non-walkable",
       "blue"
     ],
+    "worldPosition": [
+      2,
+      2
+    ],
+    "relationToCurrentTile": 0,
     "sprite": "wall.jpg"
   },
   {
@@ -58,6 +68,11 @@
       "walkable",
       "yellow"
     ],
+    "worldPosition": [
+      0,
+      1
+    ],
+    "relationToCurrentTile": 0,
     "sprite": "floor2.jpg"
   },
   {
@@ -72,6 +87,11 @@
       "non-walkable",
       "gray"
     ],
+    "worldPosition": [
+      1,
+      1
+    ],
+    "relationToCurrentTile": 0,
     "sprite": "wall.jpg"
   },
   {
@@ -86,6 +106,11 @@
       "walkable",
       "green"
     ],
+    "worldPosition": [
+      2,
+      1
+    ],
+    "relationToCurrentTile": 0,
     "sprite": "floor2.jpg"
   },
   {
@@ -100,6 +125,11 @@
       "walkable",
       "brown"
     ],
+    "worldPosition": [
+      0,
+      0
+    ],
+    "relationToCurrentTile": 0,
     "sprite": "floor2.jpg"
   },
   {
@@ -114,6 +144,11 @@
       "walkable",
       "yellow"
     ],
+    "worldPosition": [
+      1,
+      0
+    ],
+    "relationToCurrentTile": 0,
     "sprite": "floor2.jpg"
   },
   {
@@ -128,20 +163,11 @@
       "non-walkable",
       "gray"
     ],
-    "sprite": "wall.jpg"
-  },
-  {
-    "tileId": 10,
-    "upTileId": -1,
-    "downTileId": -1,
-    "leftTileId": -1,
-    "rightTileId": 4,
-    "tileType": "stone",
-    "spriteId": 9,
-    "properties": [
-      "non-walkable",
-      "gray"
+    "worldPosition": [
+      0,
+      2
     ],
+    "relationToCurrentTile": 0,
     "sprite": "wall.jpg"
   }
 ]

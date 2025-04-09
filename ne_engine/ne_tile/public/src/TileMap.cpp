@@ -58,6 +58,7 @@ void TileMap::loadTiles(const std::string &filename)
         throw std::length_error("JSON File empty");
     }
 
+    numTiles = tileData.size();
     for (const auto &item : tileData)
     {
 
@@ -73,6 +74,11 @@ void TileMap::loadTiles(const std::string &filename)
             tile._spriteId = item["spriteId"].get<int8_t>();
         else
             tile._spriteId = -1; // Default sprite ID
+
+        if (item.contains("sprite"))
+            tile.sprite = item["sprite"].get<std::string>();
+        else
+            tile.sprite = "cy.jpg"; // Default sprite ID
 
         if (item.contains("tileType"))
             tile._tileType = item["tileType"].get<std::string>();

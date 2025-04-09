@@ -34,23 +34,26 @@ private:
         // TODO Use tile maps
         std::vector<std::string> info = tilemap->getTileMapInformation();
 
-        for (int i = 0; i < info.size(); i++)
-        {
-            std::cout << info.at(i);
-        }
-        std::cout << "\n\n\n\n\n";
+        // for (int i = 0; i < info.size(); i++)
+        // {
+        //     std::cout << info.at(i);
+        // }
+        // std::cout << "\n\n\n\n\n";
 
-        int map_size = 10;
+        int map_size = 3;
         float rect_size = 1.5 / map_size;
         float total_size = rect_size * map_size;
 
         int num_sprites = map_size * map_size;
 
-        for (int i = 0; i < num_sprites; i++)
+        for (int i = 1; i < tilemap->numTiles + 1; i++)
         {
-
-            int x = i % map_size;
-            int y = i / map_size;
+            Tile tile = tilemap->getTileByID(i);
+            std::cout << tile.to_string() << "\n";
+            int x = tile.worldPosition.first;
+            int y = tile.worldPosition.second;
+            // int x = i % map_size;
+            // int y = i / map_size;
 
             float rect_x = x * rect_size - total_size / 2.0f + rect_size / 2.0f;
             float rect_y = y * rect_size - total_size / 2.0f + rect_size / 2.0f;
@@ -63,15 +66,9 @@ private:
             model_mat = glm::scale(model_mat, scale);
 
             const auto entity = registry.create();
-
-            if (y % 2 == 0)
-            {
-                registry.emplace<AtlasSprite>(entity, model_mat, texture2);
-            }
-            else
-            {
-                registry.emplace<AtlasSprite>(entity, model_mat, texture);
-            }
+            auto texture_result = texture_manager->getTexture(tile.sprite);
+            AtlasedTexture texture = texture_result.value();
+            registry.emplace<AtlasSprite>(entity, model_mat, texture);
         }
     }
 
@@ -82,7 +79,7 @@ private:
 
     static void LoadTiles(Resource<TileMap> tileMap)
     {
-        tileMap->loadTiles("../tests/json/testNear.json");
+        tileMap->loadTiles("../tests/json/testNear2.json");
     }
 
     static void MoveCamera(Resource<Camera> camera)
