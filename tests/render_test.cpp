@@ -10,6 +10,7 @@
 
 #include "TileMap.hpp"
 #include "Tile.hpp"
+#include "Input.hpp"
 
 class WorldPlugin final : public Plugin
 {
@@ -17,8 +18,8 @@ public:
     void Build(App &app) override
     {
         app
-            .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles2).After(LoadTextures).After(LoadTiles)));
-        //.AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(MoveCamera)));
+            .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles).After(LoadTextures).After(LoadTiles).After(BindInput)))
+            .AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(MoveCamera)));
     }
 
 private:
@@ -29,7 +30,7 @@ private:
 
         // map is 162 * 162 (image is 162 by 162)
         int map_size = 170;
-        float rect_size = 1.5 / map_size;
+        float rect_size = 10.0 / map_size;
         float total_size = rect_size * map_size;
 
         int num_sprites = map_size * map_size;
@@ -119,18 +120,33 @@ private:
         tileMap->loadTiles("../tests/json/maze_output.json");
     }
 
-    // TODO THIS DOES NOT WORK
-    static void MoveCamera(Resource<Camera> camera)
+    static void MoveCamera(Resource<Camera> camera, Resource<Input> input)
     {
-        static float count = 0;
-        static long speed = 0;
+        const float speed = 0.02f;
 
-        count += std::abs(2.0 * std::sin(++speed / 50.0));
+        // Prioritize only one direction at a time
+        if (input->isKeyPressed(GLFW_KEY_W))
+        {
+            camera->position.y += speed;
+        }
+        else if (input->isKeyPressed(GLFW_KEY_A))
+        {
+            camera->position.x -= speed;
+        }
+        else if (input->isKeyPressed(GLFW_KEY_S))
+        {
+            camera->position.y -= speed;
+        }
+        else if (input->isKeyPressed(GLFW_KEY_D))
+        {
+            camera->position.x += speed;
+        }
+    }
 
-        float x = 0.5 * std::sin(count / 50.0);
-        float y = 0.5 * std::cos(count / 50.0);
-
-        camera->position = glm::vec3(x, y, 2.0f);
+    static void BindInput(Resource<Input> input, Resource<Window> window)
+    {
+        auto glfw_window = static_cast<GLFWwindow *>(window->get()); // Using get() to access GLFWwindow*
+        input->BindWindow(glfw_window);
     }
 };
 
@@ -153,6 +169,7 @@ int main()
         .InsertResource<TextureManager>()
         .InsertResource<TileMap>()
         .InsertResource<Camera>(camera_pos, camera_up, proj_mat)
+        .InsertResource<Input>()
         .Run();
 
     glfwTerminate();

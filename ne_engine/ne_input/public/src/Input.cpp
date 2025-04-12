@@ -5,6 +5,7 @@
 #include "Input.hpp"
 
 #include <iostream>
+#include <ne_plugin/window/Window.hpp>
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 
@@ -14,6 +15,13 @@ Input::Input()
 }
 
 Input::Input(GLFWwindow *window)
+{
+	_window = window;
+	glfwSetWindowUserPointer(window, this);
+	glfwSetKeyCallback(window, key_callback);
+}
+
+void Input::BindWindow(GLFWwindow *window)
 {
 	_window = window;
 	glfwSetWindowUserPointer(window, this);

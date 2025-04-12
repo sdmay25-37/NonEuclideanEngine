@@ -6,7 +6,8 @@
 
 #include "Window.hpp"
 
-class GLFWWindow : Window {
+class GLFWWindow : Window
+{
 public:
 	GLFWWindow(unsigned int width, unsigned int height);
 	~GLFWWindow() override;
@@ -15,8 +16,13 @@ public:
 	void SwapBuffers() override { glfwSwapBuffers(_handle); }
 	bool ShouldClose() override { return glfwWindowShouldClose(_handle); }
 
+	void *get() override
+	{
+		return static_cast<void *>(_handle);
+	}
+
 private:
-	GLFWwindow* _handle;
+	GLFWwindow *_handle;
 };
 
-#endif //GLFWWINDOW_HPP
+#endif // GLFWWINDOW_HPP

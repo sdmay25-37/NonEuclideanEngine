@@ -17,6 +17,8 @@ public:
 	Input();
 	Input(GLFWwindow *window);
 
+	void BindWindow(GLFWwindow *window);
+
 	// Keyboard
 	bool isKeyPressed(int key);
 	bool isKeyReleased(int key) const;
