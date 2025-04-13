@@ -250,7 +250,7 @@ Tile TileMap::getTileInRenderedList(int tileId)
 
     if (it != _renderedTileList.end())
     {
-        std::cout << "Tile found!\n";
+        // std::cout << "Tile found!\n";
         return *it; // Return the found tile
     }
     else

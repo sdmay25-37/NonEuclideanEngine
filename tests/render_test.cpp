@@ -17,6 +17,7 @@
 #include "Tile.hpp"
 #include "Input.hpp"
 
+// BRO TRUST THIS IS IMPORTANT
 static float timeSinceLastMove = 0.0f;
 
 class WorldPlugin final : public Plugin
@@ -27,11 +28,11 @@ public:
         app
             .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles2).After(LoadTextures).After(LoadTiles).After(BindInput)))
             .AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(MoveCamera)));
-        // .AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(UpdateTile)));
     }
 
 private:
     // used to render entire map
+    /// NOT USED
     static void CreateTiles(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
         std::srand(std::time(nullptr));
@@ -43,7 +44,7 @@ private:
 
         int num_sprites = map_size * map_size;
 
-        std::cout << num_sprites << "\n";
+        // std::cout << num_sprites << "\n";
         for (int i = 0; i < tilemap->numTiles; i++)
         {
 
@@ -78,11 +79,11 @@ private:
     {
         std::srand(std::time(nullptr));
 
-        Tile currentTile = tilemap->getTileByID(200);
-        std::cout << tilemap->currentTile.to_string() << "\n";
+        Tile currentTile = tilemap->getTileByID(85);
+        // std::cout << tilemap->currentTile.to_string() << "\n";
 
         std::vector<Tile> nearTiles = tilemap->getNearTiles(currentTile, 20);
-        std::cout << tilemap->currentTile.to_string() << "\n";
+        // std::cout << tilemap->currentTile.to_string() << "\n";
 
         int map_size = 20;
         float rect_size = 1.5 / map_size;
@@ -137,7 +138,7 @@ private:
 
         int num_sprites = map_size * map_size;
 
-        std::cout << num_sprites << "\n";
+        // std::cout << num_sprites << "\n";
         for (const Tile &tile : nearTiles)
         {
             // Tile tile = tilemap->getTileInRenderedList(i);
@@ -180,9 +181,9 @@ private:
 
     static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager)
     {
-        const float moveCooldown = 1.0f; // 150 ms between movements
+        const float moveCooldown = 1.0f; // ADDED DELAY SO THAT MOVEMENT IS SLOWER AND IS FLUID
 
-        float deltaTime = ImGui::GetIO().DeltaTime; // Assumes you're using ImGui; use your own delta time source if needed
+        float deltaTime = ImGui::GetIO().DeltaTime; // USING IMGUI because it was already in here
         timeSinceLastMove += deltaTime;
 
         // std::cout << deltaTime << "\n";
@@ -194,7 +195,7 @@ private:
         else if (input->isKeyPressed(GLFW_KEY_W))
         {
             // camera->position.y += speed;
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._upTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._upTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._upTileId);
@@ -205,7 +206,7 @@ private:
         else if (input->isKeyPressed(GLFW_KEY_A))
         {
             // camera->position.x -= speed;
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._leftTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId);
@@ -216,7 +217,7 @@ private:
         else if (input->isKeyPressed(GLFW_KEY_S))
         {
             // camera->position.y -= speed;
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._downTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._downTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._downTileId);
@@ -227,7 +228,7 @@ private:
         else if (input->isKeyPressed(GLFW_KEY_D))
         {
             // camera->position.x += speed;
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._rightTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId);
@@ -243,6 +244,7 @@ private:
         input->BindWindow(glfw_window);
     }
 
+    // Used to prevent moving from window
     static bool isValidTileToMove(Tile tile, Resource<TileMap> tilemap)
     {
         // std::cout << "TILEID \n"
