@@ -78,7 +78,7 @@ private:
     {
         std::srand(std::time(nullptr));
 
-        Tile currentTile = tilemap->getTileByID(85);
+        Tile currentTile = tilemap->getTileByID(200);
         std::cout << tilemap->currentTile.to_string() << "\n";
 
         std::vector<Tile> nearTiles = tilemap->getNearTiles(currentTile, 20);
