@@ -78,7 +78,7 @@ private:
     {
         std::srand(std::time(nullptr));
 
-        Tile currentTile = tilemap->getTileByID(6400);
+        Tile currentTile = tilemap->getTileByID(85);
         std::cout << tilemap->currentTile.to_string() << "\n";
 
         std::vector<Tile> nearTiles = tilemap->getNearTiles(currentTile, 20);
@@ -195,33 +195,45 @@ private:
         {
             // camera->position.y += speed;
             std::cout << tilemap->currentTile.to_string() << "\n";
-            tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._upTileId);
-            UpdateTile(registry, texture_manager, tilemap);
-            timeSinceLastMove = 0.0f;
+            if (tilemap->currentTile._upTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._upTileId), tilemap))
+            {
+                tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._upTileId);
+                UpdateTile(registry, texture_manager, tilemap);
+                timeSinceLastMove = 0.0f;
+            }
         }
         else if (input->isKeyPressed(GLFW_KEY_A))
         {
             // camera->position.x -= speed;
             std::cout << tilemap->currentTile.to_string() << "\n";
-            tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId);
-            UpdateTile(registry, texture_manager, tilemap);
-            timeSinceLastMove = 0.0f;
+            if (tilemap->currentTile._leftTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId), tilemap))
+            {
+                tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId);
+                UpdateTile(registry, texture_manager, tilemap);
+                timeSinceLastMove = 0.0f;
+            }
         }
         else if (input->isKeyPressed(GLFW_KEY_S))
         {
             // camera->position.y -= speed;
             std::cout << tilemap->currentTile.to_string() << "\n";
-            tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._downTileId);
-            UpdateTile(registry, texture_manager, tilemap);
-            timeSinceLastMove = 0.0f;
+            if (tilemap->currentTile._downTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._downTileId), tilemap))
+            {
+                tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._downTileId);
+                UpdateTile(registry, texture_manager, tilemap);
+                timeSinceLastMove = 0.0f;
+            }
         }
         else if (input->isKeyPressed(GLFW_KEY_D))
         {
             // camera->position.x += speed;
             std::cout << tilemap->currentTile.to_string() << "\n";
-            tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId);
-            UpdateTile(registry, texture_manager, tilemap);
-            timeSinceLastMove = 0.0f;
+            if (tilemap->currentTile._rightTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId), tilemap))
+            {
+                tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId);
+                UpdateTile(registry, texture_manager, tilemap);
+                timeSinceLastMove = 0.0f;
+            }
         }
     }
 
@@ -229,6 +241,23 @@ private:
     {
         auto glfw_window = static_cast<GLFWwindow *>(window->get()); // Using get() to access GLFWwindow*
         input->BindWindow(glfw_window);
+    }
+
+    static bool isValidTileToMove(Tile tile, Resource<TileMap> tilemap)
+    {
+        // std::cout << "TILEID \n"
+        //           << tile._tileId << "\n";
+        // std::cout << tile.to_string();
+        // if (tile._tileId == -1)
+        // {
+        //     return false;
+        // }
+        if (tile.sprite == "wall.jpg")
+        {
+            return false;
+        }
+
+        return true;
     }
 };
 
