@@ -8,13 +8,16 @@
 #include "ne_plugin/window/GLFWWindow.hpp"
 #include "ne_plugin/DefaultPlugins.hpp"
 
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+
 #include "TileMap.hpp"
 #include "Tile.hpp"
 #include "Input.hpp"
 
-// BRO TRUST
-int tileX = 0;
-int tileY = 0;
+static float timeSinceLastMove = 0.0f;
 
 class WorldPlugin final : public Plugin
 {
@@ -118,12 +121,14 @@ private:
 
     static void UpdateTile(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
+        // THIS FEELS UNCESSARY BUT IT MADE IT WORK
+        // ASK BEN IF THIS IS GOOD ENOUGH
         auto view = registry.view<AtlasSprite>();
         for (auto entity : view)
         {
             registry.destroy(entity);
         }
-        std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAA" << "\n";
+        // std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAA" << "\n";
 
         std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, 20);
         int map_size = 20;
@@ -175,39 +180,48 @@ private:
 
     static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager)
     {
-        const float speed = 0.075f;
+        const float moveCooldown = 1.0f; // 150 ms between movements
 
-        if (input->wasKeyPressed(GLFW_KEY_W))
+        float deltaTime = ImGui::GetIO().DeltaTime; // Assumes you're using ImGui; use your own delta time source if needed
+        timeSinceLastMove += deltaTime;
+
+        // std::cout << deltaTime << "\n";
+        // std::cout << timeSinceLastMove << "\n";
+
+        if (timeSinceLastMove < moveCooldown)
+            return;
+
+        else if (input->isKeyPressed(GLFW_KEY_W))
         {
             // camera->position.y += speed;
-            tileY += 1;
             std::cout << tilemap->currentTile.to_string() << "\n";
             tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._upTileId);
             UpdateTile(registry, texture_manager, tilemap);
+            timeSinceLastMove = 0.0f;
         }
-        else if (input->wasKeyPressed(GLFW_KEY_A))
+        else if (input->isKeyPressed(GLFW_KEY_A))
         {
             // camera->position.x -= speed;
-            tileX -= 1;
             std::cout << tilemap->currentTile.to_string() << "\n";
             tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId);
             UpdateTile(registry, texture_manager, tilemap);
+            timeSinceLastMove = 0.0f;
         }
-        else if (input->wasKeyPressed(GLFW_KEY_S))
+        else if (input->isKeyPressed(GLFW_KEY_S))
         {
             // camera->position.y -= speed;
-            tileY -= 1;
             std::cout << tilemap->currentTile.to_string() << "\n";
             tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._downTileId);
             UpdateTile(registry, texture_manager, tilemap);
+            timeSinceLastMove = 0.0f;
         }
-        else if (input->wasKeyPressed(GLFW_KEY_D))
+        else if (input->isKeyPressed(GLFW_KEY_D))
         {
             // camera->position.x += speed;
-            tileX += 1;
             std::cout << tilemap->currentTile.to_string() << "\n";
             tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId);
             UpdateTile(registry, texture_manager, tilemap);
+            timeSinceLastMove = 0.0f;
         }
     }
 
@@ -230,6 +244,8 @@ int main()
 
     glm::mat4 proj_mat = glm::perspective(fov, (800.0f / 600.0f), nearPlane, farPlane);
 
+    IMGUI_CHECKVERSION();
+    ImGui::CreateContext();
     App()
         .InsertResourceBase<Window, GLFWWindow>(800, 600)
         .AddPlugin<DefaultPlugins>()
