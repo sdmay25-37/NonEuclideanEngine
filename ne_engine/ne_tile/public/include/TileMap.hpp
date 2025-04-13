@@ -38,6 +38,8 @@ public:
 
     int numTiles;
 
+    Tile currentTile;
+
     // TODO: Figure out how to buffer tiles from _renderedTileList
 
     std::vector<std::string>

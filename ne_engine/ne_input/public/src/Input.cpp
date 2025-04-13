@@ -121,8 +121,16 @@ void Input::switchBindings()
 
 void Input::keyCallback(GLFWwindow *window, int key, int scancode, int action, int mods)
 {
-	if (!action)
-		return;
+	if (action == GLFW_PRESS)
+	{
+		_keyDown[key] = true;
+		_keyPressed[key] = true; // This is important
+	}
+	else if (action == GLFW_RELEASE)
+	{
+		_keyDown[key] = false;
+	}
+
 	auto action_it = _key_action_map.find(key);
 	if (action_it == _key_action_map.end() || action != GLFW_PRESS)
 		return;
@@ -135,6 +143,23 @@ void Input::keyCallback(GLFWwindow *window, int key, int scancode, int action, i
 	{
 		callback();
 	}
+}
+
+bool Input::isKeyDown(int key) const
+{
+	auto it = _keyDown.find(key);
+	return it != _keyDown.end() && it->second;
+}
+
+bool Input::wasKeyPressed(int key)
+{
+	auto it = _keyPressed.find(key);
+	if (it != _keyPressed.end() && it->second)
+	{
+		_keyPressed[key] = false; // Reset it!
+		return true;
+	}
+	return false;
 }
 
 std::vector<std::pair<std::string, int>> Input::getBindings()

@@ -22,6 +22,8 @@ public:
 	// Keyboard
 	bool isKeyPressed(int key);
 	bool isKeyReleased(int key) const;
+	bool isKeyDown(int key) const;
+	bool wasKeyPressed(int key);
 
 	// Mouse
 	bool isMouseButtonPressed(int button) const;
@@ -66,6 +68,10 @@ private:
 
 	std::unordered_map<std::string, std::vector<ActionCallback>> _action_callback_map;
 	std::unordered_map<int, std::string> _key_action_map;
+
+	std::unordered_map<int, bool> _keyDown;	   // Currently held
+	std::unordered_map<int, bool> _keyPressed; // Just pressed this frame
+	;
 };
 
 #endif // INPUTHANDLER_HPP

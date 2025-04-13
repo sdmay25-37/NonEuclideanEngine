@@ -130,6 +130,7 @@ void TileMap::loadTiles(const std::string &filename)
         _tileList[tile._tileId] = tile;
     }
 
+    currentTile = getTileByID(85);
     std::cout << "\n"
               << "Tiles Loaded" << "\n";
 }
@@ -161,6 +162,7 @@ std::vector<Tile> TileMap::getNearTiles(Tile currentTile, int radius)
     currentTile.relationToCurrentTile = 0;
     currentTile.relationMappingToCurrentTile = {0, 0};
     nearTiles.push_back(currentTile);
+    this->currentTile = currentTile;
 
     std::queue<std::pair<Tile, int>> queue; // Queue holds tile and depth
     queue.push({currentTile, 0});           // Start BFS with currentTile at depth 0
