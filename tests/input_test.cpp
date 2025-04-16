@@ -10,7 +10,7 @@
 #include "Triangle.hpp"
 #include "JSONLoader.hpp"
 
-static void key_callback (GLFWwindow *window, int key, int scancode, int action, int mods);
+static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 static void bindWrap();
 
 int constexpr WIDTH = 900;
@@ -21,16 +21,19 @@ Triangle triangle;
 
 unsigned int vertBuff;
 
-int main() {
+int main()
+{
     // GLFW Init
-    if (!glfwInit()) {
+    if (!glfwInit())
+    {
         std::cout << "GLFW Failed to initialize!" << std::endl;
     }
 
     // Create Window
-    GLFWwindow* window = glfwCreateWindow(HEIGHT, WIDTH, "What tf is going on", NULL, NULL);
+    GLFWwindow *window = glfwCreateWindow(HEIGHT, WIDTH, "What tf is going on", NULL, NULL);
     // If fail
-    if (!window) {
+    if (!window)
+    {
         std::cout << "WHAT DID YOU DO" << std::endl;
     }
 
@@ -53,10 +56,10 @@ int main() {
     triangle = newTriangle;
 
     auto shaderResult = ShaderProgram::create(
-    "../shaders/color.vert",
-    "../shaders/color.frag"
-    );
-    if(shaderResult.is_error()) {
+        "../shaders/color.vert",
+        "../shaders/color.frag");
+    if (shaderResult.is_error())
+    {
         std::cerr << "Failed to create shader program:" << shaderResult.error() << std::endl;
     }
     ShaderProgram shaders = shaderResult.ok();
@@ -71,10 +74,10 @@ int main() {
     glBindVertexArray(vao);
     glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid*) 0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Triangle::Vertex), (GLvoid *)0);
     glEnableVertexAttribArray(0);
 
-    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid*) (4 * sizeof(float)));
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 6, (GLvoid *)(4 * sizeof(float)));
     glEnableVertexAttribArray(1);
 
     Input charInput(window);
@@ -83,11 +86,10 @@ int main() {
 
     // Process a json array of bindings that has multiple contexts
     // --> see ne_engine/public/bindings/example_bindings.json for the example
-    std::vector<std::vector <std::pair <std::string, int>>> bindings = loading.processFileArray();
+    std::vector<std::vector<std::pair<std::string, int>>> bindings = loading.processFileArray();
 
-    charInput.bindKeyPress("QUIT", [&window]() {
-        glfwSetWindowShouldClose(window, true);
-    });
+    charInput.bindKeyPress("QUIT", [&window]()
+                           { glfwSetWindowShouldClose(window, true); });
 
     // Bind a ton of functions to the action string
     // charInput.bindKeyPress("MOVE_LEFT", std::bind(&CharWrapper::moveLeftWrapper, &wrapper));
@@ -99,13 +101,12 @@ int main() {
     // Bind keys to the action strings through a list of list of pairs <string -> key>
     charInput.bindContexts(bindings);
 
-
-
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window))
+    {
 
         glfwWaitEvents();
         glBindBuffer(GL_ARRAY_BUFFER, vertBuff);
-        glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), newTriangle.getVerts().data(), GL_STATIC_DRAW);
+        // glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(Triangle::Vertex), wrapper.getTriangle().getVerts().data(), GL_STATIC_DRAW);
 
         glClear(GL_COLOR_BUFFER_BIT);
         glBindVertexArray(vao);
@@ -113,7 +114,6 @@ int main() {
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
-
     }
 
     loading.outputBindingsArray(charInput.getBindingsArray());

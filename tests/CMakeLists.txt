@@ -25,6 +25,10 @@ set(SOURCES
     #"ResourceManagerTesting.cpp"
     #"TileMapTest.cpp"
     #"GuiTesting.cpp"
+    #"input_test.cpp"
+    #"point_square_demo.cpp"
+    "ne_squares_test.cpp"
+    "PQ_tile_test.cpp"
 )
 
 set(VS_DEBUGGER_WORKING_DIRECTORY "..")
@@ -39,7 +43,7 @@ foreach(SOURCE ${SOURCES})
 
 
     target_compile_options(${EXECUTABLE} PUBLIC
-        "-O0"
+        "-Og"
         "-g"
     )
 

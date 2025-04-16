@@ -14,7 +14,11 @@
 #include "Input.hpp"
 
 // ne_math
+#include "Square.hpp"
+
 #include "HypRotate.hpp"
+#include "HypTransform.hpp"
+#include "PQTile.hpp"
 
 // ne_resmanager
 // #include "ResourceManager.hpp"

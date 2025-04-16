@@ -55,6 +55,17 @@ add_library(
     # window
     "${PLUGIN_SRC_DIR}/GLFWWindow.cpp"
 
+    "ne_math/public/src/HypRotate.cpp"
+    "ne_math/public/src/HypTransform.cpp"
+
+    "ne_shapes/private/src/CircleArcs.cpp"
+    "ne_shapes/public/src/Mesh.cpp"
+    "ne_shapes/public/src/Square.cpp"
+    "ne_shapes/public/src/Triangle.cpp"
+    "ne_shapes/public/src/Rectangle.cpp"
+    "ne_shapes/public/src/Polygon.cpp"
+    "ne_shapes/public/src/Point.cpp"
+    "ne_shapes/public/src/PQTile.cpp"
 )
 
 target_include_directories(ne_engine
@@ -69,12 +80,16 @@ target_include_directories(ne_engine
     ne_ui/public/include
     ne_util/public/include
     ne_tile/public/include
+    ne_shapes/public/include
 
     PRIVATE
     ne_graphics/private/include
     ne_math/private/include
     ne_input/private/include
     ne_ui/private/include
+    ne_shapes/private/include
+    
+
 )
 
 target_link_libraries(ne_engine glad glfw glm nlohmann_json::nlohmann_json stb imgui entt)

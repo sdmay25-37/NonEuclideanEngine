@@ -14,6 +14,7 @@ public:
     void rotateX(float theta);
     void rotateY(float theta);
     void rotateZ(float theta);
+    void offset(const glm::vec4& offset);
 
     glm::mat4 getRotation();
 
