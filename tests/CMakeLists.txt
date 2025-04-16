@@ -17,7 +17,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 add_subdirectory(.. ne_engine)
 
 set(SOURCES
-    "render_test.cpp"
+    #"render_test.cpp"
     #"render_test.cpp"
     #"input_test.cpp"
     # "point_square_demo.cpp"
@@ -27,7 +27,7 @@ set(SOURCES
     #"GuiTesting.cpp"
     #"input_test.cpp"
     #"point_square_demo.cpp"
-    "ne_squares_test.cpp"
+    # "ne_squares_test.cpp"
     "PQ_tile_test.cpp"
 )
 

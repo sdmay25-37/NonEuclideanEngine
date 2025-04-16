@@ -19,7 +19,7 @@ add_library(
 
 
     # ne_graphics
-    "${GRAPHICS_SRC_DIR}/Animation.cpp"
+    
     "${GRAPHICS_SRC_DIR}/App.cpp"
     "${GRAPHICS_SRC_DIR}/Image.cpp"
     "${GRAPHICS_SRC_DIR}/Renderer.cpp"

@@ -1,9 +1,19 @@
 #include "ne_engine.hpp"
+#include "ne_plugin/window/GLFWWindow.hpp"
+#include "ne_plugin/DefaultPlugins.hpp"
+#include <imgui.h>
+#include <imgui_internal.h>
+#include <backends/imgui_impl_glfw.h>
+#include <backends/imgui_impl_opengl3.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include <iostream>
+#include "ShaderProgram.hpp"
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
 
-ShaderProgram* shader_ptr;
+ShaderProgram *shader_ptr;
 HypRotate r_uniform_matrix = HypRotate(true);
 
 // settings
@@ -13,7 +23,8 @@ constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 
 std::vector<glm::vec4> square_points;
 
-int main() {
+int main()
+{
 
     GLFWContext context = GLFWContext();
     context.initAll(SCREEN_WIDTH, SCREEN_HEIGHT, "NE_Squares_Test");
@@ -25,16 +36,26 @@ int main() {
     // HypTransform::poincare_to_hyperboloid(sq.get_verts());
 
     // build and compile our shader program
-    ShaderProgram shaders(
-			"../ne_engine/ne_math/shaders/square_test.vert",
-			"../shaders/color.frag"
-	);
+    // ShaderProgram shaders(
+    //     "../ne_engine/ne_math/shaders/square_test.vert",
+    //     "../shaders/color.frag");
+
+    auto shaderProgramResult = ShaderProgram::create(
+        "../ne_engine/ne_math/shaders/square_test.vert",
+        "../shaders/color.frag");
+
+    if (shaderProgramResult.is_error())
+    {
+        std::cerr << shaderProgramResult.error() << std::endl;
+        return -1;
+    }
+
+    ShaderProgram shaders = shaderProgramResult.ok();
     shader_ptr = &shaders;
 
     shaders.bind();
     shaders.setUniform3f("color", glm::vec3(1, 0, 0));
     shaders.setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
-
 
     unsigned int VA0, VB0, VE0;
 
@@ -51,12 +72,13 @@ int main() {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * sq.get_indices().size(), sq.get_indices().data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)0);
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
 
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    while (!glfwWindowShouldClose(context.getWindow())) {
+    while (!glfwWindowShouldClose(context.getWindow()))
+    {
         processInput(context.getWindow());
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -73,7 +95,7 @@ int main() {
         glfwPollEvents();
     }
 
-	shaders.cleanup();
+    shaders.cleanup();
     glDeleteVertexArrays(1, &VA0);
     glDeleteBuffers(1, &VB0);
 
@@ -87,7 +109,7 @@ void processInput(GLFWwindow *window)
     {
         glfwSetWindowShouldClose(window, true);
     }
-    else if(glfwGetKey(window, GLFW_KEY_UP))
+    else if (glfwGetKey(window, GLFW_KEY_UP))
     {
         r_uniform_matrix.rotateX(M_PI / 16.0f);
         // r_uniform_matrix.offset({0, .1, 0, 1});
@@ -96,7 +118,7 @@ void processInput(GLFWwindow *window)
         shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
         // hyperbolic_rotateX(square_points, M_PI / 8);
     }
-    else if(glfwGetKey(window, GLFW_KEY_DOWN))
+    else if (glfwGetKey(window, GLFW_KEY_DOWN))
     {
         r_uniform_matrix.rotateX(-M_PI / 16.0f);
         // r_uniform_matrix.offset({0,-.1, 0, 1});
@@ -107,13 +129,13 @@ void processInput(GLFWwindow *window)
         shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
         // hyperbolic_rotateX(square_points, -M_PI / 8);
     }
-    else if(glfwGetKey(window, GLFW_KEY_RIGHT))
+    else if (glfwGetKey(window, GLFW_KEY_RIGHT))
     {
         r_uniform_matrix.rotateY(M_PI / 16.0f);
         shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
         // hyperbolic_rotateY(square_points, M_PI / 8);
     }
-    else if(glfwGetKey(window, GLFW_KEY_LEFT))
+    else if (glfwGetKey(window, GLFW_KEY_LEFT))
     {
         r_uniform_matrix.rotateY(-M_PI / 16.0f);
         shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
@@ -121,6 +143,7 @@ void processInput(GLFWwindow *window)
     }
 }
 
-void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
     glViewport(0, 0, width, height);
 }
