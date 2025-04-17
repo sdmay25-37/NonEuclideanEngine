@@ -11,10 +11,7 @@ struct MeshPoint : public Point
 {
     MeshPoint() = default;
     MeshPoint(float x, float y, float z, const Color &color, unsigned int index, const glm::vec2 &uv_coord)
-        : Point(x, y, z, color, PointType::POINCARE), uv(uv_coord)
-    {
-        this->index = index;
-    }
+        : Point(x, y, z, color, PointType::POINCARE), uv(uv_coord), index(index) {}
 
     unsigned int index;
     MeshPoint *right;

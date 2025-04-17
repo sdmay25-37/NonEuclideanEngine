@@ -57,7 +57,7 @@ int main()
         pt.y += 1.1f; // shift tile4 upward
     }
 
-    std::vector<PQTile> tiles = {tile, tile2, tile3, tile4};
+    std::vector<PQTile> tiles = { tile } //, tile2, tile3, tile4};
 
     // Build and compile our shader program
     auto shaderProgramResult = ShaderProgram::create(

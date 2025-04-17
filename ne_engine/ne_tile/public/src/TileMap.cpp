@@ -130,7 +130,7 @@ void TileMap::loadTiles(const std::string &filename)
         _tileList[tile._tileId] = tile;
     }
 
-    currentTile = getTileByID(85);
+    currentTile = getTileByID(1);
     std::cout << "\n"
               << "Tiles Loaded" << "\n";
 }

@@ -1,48 +1,68 @@
 [
     {
-        "tileId": 1,
-        "upTileId": 2,
+        "tileId": 0,
+        "upTileId": 1,
         "downTileId": -1,
         "leftTileId": -1,
-        "rightTileId": 3,
+        "rightTileId": 2,
         "tileType": "grass",
         "spriteId": 10,
+        "sprite": "cy.jpg",
+        "worldPosition": [
+            0,
+            0
+        ],
         "properties": [
             "walkable"
         ]
     },
     {
-        "tileId": 2,
+        "tileId": 1,
         "upTileId": -1,
-        "downTileId": 1,
+        "downTileId": 0,
         "leftTileId": -1,
-        "rightTileId": 4,
+        "rightTileId": 3,
         "tileType": "sand",
         "spriteId": 12,
+        "sprite": "cy.jpg",
+        "worldPosition": [
+            1,
+            0
+        ],
         "properties": [
             "slow"
         ]
     },
     {
-        "tileId": 3,
-        "upTileId": 4,
+        "tileId": 2,
+        "upTileId": 3,
         "downTileId": -1,
-        "leftTileId": 1,
+        "leftTileId": 0,
         "rightTileId": -1,
         "tileType": "water",
         "spriteId": 11,
+        "sprite": "cy.jpg",
+        "worldPosition": [
+            0,
+            1
+        ],
         "properties": [
             "swimmable"
         ]
     },
     {
-        "tileId": 4,
+        "tileId": 3,
         "upTileId": -1,
-        "downTileId": 3,
-        "leftTileId": 2,
+        "downTileId": 2,
+        "leftTileId": 1,
         "rightTileId": -1,
         "tileType": "grass",
         "spriteId": 13,
+        "sprite": "cy.jpg",
+        "worldPosition": [
+            1,
+            1
+        ],
         "properties": [
             "walkable"
         ]
