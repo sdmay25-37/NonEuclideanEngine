@@ -13,6 +13,7 @@
 #include "TextureManager.hpp"
 #include "Camera.hpp"
 #include <glad/glad.h>
+#include "ne_engine.hpp"
 
 #include <vector>
 
@@ -34,31 +35,13 @@ struct AtlasSprite
 	AtlasedTexture texture;
 };
 
-// Represents a mesh that can be rendered with instancing
-struct AtlasMesh
+struct AtlasPQtile
 {
-	std::vector<glm::vec4> positions;  // vertex positions (x, y, z, w) or homogeneous
-	std::vector<glm::vec4> colors;	   // per-vertex color
-	std::vector<glm::vec2> uvs;		   // UV coordinates per vertex
-	std::vector<unsigned int> indices; // index buffer
-	unsigned int texture_id;		   // OpenGL texture handle
-
-	// Adding default value for texture_id
-	AtlasMesh(
-		std::vector<glm::vec4> positions_,
-		std::vector<glm::vec4> colors_,
-		std::vector<glm::vec2> uvs_,
-		std::vector<unsigned int> indices_,
-		unsigned int texture_id_ // Default to 0 if not provided
-		)
-		: positions(std::move(positions_)),
-		  colors(std::move(colors_)),
-		  uvs(std::move(uvs_)),
-		  indices(std::move(indices_)),
-		  texture_id(texture_id_)
-	{
-	}
+	PQTile tile;
+	AtlasedTexture texture;
 };
+
+// Represents a mesh that can be rendered with instancing
 
 struct AtlasTexture
 {

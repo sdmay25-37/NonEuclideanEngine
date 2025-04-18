@@ -8,6 +8,7 @@
 #include "ne_plugin/window/GLFWWindow.hpp"
 #include "ne_plugin/DefaultPlugins.hpp"
 #include "ne_engine.hpp"
+#include "Polygon.hpp"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -55,44 +56,44 @@ private:
 
         std::cout
             << num_sprites << "\n";
-        for (auto &tile : tiles)
+        for (auto currentTile : tiles)
         {
             const auto entity = registry.create();
 
             std::cout << "Here" << "\n";
 
-            tile.to_weirstrass();                              // Ensures Poincaré conversion
-            auto &mesh = tile.mutable_mesh();                  // Vector of glm::vec3 (assuming this is mesh data)
-            const unsigned int *indices = tile.indices_data(); // Assuming you have index data for triangle rendering
+            currentTile.to_weirstrass(); // Ensures Poincaré conversion
+            // auto &mesh = currentTile.mutable_mesh();                  // Vector of glm::vec3 (assuming this is mesh data)
+            // const unsigned int *indices = currentTile.indices_data(); // Assuming you have index data for triangle rendering
 
-            // Convert mesh data (std::vector<MeshPoint> -> std::vector<glm::vec4>, std::vector<glm::vec2>, std::vector<unsigned int>)
-            std::vector<glm::vec4> positions;
-            std::vector<glm::vec4> colors;
-            std::vector<glm::vec2> uvs;
-            std::vector<unsigned int> indices_data;
+            // // Convert mesh data (std::vector<MeshPoint> -> std::vector<glm::vec4>, std::vector<glm::vec2>, std::vector<unsigned int>)
+            // std::vector<glm::vec4> positions;
+            // std::vector<glm::vec4> colors;
+            // std::vector<glm::vec2> uvs;
+            // std::vector<unsigned int> indices_data;
 
-            for (const auto &vertex : mesh)
-            {
-                // Convert position to glm::vec4 (x, y, z, 1.0f)
-                positions.push_back(glm::vec4(vertex.x, vertex.y, vertex.z, 1.0f)); // Position in 4D homogeneous coordinates
+            // for (const auto &vertex : mesh)
+            // {
+            //     // Convert position to glm::vec4 (x, y, z, 1.0f)
+            //     positions.push_back(glm::vec4(vertex.x, vertex.y, vertex.z, 1.0f)); // Position in 4D homogeneous coordinates
 
-                // Convert color (assuming your MeshPoint has a 'color' member)
-                colors.push_back(glm::vec4(vertex.color.R, vertex.color.G, vertex.color.B, vertex.color.A));
+            //     // Convert color (assuming your MeshPoint has a 'color' member)
+            //     colors.push_back(glm::vec4(vertex.color.R, vertex.color.G, vertex.color.B, vertex.color.A));
 
-                // Assuming vertex has a 'uv' member for texture coordinates
-                uvs.push_back(vertex.uv);
+            //     // Assuming vertex has a 'uv' member for texture coordinates
+            //     uvs.push_back(vertex.uv);
 
-                // Push the index from the MeshPoint (if it's valid)
-                indices_data.push_back(vertex.index);
-            }
+            //     // Push the index from the MeshPoint (if it's valid)
+            //     indices_data.push_back(vertex.index);
+            // }
 
-            std::cout << "Vertices: " << mesh.size() << "\n";
-            std::cout << "Positions: " << positions.size() << "\n";
-            std::cout << "Colors: " << colors.size() << "\n";
-            std::cout << "UVs: " << uvs.size() << "\n";
-            std::cout << "Indices: " << indices_data.size() << "\n";
+            // std::cout << "Vertices: " << mesh.size() << "\n";
+            // std::cout << "Positions: " << positions.size() << "\n";
+            // std::cout << "Colors: " << colors.size() << "\n";
+            // std::cout << "UVs: " << uvs.size() << "\n";
+            // std::cout << "Indices: " << indices_data.size() << "\n";
 
-            std::cout << "Here2" << "\n";
+            // std::cout << "Here2" << "\n";
 
             // Get texture from texture manager
             auto texture_result = texture_manager->getTexture("cy.jpg");
@@ -105,7 +106,9 @@ private:
                 std::cout << "\n"
                           << texture.atlas_id << "\n";
                 // Emplace the converted data into the registry
-                registry.emplace<AtlasMesh>(entity, positions, colors, uvs, indices_data, texture.atlas_id);
+                // registry.emplace<AtlasMesh>(entity, positions, colors, uvs, indices_data, texture.atlas_id);
+                registry.emplace<AtlasPQtile>(entity, currentTile, texture);
+
                 std::cout << "Texture loaded successfully!" << "\n";
             }
             else
@@ -114,36 +117,6 @@ private:
                 std::cout << "Error: Failed to load texture 'cy.png'!" << "\n";
             }
         }
-        // for (int i = 0; i < tilemap->numTiles; i++)
-        // // for (auto &currentTile : tiles)
-        // {
-
-        //     Tile tile = tilemap->getTileByID(i);
-        //     // std::cout << tile.to_string() << "\n";
-
-        //     // Update this
-        //     int x = tile.worldPosition.first;
-        //     int y = tile.worldPosition.second;
-        //     // int x = i % map_size;
-        //     // int y = i / map_size;
-
-        //     float rect_x = x * rect_size - total_size / 2.0f + rect_size / 2.0f;
-        //     float rect_y = y * rect_size - total_size / 2.0f + rect_size / 2.0f;
-
-        //     glm::vec3 position(rect_x, rect_y, 0.0);
-        //     glm::vec3 scale(rect_size, rect_size, 1.0);
-
-        //     glm::mat4 model_mat(1.0);
-        //     model_mat = glm::translate(model_mat, position);
-        //     model_mat = glm::scale(model_mat, scale);
-
-        //     const auto entity = registry.create();
-        //     // tile.sprite is imagename.png, if imagename.png is not in res/textures might throw error
-        //     // if tile.sprite is not specificed in json, uses cy.png
-        //     auto texture_result = texture_manager->getTexture(tile.sprite);
-        //     AtlasedTexture texture = texture_result.value();
-        //     registry.emplace<AtlasSprite>(entity, model_mat, texture);
-        // }
     }
 
     // Used to render tiles in a specific distance from a tile
@@ -342,7 +315,7 @@ int main()
     glm::vec3 camera_pos(0.0, 0.0, 2.0);
     glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
 
-    float fov = glm::radians(90.0f);
+    float fov = glm::radians(45.0f);
     float nearPlane = 0.1f;
     float farPlane = 100.0f;
 
