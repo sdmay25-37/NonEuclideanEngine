@@ -256,6 +256,6 @@ Tile TileMap::getTileInRenderedList(int tileId)
     else
     {
         // std::cout << "Tile not found!\n";
-        return Tile(); // TODO Update Return a default Tile if not found
+        return Tile(-1); // TODO Update Return a default Tile if not found
     }
 }

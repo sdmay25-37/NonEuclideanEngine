@@ -52,13 +52,13 @@
       2,
       2
     ],
-    "sprite": "wall.jpg"
+    "sprite": "floor2.jpg"
   },
   {
     "tileId": 3,
     "upTileId": 6,
     "downTileId": 0,
-    "leftTileId": 9,
+    "leftTileId": -1,
     "rightTileId": 4,
     "tileType": "sand",
     "spriteId": 4,
@@ -88,7 +88,7 @@
       1,
       1
     ],
-    "sprite": "wall.jpg"
+    "sprite": "floor2.jpg"
   },
   {
     "tileId": 5,
@@ -160,24 +160,6 @@
       2,
       0
     ],
-    "sprite": "wall.jpg"
-  },
-  {
-    "tileId": 9,
-    "upTileId": -1,
-    "downTileId": -1,
-    "leftTileId": -1,
-    "rightTileId": 3,
-    "tileType": "stone",
-    "spriteId": 9,
-    "properties": [
-      "non-walkable",
-      "gray"
-    ],
-    "worldPosition": [
-      -1,
-      -1
-    ],
-    "sprite": "wall.jpg"
+    "sprite": "floor2.jpg"
   }
 ]

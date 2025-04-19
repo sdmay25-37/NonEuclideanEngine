@@ -105,7 +105,7 @@ private:
             }
         }
     }
-    static void UpdateTile2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
+    static void UpdateTile2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap, Resource<Renderer> renderer)
     {
         // THIS FEELS UNCESSARY BUT IT MADE IT WORK
         // ASK BEN IF THIS IS GOOD ENOUGH
@@ -113,21 +113,15 @@ private:
         for (auto entity : view)
         {
             registry.destroy(entity);
+            renderer->Clear();
         }
-        // std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAA" << "\n";
 
         std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, 4);
-        int map_size = 20;
-        float rect_size = 1.5 / map_size;
-        float total_size = rect_size * map_size;
-        int num_sprites = map_size * map_size;
-
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
-
         Tile root_tile = tilemap->currentTile;
         SpriteTile.to_weirstrass();
-
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, 4, "cy.jpg", SpriteTile, tilemap);
+        std::unordered_set<int> processed_tiles;
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, 4, "cy.jpg", SpriteTile, tilemap, processed_tiles);
     }
 
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
@@ -153,16 +147,29 @@ private:
         Tile root_tile = currentTile;
         SpriteTile.to_weirstrass();
 
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, 4, "cy.jpg", SpriteTile, tilemap);
+        std::unordered_set<int> processed_tiles;
+
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, 4, "cy.jpg", SpriteTile, tilemap, processed_tiles);
     }
 
     static void addTileAndNeighbors(entt::registry &registry, Resource<TextureManager> texture_manager,
                                     const Tile &root_tile, int currentRelation, int radius,
-                                    const std::string &texturePath, const PQTile &Sprite_tile, Resource<TileMap> tilemap)
+                                    const std::string &texturePath, const PQTile &Sprite_tile, Resource<TileMap> tilemap, std::unordered_set<int> processed_tiles)
     {
         if (currentRelation >= radius)
             return;
 
+        if (processed_tiles.find(root_tile._tileId) != processed_tiles.end())
+        {
+            return; // Tile has already been added, exit the function
+        }
+        if (root_tile._tileId == -1)
+        {
+            return;
+        }
+
+        // Add the tile to the processed set
+        processed_tiles.insert(root_tile._tileId);
         // Create entity and add tile to registry
         const auto entity = registry.create();
         auto texture_result = texture_manager->getTexture(texturePath);
@@ -170,6 +177,11 @@ private:
         if (texture_result)
         {
             AtlasedTexture texture = texture_result.value();
+            std::cout << "Tile Added: " << root_tile._tileId << "\n";
+            for (int ID : processed_tiles)
+            {
+                std::cout << "Processed_Tiles" << ID << "\n";
+            }
             registry.emplace<AtlasPQtile>(entity, Sprite_tile, texture);
         }
         else
@@ -180,29 +192,39 @@ private:
 
         // Create neighbor tiles and rotate them accordingly
         // Clone the original tile to prevent modifying the input
-        Tile tile_left = tilemap->getTileInRenderedList(root_tile._leftTileId);
-        PQTile left_tile = Sprite_tile;
-        left_tile.rotateYHyperbolic(-Theta);
-        tile_left.relationToCurrentTile = currentRelation + 1;
-        addTileAndNeighbors(registry, texture_manager, tile_left, currentRelation + 1, radius, texturePath, left_tile, tilemap);
+        if (root_tile._leftTileId != -1 && tilemap->getTileInRenderedList(root_tile._leftTileId)._tileId != -1)
+        {
+            Tile tile_left = tilemap->getTileInRenderedList(root_tile._leftTileId);
+            PQTile left_tile = Sprite_tile;
+            left_tile.rotateYHyperbolic(-Theta);
+            tile_left.relationToCurrentTile = currentRelation + 1;
+            addTileAndNeighbors(registry, texture_manager, tile_left, currentRelation + 1, radius, texturePath, left_tile, tilemap, processed_tiles);
+        }
+        if (root_tile._rightTileId != -1 && tilemap->getTileInRenderedList(root_tile._downTileId)._rightTileId != -1)
+        {
 
-        Tile tile_right = tilemap->getTileInRenderedList(root_tile._rightTileId);
-        PQTile right_tile = Sprite_tile;
-        right_tile.rotateYHyperbolic(Theta);
-        tile_right.relationToCurrentTile = currentRelation + 1;
-        addTileAndNeighbors(registry, texture_manager, tile_right, currentRelation + 1, radius, texturePath, right_tile, tilemap);
-
-        Tile tile_top = tilemap->getTileInRenderedList(root_tile._upTileId);
-        PQTile top_tile = Sprite_tile;
-        top_tile.rotateXHyperbolic(Theta);
-        tile_top.relationToCurrentTile = currentRelation + 1;
-        addTileAndNeighbors(registry, texture_manager, tile_top, currentRelation + 1, radius, texturePath, top_tile, tilemap);
-
-        Tile tile_bottom = tilemap->getTileInRenderedList(root_tile._downTileId);
-        PQTile bottom__tile = Sprite_tile;
-        bottom__tile.rotateXHyperbolic(-Theta);
-        tile_bottom.relationToCurrentTile = currentRelation + 1;
-        addTileAndNeighbors(registry, texture_manager, tile_bottom, currentRelation + 1, radius, texturePath, bottom__tile, tilemap);
+            Tile tile_right = tilemap->getTileInRenderedList(root_tile._rightTileId);
+            PQTile right_tile = Sprite_tile;
+            right_tile.rotateYHyperbolic(Theta);
+            tile_right.relationToCurrentTile = currentRelation + 1;
+            addTileAndNeighbors(registry, texture_manager, tile_right, currentRelation + 1, radius, texturePath, right_tile, tilemap, processed_tiles);
+        }
+        if (root_tile._upTileId != -1 && tilemap->getTileInRenderedList(root_tile._upTileId)._tileId != -1)
+        {
+            Tile tile_top = tilemap->getTileInRenderedList(root_tile._upTileId);
+            PQTile top_tile = Sprite_tile;
+            top_tile.rotateXHyperbolic(Theta);
+            tile_top.relationToCurrentTile = currentRelation + 1;
+            addTileAndNeighbors(registry, texture_manager, tile_top, currentRelation + 1, radius, texturePath, top_tile, tilemap, processed_tiles);
+        }
+        if (root_tile._downTileId != -1 && tilemap->getTileInRenderedList(root_tile._downTileId)._tileId != -1)
+        {
+            Tile tile_bottom = tilemap->getTileInRenderedList(root_tile._downTileId);
+            PQTile bottom__tile = Sprite_tile;
+            bottom__tile.rotateXHyperbolic(-Theta);
+            tile_bottom.relationToCurrentTile = currentRelation + 1;
+            addTileAndNeighbors(registry, texture_manager, tile_bottom, currentRelation + 1, radius, texturePath, bottom__tile, tilemap, processed_tiles);
+        }
     }
 
     // Used to render tiles in a specific distance from a tile
@@ -311,60 +333,68 @@ private:
         tileMap->loadTiles("../tests/json/testNear.json");
     }
 
-    static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager)
+    static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager, Resource<Renderer> renderer)
     {
         const float moveCooldown = 1.0f; // ADDED DELAY SO THAT MOVEMENT IS SLOWER AND IS FLUID
 
         float deltaTime = ImGui::GetIO().DeltaTime; // USING IMGUI because it was already in here
         timeSinceLastMove += deltaTime;
 
+        //
+        //
         // std::cout << deltaTime << "\n";
         // std::cout << timeSinceLastMove << "\n";
 
-                if (timeSinceLastMove < moveCooldown)
+        if (timeSinceLastMove < moveCooldown)
             return;
 
         else if (input->wasKeyPressed(GLFW_KEY_W))
         {
             // camera->position.y += speed;
+
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._upTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._upTileId), tilemap))
             {
+                renderer->Clear();
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._upTileId);
-                UpdateTile2(registry, texture_manager, tilemap);
+                UpdateTile2(registry, texture_manager, tilemap, renderer);
                 timeSinceLastMove = 0.0f;
             }
         }
         else if (input->wasKeyPressed(GLFW_KEY_A))
         {
             // camera->position.x -= speed;
-            // std::cout << tilemap->currentTile.to_string() << "\n";
+            std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._leftTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId), tilemap))
             {
+                renderer->Clear();
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId);
-                UpdateTile2(registry, texture_manager, tilemap);
+                UpdateTile2(registry, texture_manager, tilemap, renderer);
                 timeSinceLastMove = 0.0f;
             }
         }
         else if (input->wasKeyPressed(GLFW_KEY_S))
         {
             // camera->position.y -= speed;
-            // std::cout << tilemap->currentTile.to_string() << "\n";
+            std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._downTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._downTileId), tilemap))
             {
+                renderer->Clear();
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._downTileId);
-                UpdateTile2(registry, texture_manager, tilemap);
+                UpdateTile2(registry, texture_manager, tilemap, renderer);
                 timeSinceLastMove = 0.0f;
             }
         }
         else if (input->wasKeyPressed(GLFW_KEY_D))
         {
             // camera->position.x += speed;
-            // std::cout << tilemap->currentTile.to_string() << "\n";
+            std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._rightTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId), tilemap))
             {
+                renderer->Clear();
+
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId);
-                UpdateTile2(registry, texture_manager, tilemap);
+                UpdateTile2(registry, texture_manager, tilemap, renderer);
                 timeSinceLastMove = 0.0f;
             }
         }
