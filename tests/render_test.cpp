@@ -29,7 +29,7 @@ public:
     void Build(App &app) override
     {
         app
-            .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles).After(LoadTextures).After(LoadTiles).After(BindInput)));
+            .AddSystems(ScheduleLabel::STARTUP, std::move(SystemSet(CreateTiles3).After(LoadTextures).After(LoadTiles).After(BindInput)));
         // .AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(MoveCamera)));
     }
 
@@ -59,6 +59,7 @@ private:
 
         std::cout
             << num_sprites << "\n";
+
         for (int i = 0; i < tilemap->numTiles; i++) // for (auto currentTile : tiles)
         {
             const auto entity = registry.create();
@@ -102,6 +103,127 @@ private:
                 std::cout << "Error: Failed to load texture 'cy.png'!" << "\n";
             }
         }
+    }
+
+    static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
+    {
+        std::srand(std::time(nullptr));
+
+        // map is 162 * 162 (image is 162 by 162)
+        int map_size = 4;
+        float rect_size = 1.5 / map_size;
+        float total_size = rect_size * map_size;
+
+        Tile currentTile = tilemap->getTileByID(0);
+        // tilemap->getNearTiles(currentTile, 4);
+
+        std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, 4);
+
+        int num_sprites = map_size * map_size;
+
+        PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
+
+        std::cout
+            << num_sprites << "\n";
+        Tile root_tile = currentTile;
+        SpriteTile.to_weirstrass();
+
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, 4, "cy.jpg", SpriteTile, tilemap);
+
+        // Start with the current tile
+
+        // for (int i = 0; i < tilemap->numTiles; i++) // for (auto currentTile : tiles)
+        // {
+        //     const auto entity = registry.create();
+
+        //     PQTile currentTile = tile;
+        //     std::cout << "Here" << "\n";
+
+        //     currentTile.to_weirstrass(); // Ensures Poincaré conversion
+
+        //     if (i == 1)
+        //     {
+        //         currentTile.rotateXHyperbolic(5.0 * M_PI / 16.0f);
+        //     }
+        //     else if (i == 2)
+        //     {
+        //         currentTile.rotateXHyperbolic(-5.0 * M_PI / 16.0f);
+        //     }
+        //     else if (i == 3)
+        //     {
+        //         currentTile.rotateYHyperbolic(5.0 * M_PI / 16.0f);
+        //     }
+
+        //     // Get texture from texture manager
+        //     auto texture_result = texture_manager->getTexture("cy.jpg");
+
+        //     // Check if texture was successfully retrieved
+        //     if (texture_result)
+        //     {
+        //         AtlasedTexture texture = texture_result.value();
+        //         // std::cout << "\n"
+        //         //           << texture << "\n";
+        //         // // Emplace the converted data into the registry
+        //         // registry.emplace<AtlasMesh>(entity, positions, colors, uvs, indices_data, texture.atlas_id);
+        //         registry.emplace<AtlasPQtile>(entity, currentTile, texture);
+
+        //         std::cout << "Texture loaded successfully!" << "\n";
+        //     }
+        //     else
+        //     {
+        //         // Handle the error if the texture could not be retrieved
+        //         std::cout << "Error: Failed to load texture 'cy.png'!" << "\n";
+        //     }
+        // }
+    }
+
+    static void addTileAndNeighbors(entt::registry &registry, Resource<TextureManager> texture_manager,
+                                    const Tile &root_tile, int currentRelation, int radius,
+                                    const std::string &texturePath, const PQTile &Sprite_tile, Resource<TileMap> tilemap)
+    {
+        if (currentRelation > radius)
+            return;
+
+        // Create entity and add tile to registry
+        const auto entity = registry.create();
+        auto texture_result = texture_manager->getTexture(texturePath);
+
+        if (texture_result)
+        {
+            AtlasedTexture texture = texture_result.value();
+            registry.emplace<AtlasPQtile>(entity, Sprite_tile, texture);
+        }
+        else
+        {
+            std::cout << "Error: Failed to load texture '" << texturePath << "'!" << "\n";
+            return;
+        }
+
+        // Create neighbor tiles and rotate them accordingly
+        // Clone the original tile to prevent modifying the input
+        Tile tile_left = tilemap->getTileInRenderedList(root_tile._leftTileId);
+        PQTile left_tile = Sprite_tile;
+        left_tile.rotateYHyperbolic(-4.5 * M_PI / 16.0f);
+        tile_left.relationToCurrentTile = currentRelation + 1;
+        addTileAndNeighbors(registry, texture_manager, tile_left, currentRelation + 1, radius, texturePath, left_tile, tilemap);
+
+        Tile tile_right = tilemap->getTileInRenderedList(root_tile._rightTileId);
+        PQTile right_tile = Sprite_tile;
+        right_tile.rotateYHyperbolic(4.5 * M_PI / 16.0f);
+        tile_right.relationToCurrentTile = currentRelation + 1;
+        addTileAndNeighbors(registry, texture_manager, tile_right, currentRelation + 1, radius, texturePath, right_tile, tilemap);
+
+        Tile tile_top = tilemap->getTileInRenderedList(root_tile._upTileId);
+        PQTile top_tile = Sprite_tile;
+        top_tile.rotateXHyperbolic(4.5 * M_PI / 16.0f);
+        tile_top.relationToCurrentTile = currentRelation + 1;
+        addTileAndNeighbors(registry, texture_manager, tile_top, currentRelation + 1, radius, texturePath, top_tile, tilemap);
+
+        Tile tile_bottom = tilemap->getTileInRenderedList(root_tile._downTileId);
+        PQTile bottom__tile = Sprite_tile;
+        bottom__tile.rotateXHyperbolic(-4.5 * M_PI / 16.0f);
+        tile_bottom.relationToCurrentTile = currentRelation + 1;
+        addTileAndNeighbors(registry, texture_manager, tile_bottom, currentRelation + 1, radius, texturePath, bottom__tile, tilemap);
     }
 
     // Used to render tiles in a specific distance from a tile
