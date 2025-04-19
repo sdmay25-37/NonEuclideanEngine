@@ -20,6 +20,7 @@
 #include "Tile.hpp"
 #include "Input.hpp"
 
+static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
 static float timeSinceLastMove = 0.0f;
 
@@ -203,25 +204,25 @@ private:
         // Clone the original tile to prevent modifying the input
         Tile tile_left = tilemap->getTileInRenderedList(root_tile._leftTileId);
         PQTile left_tile = Sprite_tile;
-        left_tile.rotateYHyperbolic(-4.5 * M_PI / 16.0f);
+        left_tile.rotateYHyperbolic(-Theta);
         tile_left.relationToCurrentTile = currentRelation + 1;
         addTileAndNeighbors(registry, texture_manager, tile_left, currentRelation + 1, radius, texturePath, left_tile, tilemap);
 
         Tile tile_right = tilemap->getTileInRenderedList(root_tile._rightTileId);
         PQTile right_tile = Sprite_tile;
-        right_tile.rotateYHyperbolic(4.5 * M_PI / 16.0f);
+        right_tile.rotateYHyperbolic(Theta);
         tile_right.relationToCurrentTile = currentRelation + 1;
         addTileAndNeighbors(registry, texture_manager, tile_right, currentRelation + 1, radius, texturePath, right_tile, tilemap);
 
         Tile tile_top = tilemap->getTileInRenderedList(root_tile._upTileId);
         PQTile top_tile = Sprite_tile;
-        top_tile.rotateXHyperbolic(4.5 * M_PI / 16.0f);
+        top_tile.rotateXHyperbolic(Theta);
         tile_top.relationToCurrentTile = currentRelation + 1;
         addTileAndNeighbors(registry, texture_manager, tile_top, currentRelation + 1, radius, texturePath, top_tile, tilemap);
 
         Tile tile_bottom = tilemap->getTileInRenderedList(root_tile._downTileId);
         PQTile bottom__tile = Sprite_tile;
-        bottom__tile.rotateXHyperbolic(-4.5 * M_PI / 16.0f);
+        bottom__tile.rotateXHyperbolic(-Theta);
         tile_bottom.relationToCurrentTile = currentRelation + 1;
         addTileAndNeighbors(registry, texture_manager, tile_bottom, currentRelation + 1, radius, texturePath, bottom__tile, tilemap);
     }

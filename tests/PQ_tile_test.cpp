@@ -14,7 +14,7 @@
 #include <stb/stb_image.h>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
-void processInput(GLFWwindow *window);
+std::vector<PQTile> processInput(GLFWwindow *window, std::vector<PQTile> tiles);
 
 ShaderProgram *shader_ptr;
 HypRotate r_uniform_matrix = HypRotate(true);
@@ -32,32 +32,30 @@ int main()
     GLFWwindow *window = static_cast<GLFWwindow *>(test.get());
 
     // Create PQTile objects (assuming PQTile inherits from Polygon and has a proper mutable_mesh() method)
-    PQTile tile = PQTile(4, 5, COLOR::BLUE);
-    PQTile tile2 = PQTile(4, 5, COLOR::RED);
+    PQTile tile = PQTile(4, 5, COLOR::WHITE);
+    PQTile tile2 = PQTile(4, 5, COLOR::BLUE);
     PQTile tile3 = PQTile(4, 5, COLOR::GREEN);
-    PQTile tile4 = PQTile(4, 5, COLOR::WHITE);
+    PQTile tile4 = PQTile(4, 5, COLOR::RED);
+    PQTile tile5 = PQTile(4, 5, COLOR::WHITE);
 
     // Convert tiles to Poincare representation
-    tile.to_poincare();
-    tile2.to_poincare();
-    tile3.to_poincare();
-    tile4.to_poincare();
+    tile.to_weirstrass();
+    tile2.to_weirstrass();
+    tile3.to_weirstrass();
+    tile4.to_weirstrass();
+    tile5.to_weirstrass();
+
+    tile2.rotateXHyperbolic(4.5 * M_PI / 16.0f);
+    tile3.rotateYHyperbolic(-4.5 * M_PI / 16.0f);
+    tile4.rotateXHyperbolic(4.5 * M_PI / 16.0f);
+    tile4.rotateYHyperbolic(-4.5 * M_PI / 16.0f);
+    tile5.rotateYHyperbolic(-4.5 * M_PI / 16.0f);
+    tile5.rotateXHyperbolic(4.5 * M_PI / 16.0f);
 
     // Offset individual tiles via their mesh data
-    for (auto &pt : tile2.mutable_mesh())
-    {
-        pt.x += 1.1f; // shift tile2 rightward
-    }
-    for (auto &pt : tile3.mutable_mesh())
-    {
-        pt.x -= 1.1f; // shift tile3 leftward
-    }
-    for (auto &pt : tile4.mutable_mesh())
-    {
-        pt.y += 1.1f; // shift tile4 upward
-    }
 
-    std::vector<PQTile> tiles = {tile}; //, tile2, tile3, tile4};
+    std::vector<PQTile>
+        tiles = {tile, tile2, tile3, tile4, tile5};
 
     // Build and compile our shader program
     auto shaderProgramResult = ShaderProgram::create(
@@ -144,23 +142,21 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
-        processInput(window);
+        tiles = processInput(window, tiles);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         // Bind the shader and texture each frame before drawing
         shaders.bind();
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, texture);
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, texture);
 
         // Render each PQTile in our vector
         for (auto &currentTile : tiles)
         {
 
-            currentTile.to_weirstrass();                              // Ensures Poincaré conversion
-            auto &mesh = currentTile.mutable_mesh();                  // Vector of glm::vec3 (assuming this is mesh data)
-            const unsigned int *indices = currentTile.indices_data(); // Assuming you have index data for triangle rendering
+            currentTile.to_weirstrass(); // Ensures Poincaré conversion
 
             glBindVertexArray(VA0);
             glBindBuffer(GL_ARRAY_BUFFER, VB0);
@@ -186,9 +182,8 @@ int main()
     return 0;
 }
 
-static int x = 0;
-static int y = 0;
-void processInput(GLFWwindow *window)
+float Theta = M_PI / 3.0f;
+std::vector<PQTile> processInput(GLFWwindow *window, std::vector<PQTile> tiles)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
@@ -196,36 +191,113 @@ void processInput(GLFWwindow *window)
     }
     else if (glfwGetKey(window, GLFW_KEY_UP))
     {
-        x += 1;
-        r_uniform_matrix.rotateX(M_PI / 16.0f);
-        std::cout << x << ", " << y << std::endl;
-        shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
+
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        PQTile tile = PQTile(4, 5, COLOR::WHITE);
+        PQTile tile2 = PQTile(4, 5, COLOR::BLUE);
+        PQTile tile3 = PQTile(4, 5, COLOR::GREEN);
+        PQTile tile4 = PQTile(4, 5, COLOR::RED);
+        PQTile tile5 = PQTile(4, 5, COLOR::WHITE);
+
+        Theta += 0.01;
+        std::cout << "THETA:  " << Theta << "\n";
+        // Convert tiles to Poincare representation
+        tile.to_weirstrass();
+        tile2.to_weirstrass();
+        tile3.to_weirstrass();
+        tile4.to_weirstrass();
+        tile5.to_weirstrass();
+
+        tile2.rotateXHyperbolic(Theta);
+        tile3.rotateYHyperbolic(-Theta);
+        tile4.rotateXHyperbolic(Theta);
+        tile4.rotateYHyperbolic(-Theta);
+        tile5.rotateYHyperbolic(-Theta);
+        tile5.rotateXHyperbolic(Theta);
+
+        // Offset individual tiles via their mesh data
+
+        return {tile, tile2, tile3, tile4, tile5};
     }
     else if (glfwGetKey(window, GLFW_KEY_DOWN))
     {
-        x -= 1;
-        r_uniform_matrix.rotateX(-M_PI / 16.0f);
-        shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        PQTile tile = PQTile(4, 5, COLOR::WHITE);
+        PQTile tile2 = PQTile(4, 5, COLOR::BLUE);
+        PQTile tile3 = PQTile(4, 5, COLOR::GREEN);
+        PQTile tile4 = PQTile(4, 5, COLOR::RED);
+        PQTile tile5 = PQTile(4, 5, COLOR::WHITE);
+
+        Theta -= 0.01;
+        std::cout << "THETA:  " << Theta << "\n";
+        // Convert tiles to Poincare representation
+        tile.to_weirstrass();
+        tile2.to_weirstrass();
+        tile3.to_weirstrass();
+        tile4.to_weirstrass();
+        tile5.to_weirstrass();
+
+        tile2.rotateXHyperbolic(Theta);
+        tile3.rotateYHyperbolic(-Theta);
+        tile4.rotateXHyperbolic(Theta);
+        tile4.rotateYHyperbolic(-Theta);
+        tile5.rotateYHyperbolic(-Theta);
+        tile5.rotateXHyperbolic(Theta);
+        return {tile, tile2, tile3, tile4, tile5};
+        // x -= 1;
+        // r_uniform_matrix.rotateX(-M_PI / 16.0f);
+        // shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
     }
     else if (glfwGetKey(window, GLFW_KEY_RIGHT))
     {
-        y += 1;
-        r_uniform_matrix.rotateY(M_PI / 16.0f);
-        shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
+        // y += 1;
+        // r_uniform_matrix.rotateY(M_PI / 16.0f);
+        // shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
     }
     else if (glfwGetKey(window, GLFW_KEY_LEFT))
     {
-        y -= 1;
-        r_uniform_matrix.rotateY(-M_PI / 16.0f);
-        shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
+
+        // y -= 1;
+        // r_uniform_matrix.rotateY(-M_PI / 16.0f);
+        // shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
     }
-    4 else if (glfwGetKey(window, GLFW_KEY_R))
+    else if (glfwGetKey(window, GLFW_KEY_R))
     {
-        x = 0;
-        y = 0;
-        r_uniform_matrix = HypRotate(true);
-        shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        PQTile tile = PQTile(4, 5, COLOR::WHITE);
+        PQTile tile2 = PQTile(4, 5, COLOR::BLUE);
+        PQTile tile3 = PQTile(4, 5, COLOR::GREEN);
+        PQTile tile4 = PQTile(4, 5, COLOR::RED);
+        PQTile tile5 = PQTile(4, 5, COLOR::WHITE);
+        Theta = M_PI / 3.0f;
+
+        std::cout << "THETA:  " << Theta << "\n";
+        // Convert tiles to Poincare representation
+        tile.to_weirstrass();
+        tile2.to_weirstrass();
+        tile3.to_weirstrass();
+        tile4.to_weirstrass();
+        tile5.to_weirstrass();
+
+        tile2.rotateXHyperbolic(Theta);
+        tile3.rotateYHyperbolic(-Theta);
+        tile4.rotateXHyperbolic(Theta);
+        tile4.rotateYHyperbolic(-Theta);
+        tile5.rotateYHyperbolic(-Theta);
+        tile5.rotateXHyperbolic(Theta);
+
+        // Offset individual tiles via their mesh data
+
+        return {tile, tile2, tile3, tile4, tile5};
+        // x = 0;
+        // y = 0;
+        // r_uniform_matrix = HypRotate(true);
+        // shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
     }
+    return tiles;
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
