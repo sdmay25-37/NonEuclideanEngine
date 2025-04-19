@@ -14,6 +14,7 @@
 #include <imgui_internal.h>
 #include <backends/imgui_impl_glfw.h>
 #include <backends/imgui_impl_opengl3.h>
+#include <math.h>
 
 #include "TileMap.hpp"
 #include "Tile.hpp"
@@ -44,56 +45,41 @@ private:
         float rect_size = 1.5 / map_size;
         float total_size = rect_size * map_size;
 
+        Tile currentTile = tilemap->getTileByID(0);
+
         int num_sprites = map_size * map_size;
 
-        PQTile tile = PQTile(4, 5, COLOR::BLUE);
-        PQTile tile2 = PQTile(4, 5, COLOR::RED);
-        PQTile tile3 = PQTile(4, 5, COLOR::GREEN);
+        PQTile tile = PQTile(4, 5, COLOR::WHITE);
+        PQTile tile2 = PQTile(4, 5, COLOR::WHITE);
+        PQTile tile3 = PQTile(4, 5, COLOR::WHITE);
         PQTile tile4 = PQTile(4, 5, COLOR::WHITE);
 
         // Convert tiles to Poincare representation
-        std::vector<PQTile> tiles = {tile}; //, tile2, tile3, tile4};
+        std::vector<PQTile> tiles = {tile, tile2, tile3, tile4};
 
         std::cout
             << num_sprites << "\n";
-        for (auto currentTile : tiles)
+        for (int i = 0; i < tilemap->numTiles; i++) // for (auto currentTile : tiles)
         {
             const auto entity = registry.create();
 
+            PQTile currentTile = tiles.at(i % 4);
             std::cout << "Here" << "\n";
 
             currentTile.to_weirstrass(); // Ensures Poincaré conversion
-            // auto &mesh = currentTile.mutable_mesh();                  // Vector of glm::vec3 (assuming this is mesh data)
-            // const unsigned int *indices = currentTile.indices_data(); // Assuming you have index data for triangle rendering
 
-            // // Convert mesh data (std::vector<MeshPoint> -> std::vector<glm::vec4>, std::vector<glm::vec2>, std::vector<unsigned int>)
-            // std::vector<glm::vec4> positions;
-            // std::vector<glm::vec4> colors;
-            // std::vector<glm::vec2> uvs;
-            // std::vector<unsigned int> indices_data;
-
-            // for (const auto &vertex : mesh)
-            // {
-            //     // Convert position to glm::vec4 (x, y, z, 1.0f)
-            //     positions.push_back(glm::vec4(vertex.x, vertex.y, vertex.z, 1.0f)); // Position in 4D homogeneous coordinates
-
-            //     // Convert color (assuming your MeshPoint has a 'color' member)
-            //     colors.push_back(glm::vec4(vertex.color.R, vertex.color.G, vertex.color.B, vertex.color.A));
-
-            //     // Assuming vertex has a 'uv' member for texture coordinates
-            //     uvs.push_back(vertex.uv);
-
-            //     // Push the index from the MeshPoint (if it's valid)
-            //     indices_data.push_back(vertex.index);
-            // }
-
-            // std::cout << "Vertices: " << mesh.size() << "\n";
-            // std::cout << "Positions: " << positions.size() << "\n";
-            // std::cout << "Colors: " << colors.size() << "\n";
-            // std::cout << "UVs: " << uvs.size() << "\n";
-            // std::cout << "Indices: " << indices_data.size() << "\n";
-
-            // std::cout << "Here2" << "\n";
+            if (i == 1)
+            {
+                currentTile.rotateXHyperbolic(5.0 * M_PI / 16.0f);
+            }
+            else if (i == 2)
+            {
+                currentTile.rotateXHyperbolic(-5.0 * M_PI / 16.0f);
+            }
+            else if (i == 3)
+            {
+                currentTile.rotateYHyperbolic(5.0 * M_PI / 16.0f);
+            }
 
             // Get texture from texture manager
             auto texture_result = texture_manager->getTexture("cy.jpg");
@@ -102,10 +88,9 @@ private:
             if (texture_result)
             {
                 AtlasedTexture texture = texture_result.value();
-
-                std::cout << "\n"
-                          << texture.atlas_id << "\n";
-                // Emplace the converted data into the registry
+                // std::cout << "\n"
+                //           << texture << "\n";
+                // // Emplace the converted data into the registry
                 // registry.emplace<AtlasMesh>(entity, positions, colors, uvs, indices_data, texture.atlas_id);
                 registry.emplace<AtlasPQtile>(entity, currentTile, texture);
 
@@ -222,7 +207,7 @@ private:
     static void LoadTiles(Resource<TileMap> tileMap)
     {
         // Where Tiles are loaded from
-        tileMap->loadTiles("../tests/json/testTileMap.json");
+        tileMap->loadTiles("../tests/json/testNear.json");
     }
 
     static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager)

@@ -90,7 +90,6 @@ public:
 private:
 	unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO, VE0;
 	std::unique_ptr<ShaderProgram> _shader_program;
-	GLuint mesh_VAO, mesh_VBO, mesh_EBO;
 };
 
 #endif // RENDER_HPP

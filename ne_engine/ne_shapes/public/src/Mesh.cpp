@@ -76,6 +76,21 @@ void Mesh::to_weirstrass()
     }
 }
 
+void Mesh::rotateXHyperbolic(float theta)
+{
+    for (unsigned int i = 0; i < mesh_points.size(); i++)
+    {
+        mesh_points[i].rotateXHyperbolic(theta);
+    }
+}
+void Mesh::rotateYHyperbolic(float theta)
+{
+    for (unsigned int i = 0; i < mesh_points.size(); i++)
+    {
+        mesh_points[i].rotateYHyperbolic(theta);
+    }
+}
+
 void Mesh::gen_mesh()
 {
     mesh_points.reserve(NUM_X_POINTS * NUM_Y_POINTS);

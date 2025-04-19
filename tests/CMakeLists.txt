@@ -27,7 +27,7 @@ set(SOURCES
     #"GuiTesting.cpp"
     #"input_test.cpp"
     #"point_square_demo.cpp"
-    # "ne_squares_test.cpp"
+    #"ne_squares_test.cpp"
     #"PQ_tile_test.cpp"
 )
 

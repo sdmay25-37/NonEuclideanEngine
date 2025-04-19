@@ -41,6 +41,9 @@ public:
 
     void to_weirstrass();
 
+    void rotateXHyperbolic(float theta);
+    void rotateYHyperbolic(float theta);
+
     const MeshPoint &operator[](unsigned int index) const
     {
         return mesh_points[index];

@@ -9,6 +9,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include "ShaderProgram.hpp"
+#include <math.h>
+#include <stb/stb_image.h>
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void processInput(GLFWwindow *window);
@@ -17,7 +19,7 @@ ShaderProgram *shader_ptr;
 HypRotate r_uniform_matrix = HypRotate(true);
 
 // settings
-constexpr unsigned int SCREEN_WIDTH = 1920;
+constexpr unsigned int SCREEN_WIDTH = 1080;
 constexpr unsigned int SCREEN_HEIGHT = 1080;
 constexpr float ASPECT_RATIO = (float)SCREEN_WIDTH / SCREEN_HEIGHT;
 
@@ -26,9 +28,8 @@ std::vector<glm::vec4> square_points;
 int main()
 {
 
-    GLFWContext context = GLFWContext();
-    context.initAll(SCREEN_WIDTH, SCREEN_HEIGHT, "NE_Squares_Test");
-
+    GLFWWindow test = GLFWWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
+    GLFWwindow *window = static_cast<GLFWwindow *>(test.get());
     Square sq = Square(.4, 100);
     // sq.offset({1.0, 1.0, 0});
     sq.to_3d_hyperbolic();
@@ -57,6 +58,32 @@ int main()
     shaders.setUniform3f("color", glm::vec3(1, 0, 0));
     shaders.setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
 
+    unsigned int texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    // Texture parameters
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    int texWidth, texHeight, texChannels;
+    stbi_set_flip_vertically_on_load(true);
+
+    unsigned char *data = stbi_load("../res/textures/cy.jpg", &texWidth, &texHeight, &texChannels, 0);
+    if (data)
+    {
+        GLenum format = (texChannels == 4) ? GL_RGBA : GL_RGB;
+        glTexImage2D(GL_TEXTURE_2D, 0, format, texWidth, texHeight, 0, format, GL_UNSIGNED_BYTE, data);
+        glGenerateMipmap(GL_TEXTURE_2D);
+    }
+    else
+    {
+        std::cerr << "Failed to load texture" << std::endl;
+    }
+    stbi_image_free(data);
+    // Set shader sampler uniform to texture unit 0 (if your fragment shader uses "img_texture")
+    shader_ptr->setUniform1i("img_texture", 0);
     unsigned int VA0, VB0, VE0;
 
     glGenVertexArrays(1, &VA0);
@@ -77,9 +104,9 @@ int main()
 
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-    while (!glfwWindowShouldClose(context.getWindow()))
+    while (!glfwWindowShouldClose(window))
     {
-        processInput(context.getWindow());
+        processInput(window);
 
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
@@ -91,7 +118,7 @@ int main()
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDrawElements(GL_TRIANGLES, sq.get_indices().size(), GL_UNSIGNED_INT, 0);
 
-        context.swapBuffers();
+        test.SwapBuffers();
         glfwPollEvents();
     }
 

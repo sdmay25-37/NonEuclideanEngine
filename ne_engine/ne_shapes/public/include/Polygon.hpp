@@ -9,13 +9,15 @@
 class Polygon
 {
 public:
-    Polygon();
+    Polygon() = default;
     Polygon(int num_vertices);
     Polygon(int num_vertices, const Color &color);
     ~Polygon();
 
     void to_weirstrass();
     void to_poincare();
+    void rotateXHyperbolic(float theta);
+    void rotateYHyperbolic(float theta);
 
     unsigned int vertices_size() const;
     const Point *vertices_data() const;

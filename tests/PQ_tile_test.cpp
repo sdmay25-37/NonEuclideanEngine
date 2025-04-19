@@ -57,7 +57,7 @@ int main()
         pt.y += 1.1f; // shift tile4 upward
     }
 
-    std::vector<PQTile> tiles = { tile } //, tile2, tile3, tile4};
+    std::vector<PQTile> tiles = {tile}; //, tile2, tile3, tile4};
 
     // Build and compile our shader program
     auto shaderProgramResult = ShaderProgram::create(
@@ -157,6 +157,11 @@ int main()
         // Render each PQTile in our vector
         for (auto &currentTile : tiles)
         {
+
+            currentTile.to_weirstrass();                              // Ensures Poincaré conversion
+            auto &mesh = currentTile.mutable_mesh();                  // Vector of glm::vec3 (assuming this is mesh data)
+            const unsigned int *indices = currentTile.indices_data(); // Assuming you have index data for triangle rendering
+
             glBindVertexArray(VA0);
             glBindBuffer(GL_ARRAY_BUFFER, VB0);
             glBufferData(GL_ARRAY_BUFFER, sizeof(MeshPoint) * currentTile.mesh_size(), currentTile.mesh_data(), GL_DYNAMIC_DRAW);
@@ -214,7 +219,7 @@ void processInput(GLFWwindow *window)
         r_uniform_matrix.rotateY(-M_PI / 16.0f);
         shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
     }
-    else if (glfwGetKey(window, GLFW_KEY_R))
+    4 else if (glfwGetKey(window, GLFW_KEY_R))
     {
         x = 0;
         y = 0;

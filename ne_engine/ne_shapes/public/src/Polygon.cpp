@@ -63,3 +63,12 @@ void Polygon::to_poincare()
         vertices[i].to_poincare();
     }
 }
+
+void Polygon::rotateXHyperbolic(float theta)
+{
+    mesh.rotateXHyperbolic(theta);
+}
+void Polygon::rotateYHyperbolic(float theta)
+{
+    mesh.rotateYHyperbolic(theta);
+}
