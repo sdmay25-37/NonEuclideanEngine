@@ -109,46 +109,31 @@ private:
     {
         // THIS FEELS UNCESSARY BUT IT MADE IT WORK
         // ASK BEN IF THIS IS GOOD ENOUGH
-        // auto view = registry.view<AtlasPQtile>();
-        // for (auto entity : view)
-        // {
-        //     registry.destroy(entity);
-        // }
+        auto view = registry.view<AtlasPQtile>();
+        for (auto entity : view)
+        {
+            registry.destroy(entity);
+        }
 
-        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, 4);
+        int renderDist = 3;
+        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, renderDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = tilemap->currentTile;
         SpriteTile.to_weirstrass();
         std::unordered_set<int> processed_tiles;
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, 4, root_tile.sprite, SpriteTile, tilemap, processed_tiles);
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, renderDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles);
     }
 
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
-        std::srand(std::time(nullptr));
-
-        // map is 162 * 162 (image is 162 by 162)
-        int map_size = 4;
-        float rect_size = 1.5 / map_size;
-        float total_size = rect_size * map_size;
-
-        Tile currentTile = tilemap->getTileByID(85);
-        // tilemap->getNearTiles(currentTile, 4);
-
-        std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, 4);
-
-        int num_sprites = map_size * map_size;
-
+        Tile currentTile = tilemap->getTileByID(29);
+        int rendDist = 3;
+        std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
-
-        std::cout
-            << num_sprites << "\n";
         Tile root_tile = currentTile;
         SpriteTile.to_weirstrass();
-
         std::unordered_set<int> processed_tiles;
-
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, 4, root_tile.sprite, SpriteTile, tilemap, processed_tiles);
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles);
     }
 
     static void addTileAndNeighbors(entt::registry &registry, Resource<TextureManager> texture_manager,
@@ -198,7 +183,6 @@ private:
             Tile tile_left = tilemap->getTileInRenderedList(root_tile._leftTileId);
             PQTile left_tile = Sprite_tile;
             left_tile.rotateYHyperbolic(-Theta);
-            tile_left.relationToCurrentTile = currentRelation + 1;
             addTileAndNeighbors(registry, texture_manager, tile_left, currentRelation + 1, radius, tile_left.sprite, left_tile, tilemap, processed_tiles);
         }
         if (root_tile._rightTileId != -1 && tilemap->getTileInRenderedList(root_tile._downTileId)._rightTileId != -1)
@@ -207,7 +191,6 @@ private:
             Tile tile_right = tilemap->getTileInRenderedList(root_tile._rightTileId);
             PQTile right_tile = Sprite_tile;
             right_tile.rotateYHyperbolic(Theta);
-            tile_right.relationToCurrentTile = currentRelation + 1;
             addTileAndNeighbors(registry, texture_manager, tile_right, currentRelation + 1, radius, tile_right.sprite, right_tile, tilemap, processed_tiles);
         }
         if (root_tile._upTileId != -1 && tilemap->getTileInRenderedList(root_tile._upTileId)._tileId != -1)
@@ -215,7 +198,6 @@ private:
             Tile tile_top = tilemap->getTileInRenderedList(root_tile._upTileId);
             PQTile top_tile = Sprite_tile;
             top_tile.rotateXHyperbolic(Theta);
-            tile_top.relationToCurrentTile = currentRelation + 1;
             addTileAndNeighbors(registry, texture_manager, tile_top, currentRelation + 1, radius, tile_top.sprite, top_tile, tilemap, processed_tiles);
         }
         if (root_tile._downTileId != -1 && tilemap->getTileInRenderedList(root_tile._downTileId)._tileId != -1)
@@ -223,7 +205,6 @@ private:
             Tile tile_bottom = tilemap->getTileInRenderedList(root_tile._downTileId);
             PQTile bottom__tile = Sprite_tile;
             bottom__tile.rotateXHyperbolic(-Theta);
-            tile_bottom.relationToCurrentTile = currentRelation + 1;
             addTileAndNeighbors(registry, texture_manager, tile_bottom, currentRelation + 1, radius, tile_bottom.sprite, bottom__tile, tilemap, processed_tiles);
         }
     }
@@ -331,7 +312,7 @@ private:
     static void LoadTiles(Resource<TileMap> tileMap)
     {
         // Where Tiles are loaded from
-        tileMap->loadTiles("../tests/json/maze_output.json");
+        tileMap->loadTiles("../tests/json/maze_output_small.json");
     }
 
     static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager, Resource<Renderer> renderer)
@@ -349,7 +330,7 @@ private:
         if (timeSinceLastMove < moveCooldown)
             return;
 
-        else if (input->wasKeyPressed(GLFW_KEY_W))
+        else if (input->isKeyPressed(GLFW_KEY_W))
         {
             // camera->position.y += speed;
 
@@ -361,7 +342,7 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->wasKeyPressed(GLFW_KEY_A))
+        else if (input->isKeyPressed(GLFW_KEY_A))
         {
             // camera->position.x -= speed;
             std::cout << tilemap->currentTile.to_string() << "\n";
@@ -372,7 +353,7 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->wasKeyPressed(GLFW_KEY_S))
+        else if (input->isKeyPressed(GLFW_KEY_S))
         {
             // camera->position.y -= speed;
             std::cout << tilemap->currentTile.to_string() << "\n";
@@ -383,7 +364,7 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->wasKeyPressed(GLFW_KEY_D))
+        else if (input->isKeyPressed(GLFW_KEY_D))
         {
             // camera->position.x += speed;
             std::cout << tilemap->currentTile.to_string() << "\n";
