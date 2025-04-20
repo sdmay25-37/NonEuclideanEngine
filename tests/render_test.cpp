@@ -20,6 +20,9 @@
 #include "Tile.hpp"
 #include "Input.hpp"
 
+// TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
+#define rendDist 3
+
 static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
 static float timeSinceLastMove = 0.0f;
@@ -35,76 +38,6 @@ public:
     }
 
 private:
-    // used to render entire map
-    /// NOT USED
-    // static void CreateTiles(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
-    // {
-    //     std::srand(std::time(nullptr));
-
-    //     // map is 162 * 162 (image is 162 by 162)
-    //     int map_size = 4;
-    //     float rect_size = 1.5 / map_size;
-    //     float total_size = rect_size * map_size;
-
-    //     Tile currentTile = tilemap->getTileByID(85);
-
-    //     int num_sprites = map_size * map_size;
-
-    //     PQTile tile = PQTile(4, 5, COLOR::WHITE);
-    //     PQTile tile2 = PQTile(4, 5, COLOR::WHITE);
-    //     PQTile tile3 = PQTile(4, 5, COLOR::WHITE);
-    //     PQTile tile4 = PQTile(4, 5, COLOR::WHITE);
-
-    //     // Convert tiles to Poincare representation
-    //     std::vector<PQTile> tiles = {tile, tile2, tile3, tile4};
-
-    //     std::cout
-    //         << num_sprites << "\n";
-
-    //     for (int i = 0; i < tilemap->numTiles; i++) // for (auto currentTile : tiles)
-    //     {
-    //         const auto entity = registry.create();
-
-    //         PQTile currentTile = tiles.at(i % 4);
-    //         std::cout << "Here" << "\n";
-
-    //         currentTile.to_weirstrass(); // Ensures Poincaré conversion
-
-    //         if (i == 1)
-    //         {
-    //             currentTile.rotateXHyperbolic(5.0 * M_PI / 16.0f);
-    //         }
-    //         else if (i == 2)
-    //         {
-    //             currentTile.rotateXHyperbolic(-5.0 * M_PI / 16.0f);
-    //         }
-    //         else if (i == 3)
-    //         {
-    //             currentTile.rotateYHyperbolic(5.0 * M_PI / 16.0f);
-    //         }
-
-    //         // Get texture from texture manager
-    //         auto texture_result = texture_manager->getTexture("cy.jpg");
-
-    //         // Check if texture was successfully retrieved
-    //         if (texture_result)
-    //         {
-    //             AtlasedTexture texture = texture_result.value();
-    //             // std::cout << "\n"
-    //             //           << texture << "\n";
-    //             // // Emplace the converted data into the registry
-    //             // registry.emplace<AtlasMesh>(entity, positions, colors, uvs, indices_data, texture.atlas_id);
-    //             registry.emplace<AtlasPQtile>(entity, currentTile, texture);
-
-    //             std::cout << "Texture loaded successfully!" << "\n";
-    //         }
-    //         else
-    //         {
-    //             // Handle the error if the texture could not be retrieved
-    //             std::cout << "Error: Failed to load texture 'cy.png'!" << "\n";
-    //         }
-    //     }
-    // }
     static void UpdateTile2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap, Resource<Renderer> renderer)
     {
         // THIS FEELS UNCESSARY BUT IT MADE IT WORK
@@ -116,19 +49,19 @@ private:
             registry.destroy(entity);
         }
 
-        int renderDist = 3;
-        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, renderDist);
+        // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
+        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = tilemap->currentTile;
         SpriteTile.to_weirstrass();
         std::unordered_set<int> processed_tiles;
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, renderDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles);
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles);
     }
 
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
         Tile currentTile = tilemap->getTileByID(29);
-        int rendDist = 3;
+
         std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = currentTile;
@@ -207,101 +140,6 @@ private:
             addTileAndNeighbors(registry, texture_manager, tile_bottom, currentRelation + 1, radius, tile_bottom.sprite, bottom__tile, tilemap, processed_tiles);
         }
     }
-
-    // // Used to render tiles in a specific distance from a tile
-    // static void CreateTiles2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
-    // {
-    //     std::srand(std::time(nullptr));
-
-    //     Tile currentTile = tilemap->getTileByID(85);
-    //     // std::cout << tilemap->currentTile.to_string() << "\n";
-
-    //     std::vector<Tile> nearTiles = tilemap->getNearTiles(currentTile, 20);
-    //     // std::cout << tilemap->currentTile.to_string() << "\n";
-
-    //     int map_size = 20;
-    //     float rect_size = 1.5 / map_size;
-    //     float total_size = rect_size * map_size;
-
-    //     int num_sprites = map_size * map_size;
-
-    //     std::cout << num_sprites << "\n";
-    //     for (const Tile &tile : nearTiles)
-    //     {
-    //         // Tile tile = tilemap->getTileInRenderedList(i);
-    //         //  std::cout << tile.to_string() << "\n";
-
-    //         // Centers the rendering position so that the current tile is in middle of map
-    //         int x = tile.relationMappingToCurrentTile.first + (map_size / 2);
-    //         int y = tile.relationMappingToCurrentTile.second + (map_size / 2);
-    //         // int x = i % map_size;
-    //         // int y = i / map_size;
-
-    //         float rect_x = x * rect_size - total_size / 2.0f + rect_size / 2.0f;
-    //         float rect_y = y * rect_size - total_size / 2.0f + rect_size / 2.0f;
-
-    //         glm::vec3 position(rect_x, rect_y, 0.0);
-    //         glm::vec3 scale(rect_size, rect_size, 1.0);
-
-    //         glm::mat4 model_mat(1.0);
-    //         model_mat = glm::translate(model_mat, position);
-    //         model_mat = glm::scale(model_mat, scale);
-
-    //         const auto entity = registry.create();
-    //         auto texture_result = texture_manager->getTexture(tile.sprite);
-    //         AtlasedTexture texture = texture_result.value();
-    //         registry.emplace<AtlasSprite>(entity, model_mat, texture);
-    //     }
-    // }
-
-    // static void UpdateTile(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
-    // {
-    //     // THIS FEELS UNCESSARY BUT IT MADE IT WORK
-    //     // ASK BEN IF THIS IS GOOD ENOUGH
-    //     auto view = registry.view<AtlasSprite>();
-    //     for (auto entity : view)
-    //     {
-    //         registry.destroy(entity);
-    //     }
-    //     // std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAA" << "\n";
-
-    //     std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, 20);
-    //     int map_size = 20;
-    //     float rect_size = 1.5 / map_size;
-    //     float total_size = rect_size * map_size;
-
-    //     int num_sprites = map_size * map_size;
-
-    //     // std::cout << num_sprites << "\n";
-    //     for (const Tile &tile : nearTiles)
-    //     {
-    //         // Tile tile = tilemap->getTileInRenderedList(i);
-    //         //  std::cout << tile.to_string() << "\n";
-
-    //         // Centers the rendering position so that the current tile is in middle of map
-    //         int x = tile.relationMappingToCurrentTile.first + (map_size / 2);
-    //         int y = tile.relationMappingToCurrentTile.second + (map_size / 2);
-    //         // int x = i % map_size;
-    //         // int y = i / map_size;
-
-    //         float rect_x = x * rect_size - total_size / 2.0f + rect_size / 2.0f;
-    //         float rect_y = y * rect_size - total_size / 2.0f + rect_size / 2.0f;
-
-    //         glm::vec3 position(rect_x, rect_y, 0.0);
-    //         glm::vec3 scale(rect_size, rect_size, 1.0);
-
-    //         glm::mat4 model_mat(1.0);
-    //         model_mat = glm::translate(model_mat, position);
-    //         model_mat = glm::scale(model_mat, scale);
-
-    //         const auto entity = registry.create();
-    //         auto texture_result = texture_manager->getTexture(tile.sprite);
-    //         AtlasedTexture texture = texture_result.value();
-
-    //         registry.emplace<AtlasSprite>(entity, model_mat, texture);
-    //     }
-    // }
-
     static void
     LoadTextures(Resource<TextureManager> texture_manager)
     {
