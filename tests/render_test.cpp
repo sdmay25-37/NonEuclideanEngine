@@ -37,74 +37,74 @@ public:
 private:
     // used to render entire map
     /// NOT USED
-    static void CreateTiles(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
-    {
-        std::srand(std::time(nullptr));
+    // static void CreateTiles(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
+    // {
+    //     std::srand(std::time(nullptr));
 
-        // map is 162 * 162 (image is 162 by 162)
-        int map_size = 4;
-        float rect_size = 1.5 / map_size;
-        float total_size = rect_size * map_size;
+    //     // map is 162 * 162 (image is 162 by 162)
+    //     int map_size = 4;
+    //     float rect_size = 1.5 / map_size;
+    //     float total_size = rect_size * map_size;
 
-        Tile currentTile = tilemap->getTileByID(85);
+    //     Tile currentTile = tilemap->getTileByID(85);
 
-        int num_sprites = map_size * map_size;
+    //     int num_sprites = map_size * map_size;
 
-        PQTile tile = PQTile(4, 5, COLOR::WHITE);
-        PQTile tile2 = PQTile(4, 5, COLOR::WHITE);
-        PQTile tile3 = PQTile(4, 5, COLOR::WHITE);
-        PQTile tile4 = PQTile(4, 5, COLOR::WHITE);
+    //     PQTile tile = PQTile(4, 5, COLOR::WHITE);
+    //     PQTile tile2 = PQTile(4, 5, COLOR::WHITE);
+    //     PQTile tile3 = PQTile(4, 5, COLOR::WHITE);
+    //     PQTile tile4 = PQTile(4, 5, COLOR::WHITE);
 
-        // Convert tiles to Poincare representation
-        std::vector<PQTile> tiles = {tile, tile2, tile3, tile4};
+    //     // Convert tiles to Poincare representation
+    //     std::vector<PQTile> tiles = {tile, tile2, tile3, tile4};
 
-        std::cout
-            << num_sprites << "\n";
+    //     std::cout
+    //         << num_sprites << "\n";
 
-        for (int i = 0; i < tilemap->numTiles; i++) // for (auto currentTile : tiles)
-        {
-            const auto entity = registry.create();
+    //     for (int i = 0; i < tilemap->numTiles; i++) // for (auto currentTile : tiles)
+    //     {
+    //         const auto entity = registry.create();
 
-            PQTile currentTile = tiles.at(i % 4);
-            std::cout << "Here" << "\n";
+    //         PQTile currentTile = tiles.at(i % 4);
+    //         std::cout << "Here" << "\n";
 
-            currentTile.to_weirstrass(); // Ensures Poincaré conversion
+    //         currentTile.to_weirstrass(); // Ensures Poincaré conversion
 
-            if (i == 1)
-            {
-                currentTile.rotateXHyperbolic(5.0 * M_PI / 16.0f);
-            }
-            else if (i == 2)
-            {
-                currentTile.rotateXHyperbolic(-5.0 * M_PI / 16.0f);
-            }
-            else if (i == 3)
-            {
-                currentTile.rotateYHyperbolic(5.0 * M_PI / 16.0f);
-            }
+    //         if (i == 1)
+    //         {
+    //             currentTile.rotateXHyperbolic(5.0 * M_PI / 16.0f);
+    //         }
+    //         else if (i == 2)
+    //         {
+    //             currentTile.rotateXHyperbolic(-5.0 * M_PI / 16.0f);
+    //         }
+    //         else if (i == 3)
+    //         {
+    //             currentTile.rotateYHyperbolic(5.0 * M_PI / 16.0f);
+    //         }
 
-            // Get texture from texture manager
-            auto texture_result = texture_manager->getTexture("cy.jpg");
+    //         // Get texture from texture manager
+    //         auto texture_result = texture_manager->getTexture("cy.jpg");
 
-            // Check if texture was successfully retrieved
-            if (texture_result)
-            {
-                AtlasedTexture texture = texture_result.value();
-                // std::cout << "\n"
-                //           << texture << "\n";
-                // // Emplace the converted data into the registry
-                // registry.emplace<AtlasMesh>(entity, positions, colors, uvs, indices_data, texture.atlas_id);
-                registry.emplace<AtlasPQtile>(entity, currentTile, texture);
+    //         // Check if texture was successfully retrieved
+    //         if (texture_result)
+    //         {
+    //             AtlasedTexture texture = texture_result.value();
+    //             // std::cout << "\n"
+    //             //           << texture << "\n";
+    //             // // Emplace the converted data into the registry
+    //             // registry.emplace<AtlasMesh>(entity, positions, colors, uvs, indices_data, texture.atlas_id);
+    //             registry.emplace<AtlasPQtile>(entity, currentTile, texture);
 
-                std::cout << "Texture loaded successfully!" << "\n";
-            }
-            else
-            {
-                // Handle the error if the texture could not be retrieved
-                std::cout << "Error: Failed to load texture 'cy.png'!" << "\n";
-            }
-        }
-    }
+    //             std::cout << "Texture loaded successfully!" << "\n";
+    //         }
+    //         else
+    //         {
+    //             // Handle the error if the texture could not be retrieved
+    //             std::cout << "Error: Failed to load texture 'cy.png'!" << "\n";
+    //         }
+    //     }
+    // }
     static void UpdateTile2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap, Resource<Renderer> renderer)
     {
         // THIS FEELS UNCESSARY BUT IT MADE IT WORK
@@ -156,18 +156,16 @@ private:
         processed_tiles.insert(root_tile._tileId);
         // Create entity and add tile to registry
         const auto entity = registry.create();
-        std::cout << "HERE:'" << texturePath << "'!" << "\n";
-
+        // std::cout << "HERE:'" << texturePath << "'!" << "\n";
         auto texture_result = texture_manager->getTexture(texturePath);
-
         if (texture_result)
         {
             AtlasedTexture texture = texture_result.value();
-            std::cout << "Tile Added: " << root_tile._tileId << "\n";
-            for (int ID : processed_tiles)
-            {
-                std::cout << "Processed_Tiles" << ID << "\n";
-            }
+            // std::cout << "Tile Added: " << root_tile._tileId << "\n";
+            // for (int ID : processed_tiles)
+            // {
+            //     std::cout << "Processed_Tiles" << ID << "\n";
+            // }
             registry.emplace<AtlasPQtile>(entity, Sprite_tile, texture);
         }
         else
@@ -209,99 +207,99 @@ private:
         }
     }
 
-    // Used to render tiles in a specific distance from a tile
-    static void CreateTiles2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
-    {
-        std::srand(std::time(nullptr));
+    // // Used to render tiles in a specific distance from a tile
+    // static void CreateTiles2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
+    // {
+    //     std::srand(std::time(nullptr));
 
-        Tile currentTile = tilemap->getTileByID(85);
-        // std::cout << tilemap->currentTile.to_string() << "\n";
+    //     Tile currentTile = tilemap->getTileByID(85);
+    //     // std::cout << tilemap->currentTile.to_string() << "\n";
 
-        std::vector<Tile> nearTiles = tilemap->getNearTiles(currentTile, 20);
-        // std::cout << tilemap->currentTile.to_string() << "\n";
+    //     std::vector<Tile> nearTiles = tilemap->getNearTiles(currentTile, 20);
+    //     // std::cout << tilemap->currentTile.to_string() << "\n";
 
-        int map_size = 20;
-        float rect_size = 1.5 / map_size;
-        float total_size = rect_size * map_size;
+    //     int map_size = 20;
+    //     float rect_size = 1.5 / map_size;
+    //     float total_size = rect_size * map_size;
 
-        int num_sprites = map_size * map_size;
+    //     int num_sprites = map_size * map_size;
 
-        std::cout << num_sprites << "\n";
-        for (const Tile &tile : nearTiles)
-        {
-            // Tile tile = tilemap->getTileInRenderedList(i);
-            //  std::cout << tile.to_string() << "\n";
+    //     std::cout << num_sprites << "\n";
+    //     for (const Tile &tile : nearTiles)
+    //     {
+    //         // Tile tile = tilemap->getTileInRenderedList(i);
+    //         //  std::cout << tile.to_string() << "\n";
 
-            // Centers the rendering position so that the current tile is in middle of map
-            int x = tile.relationMappingToCurrentTile.first + (map_size / 2);
-            int y = tile.relationMappingToCurrentTile.second + (map_size / 2);
-            // int x = i % map_size;
-            // int y = i / map_size;
+    //         // Centers the rendering position so that the current tile is in middle of map
+    //         int x = tile.relationMappingToCurrentTile.first + (map_size / 2);
+    //         int y = tile.relationMappingToCurrentTile.second + (map_size / 2);
+    //         // int x = i % map_size;
+    //         // int y = i / map_size;
 
-            float rect_x = x * rect_size - total_size / 2.0f + rect_size / 2.0f;
-            float rect_y = y * rect_size - total_size / 2.0f + rect_size / 2.0f;
+    //         float rect_x = x * rect_size - total_size / 2.0f + rect_size / 2.0f;
+    //         float rect_y = y * rect_size - total_size / 2.0f + rect_size / 2.0f;
 
-            glm::vec3 position(rect_x, rect_y, 0.0);
-            glm::vec3 scale(rect_size, rect_size, 1.0);
+    //         glm::vec3 position(rect_x, rect_y, 0.0);
+    //         glm::vec3 scale(rect_size, rect_size, 1.0);
 
-            glm::mat4 model_mat(1.0);
-            model_mat = glm::translate(model_mat, position);
-            model_mat = glm::scale(model_mat, scale);
+    //         glm::mat4 model_mat(1.0);
+    //         model_mat = glm::translate(model_mat, position);
+    //         model_mat = glm::scale(model_mat, scale);
 
-            const auto entity = registry.create();
-            auto texture_result = texture_manager->getTexture(tile.sprite);
-            AtlasedTexture texture = texture_result.value();
-            registry.emplace<AtlasSprite>(entity, model_mat, texture);
-        }
-    }
+    //         const auto entity = registry.create();
+    //         auto texture_result = texture_manager->getTexture(tile.sprite);
+    //         AtlasedTexture texture = texture_result.value();
+    //         registry.emplace<AtlasSprite>(entity, model_mat, texture);
+    //     }
+    // }
 
-    static void UpdateTile(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
-    {
-        // THIS FEELS UNCESSARY BUT IT MADE IT WORK
-        // ASK BEN IF THIS IS GOOD ENOUGH
-        auto view = registry.view<AtlasSprite>();
-        for (auto entity : view)
-        {
-            registry.destroy(entity);
-        }
-        // std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAA" << "\n";
+    // static void UpdateTile(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
+    // {
+    //     // THIS FEELS UNCESSARY BUT IT MADE IT WORK
+    //     // ASK BEN IF THIS IS GOOD ENOUGH
+    //     auto view = registry.view<AtlasSprite>();
+    //     for (auto entity : view)
+    //     {
+    //         registry.destroy(entity);
+    //     }
+    //     // std::cout << "AAAAAAAAAAAAAAAAAAAAAAAAA" << "\n";
 
-        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, 20);
-        int map_size = 20;
-        float rect_size = 1.5 / map_size;
-        float total_size = rect_size * map_size;
+    //     std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, 20);
+    //     int map_size = 20;
+    //     float rect_size = 1.5 / map_size;
+    //     float total_size = rect_size * map_size;
 
-        int num_sprites = map_size * map_size;
+    //     int num_sprites = map_size * map_size;
 
-        // std::cout << num_sprites << "\n";
-        for (const Tile &tile : nearTiles)
-        {
-            // Tile tile = tilemap->getTileInRenderedList(i);
-            //  std::cout << tile.to_string() << "\n";
+    //     // std::cout << num_sprites << "\n";
+    //     for (const Tile &tile : nearTiles)
+    //     {
+    //         // Tile tile = tilemap->getTileInRenderedList(i);
+    //         //  std::cout << tile.to_string() << "\n";
 
-            // Centers the rendering position so that the current tile is in middle of map
-            int x = tile.relationMappingToCurrentTile.first + (map_size / 2);
-            int y = tile.relationMappingToCurrentTile.second + (map_size / 2);
-            // int x = i % map_size;
-            // int y = i / map_size;
+    //         // Centers the rendering position so that the current tile is in middle of map
+    //         int x = tile.relationMappingToCurrentTile.first + (map_size / 2);
+    //         int y = tile.relationMappingToCurrentTile.second + (map_size / 2);
+    //         // int x = i % map_size;
+    //         // int y = i / map_size;
 
-            float rect_x = x * rect_size - total_size / 2.0f + rect_size / 2.0f;
-            float rect_y = y * rect_size - total_size / 2.0f + rect_size / 2.0f;
+    //         float rect_x = x * rect_size - total_size / 2.0f + rect_size / 2.0f;
+    //         float rect_y = y * rect_size - total_size / 2.0f + rect_size / 2.0f;
 
-            glm::vec3 position(rect_x, rect_y, 0.0);
-            glm::vec3 scale(rect_size, rect_size, 1.0);
+    //         glm::vec3 position(rect_x, rect_y, 0.0);
+    //         glm::vec3 scale(rect_size, rect_size, 1.0);
 
-            glm::mat4 model_mat(1.0);
-            model_mat = glm::translate(model_mat, position);
-            model_mat = glm::scale(model_mat, scale);
+    //         glm::mat4 model_mat(1.0);
+    //         model_mat = glm::translate(model_mat, position);
+    //         model_mat = glm::scale(model_mat, scale);
 
-            const auto entity = registry.create();
-            auto texture_result = texture_manager->getTexture(tile.sprite);
-            AtlasedTexture texture = texture_result.value();
+    //         const auto entity = registry.create();
+    //         auto texture_result = texture_manager->getTexture(tile.sprite);
+    //         AtlasedTexture texture = texture_result.value();
 
-            registry.emplace<AtlasSprite>(entity, model_mat, texture);
-        }
-    }
+    //         registry.emplace<AtlasSprite>(entity, model_mat, texture);
+    //     }
+    // }
 
     static void
     LoadTextures(Resource<TextureManager> texture_manager)
@@ -321,19 +319,11 @@ private:
 
         float deltaTime = ImGui::GetIO().DeltaTime; // USING IMGUI because it was already in here
         timeSinceLastMove += deltaTime;
-
-        //
-        //
-        // std::cout << deltaTime << "\n";
-        // std::cout << timeSinceLastMove << "\n";
-
         if (timeSinceLastMove < moveCooldown)
             return;
 
         else if (input->isKeyPressed(GLFW_KEY_W))
         {
-            // camera->position.y += speed;
-
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._upTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._upTileId), tilemap))
             {
@@ -344,7 +334,6 @@ private:
         }
         else if (input->isKeyPressed(GLFW_KEY_A))
         {
-            // camera->position.x -= speed;
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._leftTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId), tilemap))
             {
@@ -355,7 +344,6 @@ private:
         }
         else if (input->isKeyPressed(GLFW_KEY_S))
         {
-            // camera->position.y -= speed;
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._downTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._downTileId), tilemap))
             {
@@ -366,7 +354,6 @@ private:
         }
         else if (input->isKeyPressed(GLFW_KEY_D))
         {
-            // camera->position.x += speed;
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._rightTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId), tilemap))
             {
@@ -384,16 +371,9 @@ private:
         input->BindWindow(glfw_window);
     }
 
-    // Used to prevent moving from window
+    // Used to prevent moving onto a wall
     static bool isValidTileToMove(Tile tile, Resource<TileMap> tilemap)
     {
-        // std::cout << "TILEID \n"
-        //           << tile._tileId << "\n";
-        // std::cout << tile.to_string();
-        // if (tile._tileId == -1)
-        // {
-        //     return false;
-        // }
         if (tile.sprite == "wall.jpg")
         {
             return false;
