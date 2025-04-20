@@ -35,6 +35,7 @@ struct AtlasSprite
 	AtlasedTexture texture;
 };
 
+// Atlas Object Used to render non euclidean math
 struct AtlasPQtile
 {
 	PQTile tile;
@@ -49,7 +50,7 @@ public:
 	void Init();
 	void Render(entt::registry &registry, Resource<Camera> camera) const;
 	void Bind();
-	void Clear();
+	void Clear(); // NOT USED
 
 	static constexpr int N_INDICES = 6;
 

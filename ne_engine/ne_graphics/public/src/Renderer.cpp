@@ -6,15 +6,20 @@
 #include "ne_engine.hpp"
 #include <nlohmann/json.hpp>
 
+// Used to render each NonEuclidean tile in Renderer::render()
+// Needed because things are meshes are unique per tile and need to save each data
 struct MeshAtlasKeyHash
 {
 	std::size_t operator()(const std::pair<const void *, unsigned int> &key) const
 	{
 		std::size_t h1 = std::hash<const void *>{}(key.first);
 		std::size_t h2 = std::hash<unsigned int>{}(key.second);
-		return h1 ^ (h2 << 1); // or use boost::hash_combine logic
+		return h1 ^ (h2 << 1);
 	}
 };
+// Used to render each NonEuclidean tile in Renderer::render()
+// Needed because things are meshes are unique per tile and need to save each data
+// This isn't needed but good practices suggest it
 struct MeshAtlasKeyEqual
 {
 	bool operator()(const std::pair<const void *, unsigned int> &lhs,
@@ -45,6 +50,8 @@ void Renderer::Init()
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
 
+	// THESE CAUSE WARNINGS BUT I DON'T KNOW HOW TO MAKE IT WORK Without it
+	// Setting up the buffer for the PQ shaders
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, x));
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, color));
@@ -52,12 +59,12 @@ void Renderer::Init()
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, fraguv));
 	glEnableVertexAttribArray(2);
 
+	// sprite texture coords attribute
 	glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
 
-	// sprite texture coords attribute
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(3);
-	glVertexAttribDivisor(3, 1);
+	glVertexAttribDivisor(3, 1); // THIS IS WHAT CAUSED MY PAIN FOR LIKE 8 HOURS
 
 	// Load shaders
 	auto shader_result = ShaderProgram::create(
@@ -76,6 +83,7 @@ void Renderer::Init()
 }
 
 // Todo: Not sure how I feel about this method
+// Update: Same Bro this ucks my yum
 // I don't like having to copy UV data every frame when it likely doesn't change
 void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 {
@@ -88,7 +96,9 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 
 	auto pqTile_view = registry.view<AtlasPQtile>();
 
-	using MeshAtlasKey = std::pair<const void *, unsigned int>; // void* or a unique Mesh* ID
+	// Todo There should be a better way to do this
+	// But each mesh is unique
+	using MeshAtlasKey = std::pair<const void *, unsigned int>;
 	std::unordered_map<
 		std::pair<const void *, unsigned int>,
 		std::vector<const AtlasPQtile *>,
@@ -115,7 +125,7 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * sample_tile.indices_size(), sample_tile.indices_data(), GL_STATIC_DRAW);
 
-		// Collect per-instance UVs (and optionally model matrices)
+		// Collect per-instance UVs
 		std::vector<glm::vec4> uv_ranges;
 
 		for (auto *tile : tiles)
@@ -135,31 +145,6 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 		// Draw instances
 		glDrawElementsInstanced(GL_TRIANGLES, sample_tile.indices_size(), GL_UNSIGNED_INT, 0, uv_ranges.size());
 	}
-
-	// for (auto [entity, currentTile] : pqTile_view.each())
-	// {
-	// 	currentTile.tile.to_weirstrass(); // Ensures Poincaré conversion
-	// 	auto &[model_mats, uv_ranges] = atlas_data[currentTile.texture.atlas_id];
-	// 	// model_mats.push_back(sprite.model_mat);
-	// 	uv_ranges.emplace_back(currentTile.texture.uv_min.x, currentTile.texture.uv_min.y, currentTile.texture.uv_max.x, currentTile.texture.uv_max.y);
-
-	// 	glBindVertexArray(VAO);
-	// 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	// 	glBufferData(GL_ARRAY_BUFFER, sizeof(MeshPoint) * currentTile.tile.mesh_size(), currentTile.tile.mesh_data(), GL_DYNAMIC_DRAW);
-
-	// 	glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
-	// 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
-
-	// 	glActiveTexture(GL_TEXTURE0);
-	// 	glBindTexture(GL_TEXTURE_2D, currentTile.texture.atlas_id);
-
-	// 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
-	// 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * currentTile.tile.indices_size(), currentTile.tile.indices_data(), GL_STATIC_DRAW);
-
-	// 	glDrawElementsInstanced(GL_TRIANGLES, currentTile.tile.indices_size(), GL_UNSIGNED_INT, 0, pqTile_view.size());
-
-	// 	// glDrawElements(GL_TRIANGLES, currentTile.tile.indices_size(), GL_UNSIGNED_INT, 0);
-	// }
 }
 
 void Renderer::Bind()
@@ -167,6 +152,8 @@ void Renderer::Bind()
 	glBindVertexArray(VAO);
 	_shader_program->bind();
 }
+
+// NOT USED
 void Renderer::Clear()
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);

@@ -109,6 +109,7 @@ private:
     {
         // THIS FEELS UNCESSARY BUT IT MADE IT WORK
         // ASK BEN IF THIS IS GOOD ENOUGH
+        // THIS ISNT ENOUGH ASK BEN
         auto view = registry.view<AtlasPQtile>();
         for (auto entity : view)
         {
