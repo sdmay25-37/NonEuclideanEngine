@@ -3,15 +3,16 @@
 
 #include <vector>
 #include <cstring>
-#include <glm/vec2.hpp> // include GLM's vec2 type if not already included
+#include <glm/vec2.hpp>
+#include <glm/vec4.hpp>
 
 #include "Point.hpp"
 
 struct MeshPoint : public Point
 {
     MeshPoint() = default;
-    MeshPoint(float x, float y, float z, const Color &color, unsigned int index, const glm::vec2 &uv_coord)
-        : Point(x, y, z, color, PointType::POINCARE), uv(uv_coord), index(index) {}
+    MeshPoint(float x, float y, float z, const Color &color, unsigned int index, const glm::vec2 &uv_coord, const glm::vec2 &uv_min, const glm::vec2 &uv_max)
+        : Point(x, y, z, color, PointType::POINCARE), fraguv(uv_coord), uv_min(uv_min), uv_max(uv_max), index(index) {}
 
     unsigned int index;
     MeshPoint *right;
@@ -19,7 +20,8 @@ struct MeshPoint : public Point
     MeshPoint *left;
     MeshPoint *down;
 
-    glm::vec2 uv; // New: texture coordinate for sprites
+    glm::vec2 fraguv; // New: texture coordinate for sprites
+    glm::vec2 uv_min, uv_max;
 };
 
 class Mesh

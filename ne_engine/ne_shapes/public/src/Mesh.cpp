@@ -132,8 +132,13 @@ void Mesh::gen_mesh()
             float u = (x - MIN_X) / (MAX_X - MIN_X);
             float v = (y - MIN_Y) / (MAX_Y - MIN_Y);
 
-            // Create a MeshPoint using the new constructor signature with UV coordinates.
-            MeshPoint p = MeshPoint(x, y, 0.0f, color, i * NUM_Y_POINTS + j, glm::vec2(u, v));
+            // sprite.texture.uv_min.x, sprite.texture.uv_min.y, sprite.texture.uv_max.x, sprite.texture.uv_max.y
+
+            glm::vec2 uv_min(MIN_X, MIN_Y);
+            glm::vec2 uv_max(MAX_X, MAX_Y);
+
+            glm::vec4 sprite_UVs = {MIN_X, MIN_Y, MAX_X, MAX_Y}; // Create a MeshPoint using the new constructor signature with UV coordinates.
+            MeshPoint p = MeshPoint(x, y, 0.0f, color, i * NUM_Y_POINTS + j, glm::vec2(u, v), uv_min, uv_max);
 
             // Set up neighboring pointers (note: be cautious when referencing elements not yet emplaced)
             // Here, we use indices based on our current understanding of the mesh layout.

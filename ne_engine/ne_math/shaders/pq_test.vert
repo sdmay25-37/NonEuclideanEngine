@@ -11,6 +11,7 @@ layout(location = 1) in vec4 vert_color;     // Color (r, g, b, a)
 layout(location = 2) in vec2 vert_uv;        // UV coordinates for the texture (u, v)
 
 // Per-instance attributes
+layout(location = 3) in vec4 sprite_uv;
 
 // Outputs to fragment shader
 out vec4 frag_color;
@@ -30,6 +31,6 @@ void main() {
 
     frag_color = vert_color;
 
-    // Map the texture coordinates (UV) to the fragment shader
-    frag_uv = vert_uv;  // Pass the UV coordinates directly
+       frag_uv = mix(sprite_uv.xy, sprite_uv.zw, vert_uv);
+
 }
