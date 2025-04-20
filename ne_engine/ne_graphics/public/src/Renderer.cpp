@@ -55,9 +55,9 @@ void Renderer::Init()
 	glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
 
 	// sprite texture coords attribute
-	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
-	glEnableVertexAttribArray(2);
-	glVertexAttribDivisor(2, 1);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
+	glEnableVertexAttribArray(3);
+	glVertexAttribDivisor(3, 1);
 
 	// Load shaders
 	auto shader_result = ShaderProgram::create(
