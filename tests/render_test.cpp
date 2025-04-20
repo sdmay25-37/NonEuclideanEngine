@@ -113,8 +113,8 @@ private:
         for (auto entity : view)
         {
             registry.destroy(entity);
-            renderer->Clear();
         }
+        renderer->Clear();
 
         std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, 4);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
