@@ -29,19 +29,25 @@ public:
 
     // return a bunch of tiles from current tile
     std::vector<Tile> getNearTiles(Tile currentTile, int radius);
-    // TODO: add world coordinates
-    // TODO: add relation to currentTile
+
+    // Search Every Loaded tile to find a tile
+    // If not found returns a Tile with ID -1
 
     Tile getTileByID(int tileId);
 
+    // Searches only the Tiles from last getNearTiles() call
+    // If not found returns a Tile with ID -1
     Tile getTileInRenderedList(int tileID);
 
+    // Number of tiles in _tileList
     int numTiles;
 
+    // the tile last inputed from the last call of getNearTiles()
     Tile currentTile;
 
     // TODO: Figure out how to buffer tiles from _renderedTileList
 
+    // Used for Testing
     std::vector<std::string>
     getTileMapInformation(); // Returns a vector of pairs of a <direction string, texture classification>
 

@@ -17,35 +17,6 @@ TileMap::TileMap(std::unordered_map<int, Tile> tileList, std::vector<Tile> seedL
     _seedList = seedList;
 }
 
-// // Loads tiles from JSON
-// void TileMap::loadTiles(const std::string &filename)
-// {
-// std::ifstream inputFile(filename);
-// nlohmann::json tileData = nlohmann::json::parse(inputFile);
-
-// if (tileData.size() == 0)
-// {
-//     // JSON File is empty
-//     std::cerr << "JSON File empty" << std::endl;
-//     throw std::length_error("JSON File empty");
-// }
-
-// for (const auto &item : tileData)
-//     {
-//         Tile tile;
-//         tile._tileId = item.at("tileId").get<uint8_t>();
-//         tile._spriteId = item.at("spriteId").get<uint8_t>();
-//         tile._tileType = item.at("tileType").get<std::string>();
-//         tile._properties = item.at("properties").get<std::vector<std::string>>();
-//         tile._upTileId = item.at("upTileId").get<uint8_t>();
-//         tile._downTileId = item.at("downTileId").get<uint8_t>();
-//         tile._leftTileId = item.at("leftTileId").get<uint8_t>();
-//         tile._rightTileId = item.at("rightTileId").get<uint8_t>();
-
-//         _tileList[tile._tileId] = tile;
-//     }
-// }
-
 void TileMap::loadTiles(const std::string &filename)
 {
     std::ifstream inputFile(filename);
@@ -130,7 +101,7 @@ void TileMap::loadTiles(const std::string &filename)
         _tileList[tile._tileId] = tile;
     }
 
-    currentTile = getTileByID(1);
+    currentTile = getTileByID(0);
     std::cout << "\n"
               << "Tiles Loaded" << "\n";
 }
@@ -239,7 +210,7 @@ Tile TileMap::getTileByID(int tileId)
     std::cerr << "Error: Tile with ID " << static_cast<int>(tileId) << " not found!" << std::endl;
 
     // TODO FIGURE OUT WHAT TO SEND BACK
-    return Tile(); // Assuming the default constructor of Tile initializes a valid empty object
+    return Tile(-1); // Assuming the default constructor of Tile initializes a valid empty object
 }
 
 Tile TileMap::getTileInRenderedList(int tileId)
