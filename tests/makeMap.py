@@ -1,7 +1,7 @@
 from PIL import Image
 import json
 
-img = Image.open('res/textures/Maze_Idea.png').convert('RGB')
+img = Image.open('res/textures/Test_Forest.jpg').convert('RGB')
 width, height = img.size
 
 data = []
@@ -38,5 +38,5 @@ for tile in data:
     tile["downTileId"] = tile_id_map.get(down, -1)
 
 # Output JSON
-with open('maze_output.json', 'w') as f:
+with open('forest_output.json', 'w') as f:
     json.dump(data, f, indent=4)

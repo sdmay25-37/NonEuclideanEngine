@@ -134,7 +134,7 @@ int main()
     glEnableVertexAttribArray(1);
 
     // UV (vec2) in MeshPoint
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, uv));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, fraguv));
     glEnableVertexAttribArray(2);
 
     // For debugging, you might uncomment the following to see wireframes
