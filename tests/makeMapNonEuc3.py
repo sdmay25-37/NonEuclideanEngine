@@ -1,3 +1,4 @@
+from collections import defaultdict
 from PIL import Image
 import json
 import math
@@ -84,6 +85,7 @@ for _ in range(2):  # Expand more rings if needed
                 continue
             visited.add(npos)
 
+            # Generate new tile for neighbor
             neighbor_id = generate_tile(
                 nx, ny, tile_id_map, data, img, wall_colors, tile_id)
             tile_id += 1
@@ -131,14 +133,75 @@ for _ in range(2):  # Expand more rings if needed
                         # Do NOT update tile_id_map to avoid overwriting original position
                         # This makes sure the duplicate is only connected locally
 
-                        center_neighbor_id = tile_id_map[(nx, ny)]
+                        # Link new duplicate to its neighbors
+                        new_tile_id = tile_id - 1
+                        neighbor_id = tile_id_map[(nx, ny)]
+                        for tile in data:
+                            if tile["tileId"] == neighbor_id:
+                                print("HERE")
+                                print(tile)
+                                print(new_tile)
+                                print("AAAA")
+                                if ny < sy:  # If new tile is on top
+                                    tile["upTileId"] = new_tile_id
+                                    new_tile["downTileId"] = neighbor_id
+                                else:  # If new tile is on bottom
+                                    tile["downTileId"] = new_tile_id
+                                    new_tile["upTileId"] = neighbor_id
 
     queue = next_queue
 
+for tile in data:
+    print(tile)
+
+
+# Group tiles by worldPosition
+grouped_tiles = defaultdict(list)
+
+# Group the tiles by their worldPosition
+for tile in data:
+    # Convert worldPosition to a tuple
+    world_pos_tuple = tuple(tile["worldPosition"])
+    grouped_tiles[world_pos_tuple].append(tile)
+
+# Iterate over the grouped tiles to set up/down links
+for world_pos, tiles in grouped_tiles.items():
+    if len(tiles) > 1:  # Only process if there are multiple tiles at the same position
+        print(f"Tiles at position {world_pos}:")
+        for tile in tiles:
+            print(tile)
+        print()
+        for i, tile in enumerate(tiles):
+            for j, other_tile in enumerate(tiles):
+                if i != j:  # Don't compare the tile with itself
+                    # Set upTileId and downTileId between the two tiles
+                    if tile["rightTileId"] == -1 and other_tile["upTileId"] == -1 and other_tile["rightTileId"] != -1:
+                        tile["rightTileId"] = other_tile["tileId"]
+                        other_tile["upTileId"] = tile["tileId"]
+                    elif tile["leftTileId"] == -1 and other_tile["upTileId"] == -1 and other_tile["leftTileId"] != -1:
+                        tile["leftTileId"] = other_tile["tileId"]
+                        other_tile["upTileId"] = tile["tileId"]
+                    elif tile["rightTileId"] == -1 and other_tile["downTileId"] == -1 and other_tile["rightTileId"] != -1:
+                        tile["rightTileId"] = other_tile["tileId"]
+                        other_tile["downTileId"] = tile["tileId"]
+                    elif tile["leftTileId"] == -1 and other_tile["downTileId"] == -1 and other_tile["leftTileId"] != -1:
+                        tile["leftTileId"] = other_tile["tileId"]
+                        other_tile["downTileId"] = tile["tileId"]
+
+
+# Optional: print to verify the results
+for tile in data:
+    print(tile)
+"""
+print("AAAAAAAAAAAA")
+for tile in data:
+    if (tile["leftTileId"] == -1 and tile["rightTileId"] == -1 and tile["downTileId"] == -1 and tile["upTileId"] == -1):
+        print("A")
+    else:
+        print(tile)
+"""
 # === Save the map ===
 with open("tilemap.json", "w") as f:
     json.dump(data, f, indent=2)
 
 # Optional print
-for tile in data:
-    print(tile)

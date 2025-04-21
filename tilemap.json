@@ -19,7 +19,7 @@
     ],
     "sprite": "floor2.jpg",
     "leftTileId": 10,
-    "rightTileId": 13,
+    "rightTileId": 12,
     "upTileId": 9,
     "downTileId": 0
   },
@@ -30,10 +30,10 @@
       180
     ],
     "sprite": "floor2.jpg",
-    "leftTileId": 17,
-    "rightTileId": 20,
+    "leftTileId": 15,
+    "rightTileId": 17,
     "upTileId": 0,
-    "downTileId": 16
+    "downTileId": 14
   },
   {
     "tileId": 3,
@@ -42,10 +42,10 @@
       181
     ],
     "sprite": "floor2.jpg",
-    "leftTileId": 23,
+    "leftTileId": 19,
     "rightTileId": 0,
-    "upTileId": 4,
-    "downTileId": 5
+    "upTileId": 5,
+    "downTileId": 4
   },
   {
     "tileId": 4,
@@ -55,9 +55,9 @@
     ],
     "sprite": "floor2.jpg",
     "leftTileId": -1,
-    "rightTileId": -1,
-    "upTileId": -1,
-    "downTileId": 3
+    "rightTileId": 15,
+    "upTileId": 3,
+    "downTileId": -1
   },
   {
     "tileId": 5,
@@ -67,9 +67,9 @@
     ],
     "sprite": "floor2.jpg",
     "leftTileId": -1,
-    "rightTileId": -1,
-    "upTileId": 3,
-    "downTileId": -1
+    "rightTileId": 10,
+    "upTileId": -1,
+    "downTileId": 3
   },
   {
     "tileId": 6,
@@ -79,9 +79,9 @@
     ],
     "sprite": "floor2.jpg",
     "leftTileId": 0,
-    "rightTileId": 26,
-    "upTileId": 7,
-    "downTileId": 8
+    "rightTileId": 22,
+    "upTileId": 8,
+    "downTileId": 7
   },
   {
     "tileId": 7,
@@ -90,10 +90,10 @@
       180
     ],
     "sprite": "floor2.jpg",
-    "leftTileId": -1,
+    "leftTileId": 17,
     "rightTileId": -1,
-    "upTileId": -1,
-    "downTileId": 6
+    "upTileId": 6,
+    "downTileId": -1
   },
   {
     "tileId": 8,
@@ -102,10 +102,10 @@
       182
     ],
     "sprite": "floor2.jpg",
-    "leftTileId": -1,
+    "leftTileId": 12,
     "rightTileId": -1,
-    "upTileId": 6,
-    "downTileId": -1
+    "upTileId": -1,
+    "downTileId": 6
   },
   {
     "tileId": 9,
@@ -129,13 +129,13 @@
     "leftTileId": -1,
     "rightTileId": 1,
     "upTileId": 11,
-    "downTileId": 12
+    "downTileId": 5
   },
   {
     "tileId": 11,
     "worldPosition": [
       292,
-      181
+      183
     ],
     "sprite": "floor2.jpg",
     "leftTileId": -1,
@@ -146,41 +146,17 @@
   {
     "tileId": 12,
     "worldPosition": [
-      292,
-      183
-    ],
-    "sprite": "floor2.jpg",
-    "leftTileId": -1,
-    "rightTileId": -1,
-    "upTileId": 10,
-    "downTileId": -1
-  },
-  {
-    "tileId": 13,
-    "worldPosition": [
       294,
       182
     ],
     "sprite": "floor2.jpg",
     "leftTileId": 1,
     "rightTileId": -1,
-    "upTileId": 14,
-    "downTileId": 15
+    "upTileId": 13,
+    "downTileId": 8
   },
   {
-    "tileId": 14,
-    "worldPosition": [
-      294,
-      181
-    ],
-    "sprite": "floor2.jpg",
-    "leftTileId": -1,
-    "rightTileId": -1,
-    "upTileId": -1,
-    "downTileId": 13
-  },
-  {
-    "tileId": 15,
+    "tileId": 13,
     "worldPosition": [
       294,
       183
@@ -188,11 +164,11 @@
     "sprite": "floor2.jpg",
     "leftTileId": -1,
     "rightTileId": -1,
-    "upTileId": 13,
-    "downTileId": -1
+    "upTileId": -1,
+    "downTileId": 12
   },
   {
-    "tileId": 16,
+    "tileId": 14,
     "worldPosition": [
       293,
       179
@@ -204,7 +180,7 @@
     "downTileId": -1
   },
   {
-    "tileId": 17,
+    "tileId": 15,
     "worldPosition": [
       292,
       180
@@ -212,11 +188,11 @@
     "sprite": "floor2.jpg",
     "leftTileId": -1,
     "rightTileId": 2,
-    "upTileId": 18,
-    "downTileId": 19
+    "upTileId": 4,
+    "downTileId": 16
   },
   {
-    "tileId": 18,
+    "tileId": 16,
     "worldPosition": [
       292,
       179
@@ -224,14 +200,26 @@
     "sprite": "floor2.jpg",
     "leftTileId": -1,
     "rightTileId": -1,
-    "upTileId": -1,
-    "downTileId": 17
+    "upTileId": 15,
+    "downTileId": -1
   },
   {
-    "tileId": 19,
+    "tileId": 17,
     "worldPosition": [
-      292,
-      181
+      294,
+      180
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 2,
+    "rightTileId": -1,
+    "upTileId": 7,
+    "downTileId": 18
+  },
+  {
+    "tileId": 18,
+    "worldPosition": [
+      294,
+      179
     ],
     "sprite": "floor2.jpg",
     "leftTileId": -1,
@@ -240,43 +228,7 @@
     "downTileId": -1
   },
   {
-    "tileId": 20,
-    "worldPosition": [
-      294,
-      180
-    ],
-    "sprite": "floor2.jpg",
-    "leftTileId": 2,
-    "rightTileId": -1,
-    "upTileId": 21,
-    "downTileId": 22
-  },
-  {
-    "tileId": 21,
-    "worldPosition": [
-      294,
-      179
-    ],
-    "sprite": "floor2.jpg",
-    "leftTileId": -1,
-    "rightTileId": -1,
-    "upTileId": -1,
-    "downTileId": 20
-  },
-  {
-    "tileId": 22,
-    "worldPosition": [
-      294,
-      181
-    ],
-    "sprite": "floor2.jpg",
-    "leftTileId": -1,
-    "rightTileId": -1,
-    "upTileId": 20,
-    "downTileId": -1
-  },
-  {
-    "tileId": 23,
+    "tileId": 19,
     "worldPosition": [
       291,
       181
@@ -284,11 +236,11 @@
     "sprite": "floor2.jpg",
     "leftTileId": -1,
     "rightTileId": 3,
-    "upTileId": 24,
-    "downTileId": 25
+    "upTileId": 21,
+    "downTileId": 20
   },
   {
-    "tileId": 24,
+    "tileId": 20,
     "worldPosition": [
       291,
       180
@@ -296,11 +248,11 @@
     "sprite": "floor2.jpg",
     "leftTileId": -1,
     "rightTileId": -1,
-    "upTileId": -1,
-    "downTileId": 23
+    "upTileId": 19,
+    "downTileId": -1
   },
   {
-    "tileId": 25,
+    "tileId": 21,
     "worldPosition": [
       291,
       182
@@ -308,11 +260,11 @@
     "sprite": "floor2.jpg",
     "leftTileId": -1,
     "rightTileId": -1,
-    "upTileId": 23,
-    "downTileId": -1
+    "upTileId": -1,
+    "downTileId": 19
   },
   {
-    "tileId": 26,
+    "tileId": 22,
     "worldPosition": [
       295,
       181
@@ -320,11 +272,11 @@
     "sprite": "floor2.jpg",
     "leftTileId": 6,
     "rightTileId": -1,
-    "upTileId": 27,
-    "downTileId": 28
+    "upTileId": 24,
+    "downTileId": 23
   },
   {
-    "tileId": 27,
+    "tileId": 23,
     "worldPosition": [
       295,
       180
@@ -332,11 +284,11 @@
     "sprite": "floor2.jpg",
     "leftTileId": -1,
     "rightTileId": -1,
-    "upTileId": -1,
-    "downTileId": 26
+    "upTileId": 22,
+    "downTileId": -1
   },
   {
-    "tileId": 28,
+    "tileId": 24,
     "worldPosition": [
       295,
       182
@@ -344,7 +296,7 @@
     "sprite": "floor2.jpg",
     "leftTileId": -1,
     "rightTileId": -1,
-    "upTileId": 26,
-    "downTileId": -1
+    "upTileId": -1,
+    "downTileId": 22
   }
 ]
