@@ -1,18 +1,45 @@
 from PIL import Image
 import json
+import math
 
-img = Image.open('res/textures/Test_Forest.jpg').convert('RGB')
+
+def color_distance(c1, c2):
+    return math.sqrt(sum((a - b) ** 2 for a, b in zip(c1, c2)))
+
+
+def is_close_to_wall_color(pixel, wall_colors, threshold=30):
+    for wall_color in wall_colors:
+        if color_distance(pixel, wall_color) < threshold:
+            return True
+    return False
+
+
+ref_img = Image.open('res/textures/wall_mask.jpg').convert('RGB')
+ref_width, ref_height = ref_img.size
+wall_colors = set()
+
+for y in range(ref_height):
+    for x in range(ref_width):
+        color = ref_img.getpixel((x, y))
+        wall_colors.add(color)
+
+# Load the map image
+img = Image.open('res/textures/Test_Forest_2_test.jpg').convert('RGB')
 width, height = img.size
 
 data = []
 tile_id_map = {}  # (x, y) -> tileId
 tile_id = 0
 
+print(height)
 # First pass — assign tileId and store positions
 for y in range(height):
+    print(y)
     for x in range(width):
-        pixel = img.getpixel((x, height - y - 1))  # bottom-left origin
-        sprite = "wall.jpg" if pixel == (0, 0, 0) else "floor2.jpg"
+        pixel = img.getpixel((x, height - y - 1))
+
+        sprite = "wall.jpg" if is_close_to_wall_color(
+            pixel, wall_colors, threshold=30) else "floor2.jpg"
 
         tile_id_map[(x, y)] = tile_id
         data.append({
@@ -38,5 +65,5 @@ for tile in data:
     tile["downTileId"] = tile_id_map.get(down, -1)
 
 # Output JSON
-with open('forest_output.json', 'w') as f:
+with open('forest_output_3.json', 'w') as f:
     json.dump(data, f, indent=4)
