@@ -79,7 +79,7 @@ private:
     {
         std::srand(std::time(nullptr));
 
-        Tile currentTile = tilemap->getTileByID(85);
+        Tile currentTile = tilemap->getTileByID(40000);
         // std::cout << tilemap->currentTile.to_string() << "\n";
 
         std::vector<Tile> nearTiles = tilemap->getNearTiles(currentTile, 20);
@@ -176,7 +176,7 @@ private:
     static void LoadTiles(Resource<TileMap> tileMap)
     {
         // Where Tiles are loaded from
-        tileMap->loadTiles("../tests/json/forest_output2.json");
+        tileMap->loadTiles("../tests/json/forest_output_3.json");
     }
 
     static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager)
