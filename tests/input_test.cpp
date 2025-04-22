@@ -9,6 +9,8 @@
 #include "Input.hpp"
 #include "Triangle.hpp"
 #include "JSONLoader.hpp"
+#define NE_ENGINE_INCLUDE_ARCHIVE
+#include "ne_engine.hpp"
 
 static void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods);
 static void bindWrap();

@@ -1,3 +1,4 @@
+#define NE_ENGINE_INCLUDE_ARCHIVE
 #include "ne_engine.hpp"
 #include "ne_plugin/window/GLFWWindow.hpp"
 #include "ne_plugin/DefaultPlugins.hpp"
@@ -42,7 +43,7 @@ int main()
     //     "../shaders/color.frag");
 
     auto shaderProgramResult = ShaderProgram::create(
-        "../ne_engine/ne_math/shaders/square_test.vert",
+        "../ne_engine/shaders/square_test.vert",
         "../shaders/color.frag");
 
     if (shaderProgramResult.is_error())

@@ -1,17 +1,17 @@
 set(GRAPHICS_SRC_DIR    ${CMAKE_CURRENT_SOURCE_DIR}/ne_graphics/public/src)
 set(INPUT_SRC_DIR       ${CMAKE_CURRENT_SOURCE_DIR}/ne_input/public/src)
-set(MATH_SRC_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/ne_math/public/src)
+set(SHAPE_SRC_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/ne_shape/public/src)
 set(RES_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_resource/public/src)
 set(SYS_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_system/public/src)
 set(UI_SRC_DIR          ${CMAKE_CURRENT_SOURCE_DIR}/ne_ui/public/src)
 set(PLUGIN_SRC_DIR      ${CMAKE_CURRENT_SOURCE_DIR}/ne_plugin/public/src)
 set(UTIL_SRC_DIR       ${CMAKE_CURRENT_SOURCE_DIR}/ne_util/public/src)
 set(TILE_SRC_DIR       ${CMAKE_CURRENT_SOURCE_DIR}/ne_tile/public/src)
+set(ARCHIVE_SRC_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/ne_archive/public/src)
 
 
 add_library(
     ne_engine STATIC
-
 
     # ne_tile
     "${TILE_SRC_DIR}/TileMap.cpp"
@@ -35,7 +35,12 @@ add_library(
     "${INPUT_SRC_DIR}/JSONLoader.cpp"
 
     # ne_math
-    "${MATH_SRC_DIR}/HypRotate.cpp"
+    "${SHAPE_SRC_DIR}/HypMesh.cpp"
+    "${SHAPE_SRC_DIR}/Mesh.cpp"
+    "${SHAPE_SRC_DIR}/Point.cpp"
+    "${SHAPE_SRC_DIR}/Polygon.cpp"
+    "${SHAPE_SRC_DIR}/PQTile.cpp"
+
 
     # ne_system
     "${SYS_SRC_DIR}/SystemSchedule.cpp"
@@ -55,17 +60,17 @@ add_library(
     # window
     "${PLUGIN_SRC_DIR}/GLFWWindow.cpp"
 
-    "ne_math/public/src/HypRotate.cpp"
-    "ne_math/public/src/HypTransform.cpp"
-
-    "ne_shapes/private/src/CircleArcs.cpp"
     "ne_shapes/public/src/Mesh.cpp"
-    "ne_shapes/public/src/Square.cpp"
-    "ne_shapes/public/src/Triangle.cpp"
-    "ne_shapes/public/src/Rectangle.cpp"
-    "ne_shapes/public/src/Polygon.cpp"
+    "ne_shapes/public/src/HypMesh.cpp"
     "ne_shapes/public/src/Point.cpp"
     "ne_shapes/public/src/PQTile.cpp"
+
+    "ne_archive/public/src/Square.cpp"
+    "ne_archive/public/src/Triangle.cpp"
+    "ne_archive/public/src/Rectangle.cpp"
+    "ne_archive/public/src/HypRotate.cpp"
+    "ne_archive/public/src/HypTransform.cpp"
+
 )
 
 target_include_directories(ne_engine
@@ -73,7 +78,6 @@ target_include_directories(ne_engine
     PUBLIC
     include
     ne_graphics/public/include
-    ne_math/public/include
     ne_plugin/public/include
     ne_input/public/include
     ne_system/public/include
@@ -81,13 +85,14 @@ target_include_directories(ne_engine
     ne_util/public/include
     ne_tile/public/include
     ne_shapes/public/include
-
+    ne_archive/public/include
     PRIVATE
     ne_graphics/private/include
-    ne_math/private/include
     ne_input/private/include
     ne_ui/private/include
     ne_shapes/private/include
+    ne_archive_private/include
+
     
 
 )

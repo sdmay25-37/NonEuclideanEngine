@@ -7,49 +7,33 @@
 #include <glm/vec4.hpp>
 
 #include "Point.hpp"
+#include "Element.hpp"
 
-struct MeshPoint : public Point
-{
-    MeshPoint() = default;
-    MeshPoint(float x, float y, float z, const Color &color, unsigned int index, const glm::vec2 &uv_coord, const glm::vec2 &uv_min, const glm::vec2 &uv_max)
-        : Point(x, y, z, color, PointType::POINCARE), fraguv(uv_coord), uv_min(uv_min), uv_max(uv_max), index(index) {}
-
-    unsigned int index;
-    MeshPoint *right;
-    MeshPoint *up;
-    MeshPoint *left;
-    MeshPoint *down;
-
-    glm::vec2 fraguv; // New: texture coordinate for sprites
-    glm::vec2 uv_min, uv_max;
-};
-
-class Mesh
+class Mesh : public Transformable, Element
 {
 public:
-    Mesh() = default;
-    Mesh(const unsigned int num_x_points, const unsigned int num_y_points);
-    Mesh(const unsigned int num_x_points, const unsigned int num_y_points,
-         const float min_x, const float max_x, const float min_y, const float max_y);
+    Mesh(const Color &color);
+    ~Mesh() = default;
 
-    Mesh(const std::vector<Point> &points);
+    void rot_x(float theta) override;
+    void rot_y(float theta) override;
+    void rot_z(float theta) override;
+    void translate(float x, float y, float z) override;
 
-    std::vector<MeshPoint> &get_vertices() { return mesh_points; }
+    void rot_x_hyp(float theta) override;
+    void rot_y_hyp(float theta) override;
+    void rot_z_hyp(float theta) override;
 
-    ~Mesh();
+    void to_weirstrass() override;
+    void to_poincare() override;
 
-    unsigned int size() const;
-    const MeshPoint *data() const;
-
-    void to_weirstrass();
+    Point *data() override;
+    unsigned int data_size() override;
+    void *data_offset() override;
+    void *color_offset() override;
 
     void rotateXHyperbolic(float theta);
     void rotateYHyperbolic(float theta);
-
-    const MeshPoint &operator[](unsigned int index) const
-    {
-        return mesh_points[index];
-    }
 
     Mesh &operator=(const Mesh &mesh)
     {
@@ -75,9 +59,17 @@ private:
     float MAX_X;
     float MIN_Y;
     float MAX_Y;
+    unsigned int *indices_data() override;
+    unsigned int indices_size() override;
+
+protected:
+    virtual void gen_poly_mesh();
 
     Color color;
-    std::vector<MeshPoint> mesh_points;
+
+    std::vector<Point> poly_vertices;
+    std::vector<Point> poly_mesh;
+    std::vector<unsigned int> poly_indices;
 };
 
 #endif

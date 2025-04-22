@@ -1,3 +1,4 @@
+#define NE_ENGINE_INCLUDE_ARCHIVE
 #include "ne_engine.hpp"
 #include "ne_plugin/window/GLFWWindow.hpp"
 #include "ne_plugin/DefaultPlugins.hpp"
@@ -59,8 +60,8 @@ int main()
 
     // Build and compile our shader program
     auto shaderProgramResult = ShaderProgram::create(
-        "../ne_engine/ne_math/shaders/pq_test.vert",
-        "../ne_engine/ne_math/shaders/pq_color.frag");
+        "../ne_engine/shaders/pq_test.vert",
+        "../ne_engine/shaders/pq_color.frag");
 
     if (shaderProgramResult.is_error())
     {
@@ -109,28 +110,13 @@ int main()
 
     glBindVertexArray(VA0);
     glBindBuffer(GL_ARRAY_BUFFER, VB0);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Point) * tile.data_size(), tile.data(), GL_DYNAMIC_DRAW);
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
 
-    // // Setup vertex attribute pointers:
-    // // Position attribute (location = 0): 4 floats, starting at offset 0
-    // glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)0);
-    // glEnableVertexAttribArray(0);
-    // // Color attribute (location = 1): 4 floats, offset = 4 * sizeof(float)
-    // glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)(4 * sizeof(float)));
-    // glEnableVertexAttribArray(1);
-    // // UV attribute (location = 2): 2 floats, offset = 8 * sizeof(float)
-    // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)(8 * sizeof(float)));
-    // glEnableVertexAttribArray(2);
-
-    // Position (vec4)
-    // Assuming 'Point' has a member 'color' of type 'Color'
-
-    // Position (vec4)
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, x));
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Point), tile.data_offset());
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Point), tile.color_offset());
     glEnableVertexAttribArray(0);
-
-    // Color (vec4) from the base class 'Point'
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, color));
     glEnableVertexAttribArray(1);
 
     // UV (vec2) in MeshPoint
@@ -151,6 +137,9 @@ int main()
         shaders.bind();
         // glActiveTexture(GL_TEXTURE0);
         // glBindTexture(GL_TEXTURE_2D, texture);
+        glBindVertexArray(VA0);
+        glBindBuffer(GL_ARRAY_BUFFER, VB0);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Point) * tile.data_size(), tile.data(), GL_DYNAMIC_DRAW);
 
         // Render each PQTile in our vector
         for (auto &currentTile : tiles)
