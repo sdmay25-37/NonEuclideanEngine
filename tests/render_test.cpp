@@ -21,7 +21,7 @@
 #include "Input.hpp"
 
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-#define rendDist 3
+#define rendDist 2
 
 static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
@@ -60,7 +60,7 @@ private:
 
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
-        Tile currentTile = tilemap->getTileByID(29);
+        Tile currentTile = tilemap->getTileByID(40000);
 
         std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
@@ -154,7 +154,7 @@ private:
 
     static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager, Resource<Renderer> renderer)
     {
-        const float moveCooldown = 1.0f; // ADDED DELAY SO THAT MOVEMENT IS SLOWER AND IS FLUID
+        const float moveCooldown = 0.0f; // ADDED DELAY SO THAT MOVEMENT IS SLOWER AND IS FLUID
 
         float deltaTime = ImGui::GetIO().DeltaTime; // USING IMGUI because it was already in here
         timeSinceLastMove += deltaTime;
