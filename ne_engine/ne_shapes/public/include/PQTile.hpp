@@ -1,14 +1,12 @@
 #ifndef PQTILE_HPP
-#define PQ_TILE_HPP
+#define PQTILE_HPP
 
-#include "Polygon.hpp"
+#include "HypMesh.hpp"
 
-class PQTile : public Polygon
+class PQTile : public HypMesh
 {
     public:
-    PQTile() = default;
-    PQTile(int p, int q);
-    PQTile(int p, int q, const Color& color);
+    PQTile(int p=4, int q=5, const Color& color=COLOR::RED);
     ~PQTile();
 
     private:

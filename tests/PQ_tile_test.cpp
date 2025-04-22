@@ -1,3 +1,4 @@
+#define NE_ENGINE_INCLUDE_ARCHIVE
 #include "ne_engine.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -21,11 +22,13 @@ int main() {
     PQTile tile = PQTile(4, 5, COLOR::BLUE);
 
     tile.to_weirstrass();
+    tile.rot_x_hyp(M_PI / 4.0f);
+    // tile.rot_z(M_PI / 4.0f);
 
     // build and compile our shader program
     ShaderProgram shaders(
-			"../ne_engine/ne_math/shaders/pq_test.vert",
-			"../ne_engine/ne_math/shaders/pq_color.frag"
+			"../ne_engine/shaders/pq_test.vert",
+			"../ne_engine/shaders/pq_color.frag"
 	);
 
     shader_ptr = &shaders;
@@ -44,13 +47,13 @@ int main() {
 
     // position attribute
     glBindBuffer(GL_ARRAY_BUFFER, VB0);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(MeshPoint) * tile.mesh_size(), tile.mesh_data(), GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(Point) * tile.data_size(), tile.data(), GL_DYNAMIC_DRAW);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * tile.indices_size(), tile.indices_data(), GL_STATIC_DRAW);
 
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void*)0);
-    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void*)(4 * sizeof(float)));
+    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Point), tile.data_offset());
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Point), tile.color_offset());
     glEnableVertexAttribArray(0);
     glEnableVertexAttribArray(1);
 
@@ -64,7 +67,7 @@ int main() {
 
         glBindVertexArray(VA0);
         glBindBuffer(GL_ARRAY_BUFFER, VB0);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(MeshPoint) * tile.mesh_size(), tile.mesh_data(), GL_DYNAMIC_DRAW);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(Point) * tile.data_size(), tile.data(), GL_DYNAMIC_DRAW);
 
         // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
         glDrawElements(GL_TRIANGLES, tile.indices_size(), GL_UNSIGNED_INT, 0);

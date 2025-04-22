@@ -2,74 +2,44 @@
 #define MESH_HPP
 
 #include <vector>
-#include <cstring>
 
 #include "Point.hpp"
+#include "Element.hpp"
 
-struct MeshPoint : public Point
-{
-    MeshPoint() = default;
-    MeshPoint(float x, float y, float z, const Color& color, unsigned int index) : Point(x, y, z, color, PointType::POINCARE)
-    {
-        this->index = index;
-    }
-
-    unsigned int index;
-    MeshPoint* right;
-    MeshPoint* up;
-    MeshPoint* left;
-    MeshPoint* down;
-};
-
-class Mesh
+class Mesh : public Transformable, Element
 {
     public:
-    Mesh() = default;
-    Mesh(const unsigned int num_x_points, const unsigned int num_y_points);
-    Mesh(const unsigned int num_x_points, const unsigned int num_y_points,
-               const float min_x, const float max_x, const float min_y, const float max_y);
+    Mesh(const Color& color);
+    ~Mesh() = default;
 
-    Mesh(const std::vector<Point>& points);
+    void rot_x(float theta) override;
+    void rot_y(float theta) override;
+    void rot_z(float theta) override;
+    void translate(float x, float y, float z) override;
 
-    ~Mesh();
+    void rot_x_hyp(float theta) override;
+    void rot_y_hyp(float theta) override;
+    void rot_z_hyp(float theta) override;
 
-    unsigned int size() const;
-    const MeshPoint* data() const;
+    void to_weirstrass() override;
+    void to_poincare() override;
 
-    void to_weirstrass();
+    Point* data() override;
+    unsigned int data_size() override;
+    void* data_offset() override;
+    void* color_offset() override;
 
-    const MeshPoint& operator[](unsigned int index) const
-    {
-        return mesh_points[index];
-    }
+    unsigned int* indices_data() override;
+    unsigned int indices_size() override;
 
-    Mesh& operator=(const Mesh& mesh)
-    {
-        this->NUM_X_POINTS = mesh.NUM_X_POINTS;
-        this->NUM_Y_POINTS = mesh.NUM_Y_POINTS;
-        this->MIN_X        = mesh.MIN_X;
-        this->MAX_X        = mesh.MAX_X;
-        this->MIN_Y        = mesh.MIN_Y;
-        this->MAX_Y        = mesh.MAX_Y;
-        this->color        = mesh.color;
-
-        this->gen_mesh();
-
-        return *this;
-    }
-
-    private:
-    void gen_mesh();
-
-    unsigned int NUM_X_POINTS;
-    unsigned int NUM_Y_POINTS;
-    float MIN_X;
-    float MAX_X;
-    float MIN_Y;
-    float MAX_Y;
+    protected:
+    virtual void gen_poly_mesh();
 
     Color color;
-    std::vector<MeshPoint> mesh_points;
+
+    std::vector<Point> poly_vertices;
+    std::vector<Point> poly_mesh;
+    std::vector<unsigned int> poly_indices;
 };
 
 #endif

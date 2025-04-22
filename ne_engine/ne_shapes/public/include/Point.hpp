@@ -1,37 +1,10 @@
 #ifndef POINT_HPP
 #define POINT_HPP
 
+#include <glm/glm.hpp>
 
-struct Color
-{
-    float R;
-    float G;
-    float B;
-    float A;
-    Color() = default;
-    constexpr Color(float red, float green, float blue, float alpha)
-    : R(red), G(green), B(blue), A(alpha)
-    {
-
-    }
-};
-
-class COLOR
-{
-    public:
-    static constexpr Color RED   = Color(1.0f, 0.0f, 0.0f, 1.0f);
-    static constexpr Color BLUE  = Color(0.0f, 0.0f, 1.0f, 1.0f);
-    static constexpr Color GREEN = Color(0.0f, 1.0f, 0.0f, 1.0f);
-    static constexpr Color BLACK = Color(0.0f, 0.0f, 0.0f, 1.0f);
-    static constexpr Color WHITE = Color(1.0f, 1.0f, 1.0f, 1.0f);
-};
-
-/* Color Constants Go Here*/
-extern Color COLOR_RED  ;
-extern Color COLOR_BLUE ;
-extern Color COLOR_GREEN;
-extern Color COLOR_BLACK;
-extern Color COLOR_WHITE;
+#include "Color.hpp"
+#include "Transformable.hpp"
 
 enum class PointType
 {
@@ -41,21 +14,27 @@ enum class PointType
     EUCLIDEAN
 };
 
-struct Point
+struct Point : public Transformable
 {
     float x, y, z, w;
     Color color;
     PointType type;
 
-    Point();
-    Point(float x, float y, float z);
-    Point(float x, float y, float z, const Color& color);
-    Point(float x, float y, float z, PointType point_type);
-    Point(float x, float y, float z, const Color& color, PointType point_type);
+    Point(const Color& color, const PointType& point_type);
+    Point(float x = 0.0f, float y = 0.0f, float z = 0.0f, const Color& color = COLOR::RED, const PointType& point_type = PointType::NONE);
     ~Point();
 
-    void to_weirstrass();
-    void to_poincare();
+    void rot_x(float theta) override;
+    void rot_y(float theta) override;
+    void rot_z(float theta) override;
+    void translate(float x, float y, float z) override;
+
+    void rot_x_hyp(float theta) override;
+    void rot_y_hyp(float theta) override;
+    void rot_z_hyp(float theta) override;
+
+    void to_weirstrass() override;
+    void to_poincare() override;
 
     float mag() const;
     float dist(const Point& point) const;
@@ -68,12 +47,25 @@ struct Point
         p.x = this->x + point.x;
         p.y = this->y + point.y;
         p.z = this->z + point.z;
+        p.color = this->color;
+
         if(this->type == point.type)
         {
             p.type = this->type;
         }
 
+        p.zero_under_threshold();
         return p;
+    }
+
+    Point& operator +=(const Point& point)
+    {
+        this->x += point.x;
+        this->y += point.y;
+        this->z += point.z;
+
+        this->zero_under_threshold();
+        return *this;
     }
 
     Point operator -(const Point& point) const
@@ -82,14 +74,88 @@ struct Point
         p.x = this->x - point.x;
         p.y = this->y - point.y;
         p.z = this->z - point.z;
+        p.color = this->color;
         if(this->type == point.type)
         {
             p.type = this->type;
         }
 
+        p.zero_under_threshold();
         return p;
     }
+
+    Point& operator -=(const Point& point)
+    {
+        this->x += point.x;
+        this->y += point.y;
+        this->z += point.z;
+
+        this->zero_under_threshold();
+
+        return *this;
+    }
+
+    Point operator *(float mul) const
+    {
+        Point p;
+        p.x = this->x * mul;
+        p.y = this->y * mul;
+        p.z = this->z * mul;
+        p.color = this->color;
+        p.type = this->type;
+
+        p.zero_under_threshold();
+
+        return p;
+    }
+
+    Point& operator *=(float div)
+    {
+        this->x *= div;
+        this->y *= div;
+        this->z *= div;
+
+        this->zero_under_threshold();
+        return *this;
+    }
+
+    Point operator /(float div) const
+    {
+        Point p;
+        p.x = this->x / div;
+        p.y = this->y / div;
+        p.z = this->z / div;
+        p.color = this->color;
+        p.type = this->type;
+
+        p.zero_under_threshold();
+
+        return p;
+    }
+
+    Point& operator /=(float div)
+    {
+        this->x /= div;
+        this->y /= div;
+        this->z /= div;
+
+        this->zero_under_threshold();
+
+        return *this;
+    }
+
+    float& operator [](unsigned int index) const
+    {
+        if(index > 3)
+        {
+            throw std::out_of_range("Index Out of Range for Color");
+        }
+        float* coord = (float*)this;
+        return coord[index];
+    }
+
+    private:
+    void zero_under_threshold();
 };
-// static_assert(sizeof(Point) == 20, "Probs won't work");
 
 #endif

@@ -2,38 +2,122 @@
 
 #include "Point.hpp"
 
-Point::Point()
-: Point(0.0f, 0.0f, 0.0f)
+Point::Point(const Color& color, const PointType& point_type)
+: Point(0.0f, 0.0f, 0.0f, color, point_type)
 {
+
 }
 
-Point::Point(float x, float y, float z)
-: Point(x, y, z, COLOR::BLACK)
-{
-}
-
-Point::Point(float x, float y, float z, const Color& color)
-: Point(x, y, z, color, PointType::EUCLIDEAN)
-{
-}
-
-Point::Point(float x, float y, float z, PointType point_type)
-: Point(x, y, z, COLOR::BLACK, point_type)
-{
-}
-Point::Point(float x, float y, float z, const Color& color, PointType point_type)
+Point::Point(float x, float y, float z, const Color& color, const PointType& point_type)
 {
     this->x = x;
     this->y = y;
     this->z = z;
+
     this->w = 1.0;
     this->color = color;
     this->type = point_type;
+
+    zero_under_threshold();
 }
 
 Point::~Point()
 {
 
+}
+
+void Point::rot_x(float theta)
+{
+    theta = angle_unit_conv(theta);
+    float x_new = x;
+    float y_new = y * std::cos(theta) - z * std::sin(theta);
+    float z_new = y * std::sin(theta) + z * std::cos(theta);
+
+    x = x_new;
+    y = y_new;
+    z = z_new;
+
+    zero_under_threshold();
+}
+
+void Point::rot_y(float theta)
+{
+    theta = angle_unit_conv(theta);
+    float x_new = x * std::cos(theta) - z * std::sin(theta);
+    float y_new = y;
+    float z_new = x * std::sin(theta) + z * std::cos(theta);
+
+    x = x_new;
+    y = y_new;
+    z = z_new;
+
+    zero_under_threshold();
+}
+
+void Point::rot_z(float theta)
+{
+    theta = angle_unit_conv(theta);
+    float x_new = x * std::cos(theta) - y * std::sin(theta);;
+    float y_new = x * std::sin(theta) + y * std::cos(theta);
+    float z_new = z;
+
+    x = x_new;
+    y = y_new;
+    z = z_new;
+
+    zero_under_threshold();
+}
+
+void Point::translate(float x, float y, float z)
+{
+    Point t = Point(x, y, z);
+
+    *this += t;
+
+
+    zero_under_threshold();
+}
+
+void Point::rot_x_hyp(float theta)
+{
+    theta = angle_unit_conv(theta);
+    float x_new = x;
+    float y_new = y * std::cosh(theta) + z * std::sinh(theta);
+    float z_new = y * std::sinh(theta) + z * std::cosh(theta);
+
+    x = x_new;
+    y = y_new;
+    z = z_new;
+
+    zero_under_threshold();
+}
+
+void Point::rot_y_hyp(float theta)
+{
+    theta = angle_unit_conv(theta);
+    float x_new = x * std::cosh(theta) + z * std::sinh(theta);
+    float y_new = y;
+    float z_new = x * std::sinh(theta) + z * std::cosh(theta);
+
+    x = x_new;
+    y = y_new;
+    z = z_new;
+
+    zero_under_threshold();
+}
+
+void Point::rot_z_hyp(float theta)
+{
+    theta = angle_unit_conv(theta);
+    float x_new = x * std::cosh(theta) + y * std::sinh(theta);;
+    float y_new = x * std::sinh(theta) + y * std::cosh(theta);
+    float z_new = z;
+
+    x = x_new;
+    y = y_new;
+    z = z_new;
+
+    zero_under_threshold();
 }
 
 void Point::to_weirstrass()
@@ -52,6 +136,8 @@ void Point::to_weirstrass()
     {
         type = PointType::WEIRSTRASS;
     }
+
+    zero_under_threshold();
 }
 
 void Point::to_poincare()
@@ -98,5 +184,24 @@ Point Point::cross(const Point& point) const
     p.y = this->z * point.x - this->x * point.z;
     p.z = this->x * point.y - this->y * point.x;
 
+    p.zero_under_threshold();
+
     return p;
+}
+
+#define ZERO_THRESHOLD 1e-6f
+void Point::zero_under_threshold()
+{
+    if(std::abs(x) < ZERO_THRESHOLD)
+    {
+        x = 0.0f;
+    }
+    if(std::abs(y) < ZERO_THRESHOLD)
+    {
+        y = 0.0f;
+    }
+    if(std::abs(z) < ZERO_THRESHOLD)
+    {
+        z = 0.0f;
+    }
 }

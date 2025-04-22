@@ -1,3 +1,4 @@
+#define NE_ENGINE_INCLUDE_ARCHIVE
 #include "ne_engine.hpp"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height);
@@ -26,7 +27,7 @@ int main() {
 
     // build and compile our shader program
     ShaderProgram shaders(
-			"../ne_engine/ne_math/shaders/square_test.vert",
+			"../ne_engine/shaders/square_test.vert",
 			"../shaders/color.frag"
 	);
     shader_ptr = &shaders;

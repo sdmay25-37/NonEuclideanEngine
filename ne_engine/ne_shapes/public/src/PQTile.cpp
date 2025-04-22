@@ -2,15 +2,9 @@
 #include <stdexcept>
 
 #include "PQTile.hpp"
-#include "CircleArcs.hpp"
-
-PQTile::PQTile(int p, int q)
-: PQTile(p, q, COLOR::RED)
-{
-}
 
 PQTile::PQTile(int p, int q, const Color& color)
-: Polygon(p, color)
+: HypMesh(color)
 {
 
     float tile_check = (p - 2) * (q - 2);
@@ -24,7 +18,7 @@ PQTile::PQTile(int p, int q, const Color& color)
     this->q = q;
 
     gen_vertices();
-    gen_indices();
+    gen_poly_mesh();
 }
 
 PQTile::~PQTile()
@@ -49,55 +43,15 @@ void PQTile::gen_vertices()
 
     // Calculate the distance and normalize it
     float d = std::sin(angleC - angleB - angleA)
-            / std::sqrt(1.0 - sinB * sinB - sinA * sinA);
+            / std::sqrt(1.0f - sinB * sinB - sinA * sinA);
 
     for(int i = 0; i < p; i++)
     {
-        float x = d * std::cos((1 + 2 * i) * angleA);
-        float y = d * std::sin((1 + 2 * i) * angleA);
-        float z = 0;
+        // Start in lower left corner for square
+        float x = d * std::cos((5 + 2 * i) * angleA);
+        float y = d * std::sin((5 + 2 * i) * angleA);
+        float z = 0.0f;
 
-        vertices.emplace_back(Point(x, y, z, color, PointType::POINCARE));
-    }
-}
-
-void PQTile::gen_indices()
-{
-    CircleArcs circleArcs = CircleArcs(*this);
-    mesh = Mesh(vertices);
-
-    for(int i = 0; i < mesh.size();i++)
-    {
-        MeshPoint* up = mesh[i].up;
-        MeshPoint* right = mesh[i].right;
-
-        if(up == nullptr || right == nullptr)
-        {
-            continue;
-        }
-
-        MeshPoint* up_right = up->right;
-
-        if(up_right == nullptr || circleArcs.within_circles(mesh[i]) || circleArcs.within_circles(*up_right))
-        {
-            continue;
-        }
-
-        bool test = (!circleArcs.within_circles(*up));
-        // First build up-right triangle
-        if((up != nullptr) && (!circleArcs.within_circles(*up)))
-        {
-            mesh_indices.emplace_back(i);
-            mesh_indices.emplace_back(up->index);
-            mesh_indices.emplace_back(up_right->index);
-        }
-
-        // Then right-up triangle
-        if((right != nullptr) && !(circleArcs.within_circles(*right)))
-        {
-            mesh_indices.emplace_back(i);
-            mesh_indices.emplace_back(right->index);
-            mesh_indices.emplace_back(up_right->index);
-        }
+        poly_vertices.emplace_back(Point(x, y, z, color, PointType::POINCARE));
     }
 }
