@@ -57,38 +57,33 @@ wall_colors = set(ref_img.getdata())
 # === Load map image ===
 img = Image.open('res/textures/Test_Forest_2_test.jpg').convert('RGB')
 width, height = img.size
-
-center_x, center_y = width // 2, height // 2
 tile_id_map = {}
 data = []
 tile_id = 0
 
-# Generate center tile
-center_id = generate_tile(center_x, center_y, tile_id_map,
-                          data, img, wall_colors, tile_id)
-tile_id += 1
+# Traverse every pixel in the image
+for y in range(height):
+    print(y)
+    for x in range(width):
+        if (x, y) in tile_id_map:
+            continue  # already generated
 
-queue = [(center_x, center_y)]
-visited = set(queue)
-
-for _ in range(2):  # Expand more rings if needed
-    next_queue = []
-    for x, y in queue:
-        current_id = tile_id_map[(x, y)]
+        current_id = generate_tile(
+            x, y, tile_id_map, data, img, wall_colors, tile_id)
+        tile_id += 1
 
         for dir, (dx, dy) in DIRECTIONS.items():
             nx, ny = x + dx, y + dy
-            npos = (nx, ny)
             if not (0 <= nx < width and 0 <= ny < height):
                 continue
-            if npos in visited:
-                continue
-            visited.add(npos)
 
-            # Generate new tile for neighbor
-            neighbor_id = generate_tile(
-                nx, ny, tile_id_map, data, img, wall_colors, tile_id)
-            tile_id += 1
+            neighbor_pos = (nx, ny)
+            if neighbor_pos in tile_id_map:
+                neighbor_id = tile_id_map[neighbor_pos]
+            else:
+                neighbor_id = generate_tile(
+                    nx, ny, tile_id_map, data, img, wall_colors, tile_id)
+                tile_id += 1
 
             # Link current <-> neighbor
             for tile in data:
@@ -96,8 +91,6 @@ for _ in range(2):  # Expand more rings if needed
                     tile[f"{dir}TileId"] = neighbor_id
                 if tile["tileId"] == neighbor_id:
                     tile[f"{OPPOSITE[dir]}TileId"] = current_id
-
-            next_queue.append(npos)
 
             # === Handle vertical duplication if coming from left/right ===
             if dir in ["left", "right"]:
@@ -130,29 +123,20 @@ for _ in range(2):  # Expand more rings if needed
 
                         data.append(new_tile)
 
-                        # Do NOT update tile_id_map to avoid overwriting original position
-                        # This makes sure the duplicate is only connected locally
-
-                        # Link new duplicate to its neighbors
-                        new_tile_id = tile_id - 1
+                        # Link new duplicate to its neighbor
                         neighbor_id = tile_id_map[(nx, ny)]
-                        for tile in data:
-                            if tile["tileId"] == neighbor_id:
-                                print("HERE")
-                                print(tile)
-                                print(new_tile)
-                                print("AAAA")
-                                if ny < sy:  # If new tile is on top
+                        if ny < sy:
+                            for tile in data:
+                                if tile["tileId"] == neighbor_id:
                                     tile["upTileId"] = new_tile_id
-                                    new_tile["downTileId"] = neighbor_id
-                                else:  # If new tile is on bottom
+                            new_tile["downTileId"] = neighbor_id
+                        else:
+                            for tile in data:
+                                if tile["tileId"] == neighbor_id:
                                     tile["downTileId"] = new_tile_id
-                                    new_tile["upTileId"] = neighbor_id
-
-    queue = next_queue
-
-for tile in data:
-    print(tile)
+                            new_tile["upTileId"] = neighbor_id
+# for tile in data:
+#    print(tile)
 
 
 # Group tiles by worldPosition
@@ -167,31 +151,30 @@ for tile in data:
 # Iterate over the grouped tiles to set up/down links
 for world_pos, tiles in grouped_tiles.items():
     if len(tiles) > 1:  # Only process if there are multiple tiles at the same position
-        print(f"Tiles at position {world_pos}:")
-        for tile in tiles:
-            print(tile)
-        print()
+
         for i, tile in enumerate(tiles):
             for j, other_tile in enumerate(tiles):
-                if i != j:  # Don't compare the tile with itself
+                if i < j:  # Don't compare the tile with itself
                     # Set upTileId and downTileId between the two tiles
-                    if tile["rightTileId"] == -1 and other_tile["upTileId"] == -1 and other_tile["rightTileId"] != -1:
+                    if tile["rightTileId"] == -1 and other_tile["upTileId"] == -1 and other_tile["rightTileId"] < other_tile["tileId"] and tile["upTileId"] < tile["tileId"] and other_tile["rightTileId"] != -1:
+
                         tile["rightTileId"] = other_tile["tileId"]
                         other_tile["upTileId"] = tile["tileId"]
-                    elif tile["leftTileId"] == -1 and other_tile["upTileId"] == -1 and other_tile["leftTileId"] != -1:
+                    elif tile["leftTileId"] == -1 and other_tile["upTileId"] == -1 and other_tile["leftTileId"] < other_tile["tileId"] and tile["upTileId"] < tile["tileId"] and other_tile["leftTileId"] != -1:
+
                         tile["leftTileId"] = other_tile["tileId"]
                         other_tile["upTileId"] = tile["tileId"]
-                    elif tile["rightTileId"] == -1 and other_tile["downTileId"] == -1 and other_tile["rightTileId"] != -1:
+                    elif tile["rightTileId"] == -1 and other_tile["downTileId"] == -1 and other_tile["rightTileId"] < other_tile["tileId"] and tile["downTileId"] < tile["tileId"] and other_tile["rightTileId"] and other_tile["rightTileId"] != -1:
                         tile["rightTileId"] = other_tile["tileId"]
                         other_tile["downTileId"] = tile["tileId"]
-                    elif tile["leftTileId"] == -1 and other_tile["downTileId"] == -1 and other_tile["leftTileId"] != -1:
+                    elif tile["leftTileId"] == -1 and other_tile["downTileId"] == -1 and other_tile["leftTileId"] < other_tile["tileId"] and tile["downTileId"] < tile["tileId"] and other_tile["leftTileId"] != -1:
                         tile["leftTileId"] = other_tile["tileId"]
                         other_tile["downTileId"] = tile["tileId"]
 
 
 # Optional: print to verify the results
-for tile in data:
-    print(tile)
+# for tile in data:
+    # print(tile)
 """
 print("AAAAAAAAAAAA")
 for tile in data:

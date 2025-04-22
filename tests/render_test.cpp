@@ -149,7 +149,7 @@ private:
     static void LoadTiles(Resource<TileMap> tileMap)
     {
         // Where Tiles are loaded from
-        tileMap->loadTiles("../tests/json/maze_output_small.json");
+        tileMap->loadTiles("../tests/json/forest_noneuc.json");
     }
 
     static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager, Resource<Renderer> renderer)
