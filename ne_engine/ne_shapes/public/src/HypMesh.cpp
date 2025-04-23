@@ -1,6 +1,6 @@
 #include <cmath>
 #include <stdexcept>
-
+#include <iostream>
 #include "HypMesh.hpp"
 
 #define CENTER_INDEX 0
@@ -42,11 +42,24 @@ void HypMesh::gen_circles()
         circle_radii.emplace_back(radius);
     }
 }
-
 void HypMesh::gen_poly_mesh()
 {
     gen_circles();
     init_poly_mesh();
+
+    MIN_Y = poly_mesh[0].y;
+    MAX_Y = poly_mesh[0].y;
+    MIN_X = poly_mesh[0].x;
+    MAX_X = poly_mesh[0].x;
+
+    // Loop through all mesh points to find the minimum and maximum y and x values
+    for (const auto &point : poly_vertices)
+    {
+        MIN_Y = std::min(MIN_Y, point.y); // Update MIN_Y if the current point's y is smaller
+        MAX_Y = std::max(MAX_Y, point.y); // Update MAX_Y if the current point's y is larger
+        MIN_X = std::min(MIN_X, point.x); // Update MIN_X if the current point's x is smaller
+        MAX_X = std::max(MAX_X, point.x); // Update MAX_X if the current point's x is larger
+    }
 
     unsigned int point_index = 1;
     for (int i = 0; i < poly_vertices.size(); i++)
@@ -54,6 +67,7 @@ void HypMesh::gen_poly_mesh()
         const Point &point1 = poly_vertices[i];
         const Point &point2 = poly_vertices[(i + 1) % poly_vertices.size()];
 
+        // Calculate differences for angle
         Point diff1 = point1 - circle_centers[i];
         Point diff2 = point2 - circle_centers[i];
 
@@ -62,10 +76,14 @@ void HypMesh::gen_poly_mesh()
         if (THETA_END < THETA_START)
             THETA_END += 2 * M_PI;
 
-        const float THETA_INCR = (THETA_END - THETA_START) / points_per_arc;
+        // Difference between angles
+        float theta_diff = THETA_END - THETA_START;
+        if (theta_diff < 0)
+            theta_diff += 2 * M_PI;
+
+        const float THETA_INCR = theta_diff / points_per_arc;
 
         float theta = THETA_START;
-
         for (int j = 0; j < points_per_arc - 1; j++)
         {
             Point mesh_point = Point(color, PointType::POINCARE);
@@ -76,13 +94,35 @@ void HypMesh::gen_poly_mesh()
             }
             else
             {
+                // Calculate x, y coordinates based on theta
                 float x = std::cos(theta) * circle_radii[i] + circle_centers[i].x;
                 float y = std::sin(theta) * circle_radii[i] + circle_centers[i].y;
 
+                // Debug: print out the calculated UV values for checking
+                std::cout << "x: " << x << " y: " << y << " theta: " << theta << std::endl;
+
+                // Adjust uv_u and uv_v based on positions
+                float uv_v = (y - MIN_Y) / (MAX_Y - MIN_Y); // Normalize based on y
+                float uv_u = (x - MIN_X) / (MAX_X - MIN_X); // Normalize based on x
+
+                if (x < 0)
+                {
+                    uv_u = 1.0f - uv_u; // Flip the UV horizontally for negative x values
+                }
+                if (y < 0)
+                {
+                    uv_v = 1.0f - uv_v; // Flip the UV horizontally for negative x values
+                }
+                // Debug: print out the UVs
+                std::cout << "uv_u: " << uv_u << " uv_v: " << uv_v << std::endl;
+
+                // Set the mesh point with UV coordinates
                 mesh_point.x = x;
                 mesh_point.y = y;
+                mesh_point.uv = glm::vec2(uv_u, uv_v);
             }
 
+            // Store the mesh point and indices
             poly_mesh.emplace_back(mesh_point);
             poly_indices.emplace_back(CENTER_INDEX);
             poly_indices.emplace_back(point_index);

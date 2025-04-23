@@ -42,14 +42,13 @@ public:
 private:
     unsigned int NUM_X_POINTS;
     unsigned int NUM_Y_POINTS;
+
+protected:
+    virtual void gen_poly_mesh();
     float MIN_X;
     float MAX_X;
     float MIN_Y;
     float MAX_Y;
-
-protected:
-    virtual void gen_poly_mesh();
-
     Color color;
 
     std::vector<Point> poly_vertices;
