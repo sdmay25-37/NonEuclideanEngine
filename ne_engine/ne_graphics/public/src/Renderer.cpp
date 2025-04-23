@@ -20,14 +20,7 @@ struct MeshAtlasKeyHash
 // Used to render each NonEuclidean tile in Renderer::render()
 // Needed because things are meshes are unique per tile and need to save each data
 // This isn't needed but good practices suggest it
-struct MeshAtlasKeyEqual
-{
-	bool operator()(const std::pair<const void *, unsigned int> &lhs,
-					const std::pair<const void *, unsigned int> &rhs) const
-	{
-		return lhs.first == rhs.first && lhs.second == rhs.second;
-	}
-};
+
 Renderer::~Renderer()
 {
 	glDeleteVertexArrays(1, &VAO);
@@ -52,11 +45,11 @@ void Renderer::Init()
 
 	// THESE CAUSE WARNINGS BUT I DON'T KNOW HOW TO MAKE IT WORK Without it
 	// Setting up the buffer for the PQ shaders
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, x));
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Point), (void *)offsetof(Point, x));
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, color));
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Point), (void *)offsetof(Point, color));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, fraguv));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Point), (void *)offsetof(Point, uv));
 	glEnableVertexAttribArray(2);
 
 	// sprite texture coords attribute
@@ -66,10 +59,14 @@ void Renderer::Init()
 	glEnableVertexAttribArray(3);
 	glVertexAttribDivisor(3, 1); // THIS IS WHAT CAUSED MY PAIN FOR LIKE 8 HOURS
 
+	// "../ne_engine/shaders/pq_test.vert",
+	// 		"../ne_engine/shaders/pq_color.frag"
+	// "../ne_engine/ne_math/shaders/pq_test.vert",
+	// 	"../ne_engine/ne_math/shaders/pq_color.frag");
 	// Load shaders
 	auto shader_result = ShaderProgram::create(
-		"../ne_engine/ne_math/shaders/pq_test.vert",
-		"../ne_engine/ne_math/shaders/pq_color.frag");
+		"../ne_engine/shaders/pq_test.vert",
+		"../ne_engine/shaders/pq_color.frag");
 	if (shader_result.is_error())
 	{
 		std::cerr << "Failed to create shader program: " << shader_result.error() << std::endl;
@@ -101,14 +98,13 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 	using MeshAtlasKey = std::pair<const void *, unsigned int>;
 	std::unordered_map<
 		std::pair<const void *, unsigned int>,
-		std::vector<const AtlasPQtile *>,
-		MeshAtlasKeyHash,
-		MeshAtlasKeyEqual>
+		std::vector<AtlasPQtile *>,
+		MeshAtlasKeyHash>
 		batched_tiles;
 
 	for (auto [entity, currentTile] : pqTile_view.each())
 	{
-		auto mesh_ptr = static_cast<const void *>(currentTile.tile.mesh_data()); // use mesh_data pointer as a key
+		auto mesh_ptr = static_cast<const void *>(currentTile.tile.data()); // use mesh_data pointer as a key
 		auto atlas_id = currentTile.texture.atlas_id;
 
 		batched_tiles[{mesh_ptr, atlas_id}].push_back(&currentTile);
@@ -117,10 +113,10 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 	for (auto &[key, tiles] : batched_tiles)
 	{
 		const auto &[mesh_key, atlas_id] = key;
-		const auto &sample_tile = tiles[0]->tile;
+		auto &sample_tile = tiles[0]->tile;
 		// Upload mesh data (shared for all instances)
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(MeshPoint) * sample_tile.mesh_size(), sample_tile.mesh_data(), GL_DYNAMIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(Point) * sample_tile.data_size(), sample_tile.data(), GL_DYNAMIC_DRAW);
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * sample_tile.indices_size(), sample_tile.indices_data(), GL_STATIC_DRAW);

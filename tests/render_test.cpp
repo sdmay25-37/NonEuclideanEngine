@@ -8,7 +8,6 @@
 #include "ne_plugin/window/GLFWWindow.hpp"
 #include "ne_plugin/DefaultPlugins.hpp"
 #include "ne_engine.hpp"
-#include "Polygon.hpp"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -21,7 +20,7 @@
 #include "Input.hpp"
 
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-#define rendDist 2
+#define rendDist 4
 
 static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
@@ -60,7 +59,7 @@ private:
 
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
-        Tile currentTile = tilemap->getTileByID(40000);
+        Tile currentTile = tilemap->getTileByID(10);
 
         std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);

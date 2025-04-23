@@ -118,6 +118,11 @@ void *Mesh::color_offset()
     return (void *)((intptr_t)(&(poly_mesh[0].color)) - (intptr_t)(&(poly_mesh[0])));
 }
 
+void *Mesh::uv_offset()
+{
+    return (void *)((intptr_t)(&(poly_mesh[0].uv)) - (intptr_t)(&(poly_mesh[0])));
+}
+
 unsigned int *Mesh::indices_data()
 {
     return poly_indices.data();

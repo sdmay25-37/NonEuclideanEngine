@@ -120,7 +120,7 @@ int main()
     glEnableVertexAttribArray(1);
 
     // UV (vec2) in MeshPoint
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(MeshPoint), (void *)offsetof(MeshPoint, fraguv));
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Point), tile.uv_offset());
     glEnableVertexAttribArray(2);
 
     // For debugging, you might uncomment the following to see wireframes
@@ -149,7 +149,7 @@ int main()
 
             glBindVertexArray(VA0);
             glBindBuffer(GL_ARRAY_BUFFER, VB0);
-            glBufferData(GL_ARRAY_BUFFER, sizeof(MeshPoint) * currentTile.mesh_size(), currentTile.mesh_data(), GL_DYNAMIC_DRAW);
+            glBufferData(GL_ARRAY_BUFFER, sizeof(Point) * currentTile.data_size(), currentTile.data(), GL_DYNAMIC_DRAW);
 
             glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
             glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * currentTile.indices_size(), currentTile.indices_data(), GL_STATIC_DRAW);

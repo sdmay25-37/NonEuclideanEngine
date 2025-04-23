@@ -7,14 +7,14 @@
 
 class HypMesh : public Mesh
 {
-    public:
-    HypMesh(const Color& color, unsigned int points_per_arc=DEFAULT_ARC_POINTS);
+public:
+    HypMesh(const Color &color, unsigned int points_per_arc = DEFAULT_ARC_POINTS);
     ~HypMesh();
 
-    protected:
+protected:
     void gen_poly_mesh() override;
 
-    private:
+private:
     void gen_circles();
     void init_poly_mesh();
 
@@ -23,7 +23,6 @@ class HypMesh : public Mesh
 
     unsigned int points_per_arc;
     unsigned int mesh_size;
-
 };
 
 #endif

@@ -8,9 +8,6 @@ class PQTile : public HypMesh
 public:
     PQTile() = default;
     PQTile(int p, int q);
-    PQTile(int p, int q, const Color &color);
-
-public:
     PQTile(int p = 4, int q = 5, const Color &color = COLOR::RED);
     ~PQTile();
 

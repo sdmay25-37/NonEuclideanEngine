@@ -19,8 +19,9 @@ struct Point : public Transformable
     float x, y, z, w;
     Color color;
     PointType type;
+    glm::vec2 uv;
 
-    Point(float x, float y, float z, const Color &color, PointType point_type);
+    Point(const Color &color, const PointType &point_type);
     Point(float x = 0.0f, float y = 0.0f, float z = 0.0f, const Color &color = COLOR::RED, const PointType &point_type = PointType::NONE);
     ~Point();
 

@@ -11,6 +11,7 @@
 // ne_math
 #include "Square.hpp"
 #include "Sprite.hpp"
+#include "HypRotate.hpp"
 
 #include "JSONLoader.hpp"
 #include "Input.hpp"
@@ -20,7 +21,6 @@
 #ifdef NE_ENGINE_INCLUDE_ARCHIVE
 #include "Square.hpp"
 #include "Triangle.hpp"
-#include "HypRotate.hpp"
 #include "HypTransform.hpp"
 #endif
 

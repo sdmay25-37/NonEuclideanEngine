@@ -1,6 +1,6 @@
 set(GRAPHICS_SRC_DIR    ${CMAKE_CURRENT_SOURCE_DIR}/ne_graphics/public/src)
 set(INPUT_SRC_DIR       ${CMAKE_CURRENT_SOURCE_DIR}/ne_input/public/src)
-set(SHAPE_SRC_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/ne_shape/public/src)
+set(SHAPE_SRC_DIR        ${CMAKE_CURRENT_SOURCE_DIR}/ne_shapes/public/src)
 set(RES_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_resource/public/src)
 set(SYS_SRC_DIR         ${CMAKE_CURRENT_SOURCE_DIR}/ne_system/public/src)
 set(UI_SRC_DIR          ${CMAKE_CURRENT_SOURCE_DIR}/ne_ui/public/src)
@@ -38,8 +38,8 @@ add_library(
     "${SHAPE_SRC_DIR}/HypMesh.cpp"
     "${SHAPE_SRC_DIR}/Mesh.cpp"
     "${SHAPE_SRC_DIR}/Point.cpp"
-    "${SHAPE_SRC_DIR}/Polygon.cpp"
     "${SHAPE_SRC_DIR}/PQTile.cpp"
+    "${SHAPE_SRC_DIR}/HypRotate.cpp"
 
 
     # ne_system
@@ -60,15 +60,11 @@ add_library(
     # window
     "${PLUGIN_SRC_DIR}/GLFWWindow.cpp"
 
-    "ne_shapes/public/src/Mesh.cpp"
-    "ne_shapes/public/src/HypMesh.cpp"
-    "ne_shapes/public/src/Point.cpp"
-    "ne_shapes/public/src/PQTile.cpp"
+
 
     "ne_archive/public/src/Square.cpp"
     "ne_archive/public/src/Triangle.cpp"
     "ne_archive/public/src/Rectangle.cpp"
-    "ne_archive/public/src/HypRotate.cpp"
     "ne_archive/public/src/HypTransform.cpp"
 
 )
