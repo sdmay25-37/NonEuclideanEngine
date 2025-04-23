@@ -88,39 +88,67 @@ void HypMesh::gen_poly_mesh()
         {
             Point mesh_point = Point(color, PointType::POINCARE);
 
-            if (j == 0)
+            // Calculate x, y coordinates based on theta
+            float x = std::cos(theta) * circle_radii[i] + circle_centers[i].x;
+            float y = std::sin(theta) * circle_radii[i] + circle_centers[i].y;
+            if (y < 0.0 and x < 0.0)
             {
-                mesh_point = poly_vertices[(i + 1) % poly_vertices.size()];
+                std::cout << "IM STUPID" << x << "\n"
+                          << x - MIN_X << "\n";
+                std::cout << "IM STUPID2 " << y << "\n"
+                          << y - MIN_Y << "\n";
             }
-            else
+
+            // Debug: print out the calculated UV values for checking
+            // std::cout << "x: " << x << " y: " << y << " theta: " << theta << std::endl;
+
+            // Adjust uv_u and uv_v based on positions
+            float uv_u = (x - MIN_X) / (MAX_X - MIN_X);
+            float uv_v = (y - MIN_Y) / (MAX_Y - MIN_Y);
+
+            // Clamp just in case (e.g., due to floating point errors)
+
+            // Optional debug logging
+            if (std::abs(x - MIN_X) < 0.001f && std::abs(y - MIN_Y) < 0.001f)
             {
-                // Calculate x, y coordinates based on theta
-                float x = std::cos(theta) * circle_radii[i] + circle_centers[i].x;
-                float y = std::sin(theta) * circle_radii[i] + circle_centers[i].y;
+                std::cout << "Bottom-left corner: uv_u: " << uv_u << " uv_v: " << uv_v << std::endl;
+                std::cout << "Max X: " << MAX_X << " Min X: " << MIN_X << std::endl;
+                std::cout << "Max Y: " << MAX_Y << " Min Y: " << MIN_Y << std::endl;
+            }
 
-                // Debug: print out the calculated UV values for checking
-                std::cout << "x: " << x << " y: " << y << " theta: " << theta << std::endl;
+            if (std::abs(x - MAX_X) < 0.001f && std::abs(y - MAX_Y) < 0.001f)
+                std::cout << "Top-right corner: uv_u: " << uv_u << " uv_v: " << uv_v << std::endl;
 
-                // Adjust uv_u and uv_v based on positions
-                float uv_v = (y - MIN_Y) / (MAX_Y - MIN_Y); // Normalize based on y
-                float uv_u = (x - MIN_X) / (MAX_X - MIN_X); // Normalize based on x
-
-                if (x < 0)
-                {
-                    uv_u = 1.0f - uv_u; // Flip the UV horizontally for negative x values
-                }
-                if (y < 0)
-                {
-                    uv_v = 1.0f - uv_v; // Flip the UV horizontally for negative x values
-                }
-                // Debug: print out the UVs
+            if (x == 0.0 and y == 0.0)
+            {
                 std::cout << "uv_u: " << uv_u << " uv_v: " << uv_v << std::endl;
-
-                // Set the mesh point with UV coordinates
-                mesh_point.x = x;
-                mesh_point.y = y;
-                mesh_point.uv = glm::vec2(uv_u, uv_v);
             }
+            if (x < 0)
+            {
+                // float x_reflected = -y;
+                // float y_reflected = -x;
+
+                // uv_u = x + 0.5;
+                // uv_u = (x_reflected - MIN_X) / (MAX_X - MIN_X);
+                // uv_v = (y_reflected - MIN_Y) / (MAX_Y - MIN_Y);
+                // uv_u = (1.0 + x - MIN_X);
+                // uv_v = (1.0 + y - MIN_Y);
+                // std::cout << "uv_u: " << uv_u << " uv_v: " << uv_v << std::endl;
+            }
+            // if (x < 0)
+            // {
+            //     uv_u = 1.0f - uv_u; // Flip the UV horizontally for negative x values
+            // }
+            // if (y < 0)
+            // {
+            //     uv_v = 1.0f - uv_v; // Flip the UV horizontally for negative x values
+            // }
+            // Debug: print out the UVs
+
+            // Set the mesh point with UV coordinates
+            mesh_point.x = x;
+            mesh_point.y = y;
+            mesh_point.uv = glm::vec2(uv_u, uv_v);
 
             // Store the mesh point and indices
             poly_mesh.emplace_back(mesh_point);

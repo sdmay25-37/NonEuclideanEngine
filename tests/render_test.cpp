@@ -66,7 +66,7 @@ private:
         Tile root_tile = currentTile;
         SpriteTile.to_weirstrass();
         std::unordered_set<int> processed_tiles;
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles);
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, "cy.jpg", SpriteTile, tilemap, processed_tiles);
     }
 
     static void addTileAndNeighbors(entt::registry &registry, Resource<TextureManager> texture_manager,
