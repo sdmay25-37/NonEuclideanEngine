@@ -100,13 +100,14 @@ int main()
     }
     stbi_image_free(data);
     // Set shader sampler uniform to texture unit 0 (if your fragment shader uses "img_texture")
-    shader_ptr->setUniform1i("img_texture", 0);
+    shaders.setUniform1i("texture_atlas", 0);
 
     // Generate VAO, VBO, and EBO
-    unsigned int VA0, VB0, VE0;
+    unsigned int VA0, VB0, VE0, UV_VBO;
     glGenVertexArrays(1, &VA0);
     glGenBuffers(1, &VB0);
     glGenBuffers(1, &VE0);
+    glGenBuffers(1, &UV_VBO);
 
     glBindVertexArray(VA0);
     glBindBuffer(GL_ARRAY_BUFFER, VB0);
@@ -120,9 +121,16 @@ int main()
     glEnableVertexAttribArray(1);
 
     // UV (vec2) in MeshPoint
-    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Point), tile.uv_offset());
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Point), (void *)offsetof(Point, uv));
+
+    // glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Point), tile.uv_offset());
     glEnableVertexAttribArray(2);
 
+    // glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
+
+    // glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
+    // glEnableVertexAttribArray(3);
+    // glVertexAttribDivisor(3, 1);
     // For debugging, you might uncomment the following to see wireframes
     // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
@@ -135,8 +143,8 @@ int main()
 
         // Bind the shader and texture each frame before drawing
         shaders.bind();
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, texture);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, texture);
         glBindVertexArray(VA0);
         glBindBuffer(GL_ARRAY_BUFFER, VB0);
         glBufferData(GL_ARRAY_BUFFER, sizeof(Point) * tile.data_size(), tile.data(), GL_DYNAMIC_DRAW);
