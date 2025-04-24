@@ -20,7 +20,7 @@
 #include "Input.hpp"
 
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-#define rendDist 1
+#define rendDist 6
 
 static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
@@ -47,7 +47,7 @@ private:
         {
             registry.destroy(entity);
         }
-
+        auto view2 = registry.view<AtlasPQtile>();
         // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
         std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
@@ -59,14 +59,14 @@ private:
 
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
-        Tile currentTile = tilemap->getTileByID(1000);
+        Tile currentTile = tilemap->getTileByID(82);
 
         std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = currentTile;
         SpriteTile.to_weirstrass();
         std::unordered_set<int> processed_tiles;
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, "cy.jpg", SpriteTile, tilemap, processed_tiles);
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles);
     }
 
     static void addTileAndNeighbors(entt::registry &registry, Resource<TextureManager> texture_manager,
@@ -148,7 +148,7 @@ private:
     static void LoadTiles(Resource<TileMap> tileMap)
     {
         // Where Tiles are loaded from
-        tileMap->loadTiles("../tests/json/maze_output.json");
+        tileMap->loadTiles("../tests/json/maze_output_small.json");
     }
 
     static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager, Resource<Renderer> renderer)
@@ -172,7 +172,7 @@ private:
         }
         else if (input->isKeyPressed(GLFW_KEY_A))
         {
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._leftTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId);
@@ -182,7 +182,7 @@ private:
         }
         else if (input->isKeyPressed(GLFW_KEY_S))
         {
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._downTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._downTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._downTileId);
@@ -192,7 +192,7 @@ private:
         }
         else if (input->isKeyPressed(GLFW_KEY_D))
         {
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._rightTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId), tilemap))
             {
 

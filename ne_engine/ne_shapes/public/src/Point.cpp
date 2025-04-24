@@ -13,12 +13,10 @@ Point::Point(float x, float y, float z, const Color &color, const PointType &poi
     this->type = point_type;
 
     zero_under_threshold();
-    uv = glm::vec2();
 }
 Point::Point(const Color &color, const PointType &point_type)
     : Point(0.0f, 0.0f, 0.0f, color, point_type)
 {
-    uv = glm::vec2();
 }
 
 Point::~Point()

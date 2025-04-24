@@ -31,6 +31,10 @@ void main() {
 
     frag_color = vert_color;
 
-       frag_uv = mix(sprite_uv.xy, sprite_uv.zw, vert_uv);
+ vec2 uv_range = sprite_uv.zw - sprite_uv.xy;
+frag_uv = sprite_uv.xy + vert_uv * uv_range;
+
+// Clamp UV coordinates to ensure they are within the texture's bounds
+frag_uv = clamp(frag_uv, vec2(0.0), vec2(1.0));
 
 }
