@@ -1,0 +1,1874 @@
+[
+  {
+    "tileId": 0,
+    "worldPosition": [
+      0.0,
+      0.0
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 4,
+    "rightTileId": 2,
+    "upTileId": 1,
+    "downTileId": 3
+  },
+  {
+    "tileId": 1,
+    "worldPosition": [
+      1.0,
+      0.0
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 9,
+    "rightTileId": 7,
+    "upTileId": 6,
+    "downTileId": 0
+  },
+  {
+    "tileId": 2,
+    "worldPosition": [
+      0.30902,
+      0.95106
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 0,
+    "rightTileId": 12,
+    "upTileId": 11,
+    "downTileId": 13
+  },
+  {
+    "tileId": 3,
+    "worldPosition": [
+      -0.80902,
+      0.58779
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 19,
+    "rightTileId": 17,
+    "upTileId": 16,
+    "downTileId": 18
+  },
+  {
+    "tileId": 4,
+    "worldPosition": [
+      -0.80902,
+      -0.58779
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 24,
+    "rightTileId": 22,
+    "upTileId": 0,
+    "downTileId": 23
+  },
+  {
+    "tileId": 5,
+    "worldPosition": [
+      0.30902,
+      -0.95106
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 29,
+    "rightTileId": 0,
+    "upTileId": 26,
+    "downTileId": 28
+  },
+  {
+    "tileId": 6,
+    "worldPosition": [
+      1.5,
+      0.0
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 34,
+    "rightTileId": 32,
+    "upTileId": 31,
+    "downTileId": 1
+  },
+  {
+    "tileId": 7,
+    "worldPosition": [
+      1.15451,
+      0.47553
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 1,
+    "rightTileId": 37,
+    "upTileId": 36,
+    "downTileId": 38
+  },
+  {
+    "tileId": 8,
+    "worldPosition": [
+      0.59549,
+      0.29389
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 44,
+    "rightTileId": 42,
+    "upTileId": 41,
+    "downTileId": 43
+  },
+  {
+    "tileId": 9,
+    "worldPosition": [
+      0.59549,
+      -0.29389
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 49,
+    "rightTileId": 47,
+    "upTileId": 1,
+    "downTileId": 48
+  },
+  {
+    "tileId": 10,
+    "worldPosition": [
+      1.15451,
+      -0.47553
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 54,
+    "rightTileId": 1,
+    "upTileId": 51,
+    "downTileId": 53
+  },
+  {
+    "tileId": 11,
+    "worldPosition": [
+      0.80902,
+      0.95106
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 59,
+    "rightTileId": 57,
+    "upTileId": 56,
+    "downTileId": 2
+  },
+  {
+    "tileId": 12,
+    "worldPosition": [
+      0.46353,
+      1.42659
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 2,
+    "rightTileId": 62,
+    "upTileId": 61,
+    "downTileId": 63
+  },
+  {
+    "tileId": 13,
+    "worldPosition": [
+      -0.09549,
+      1.24495
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 69,
+    "rightTileId": 67,
+    "upTileId": 66,
+    "downTileId": 68
+  },
+  {
+    "tileId": 14,
+    "worldPosition": [
+      -0.09549,
+      0.65717
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 74,
+    "rightTileId": 72,
+    "upTileId": 2,
+    "downTileId": 73
+  },
+  {
+    "tileId": 15,
+    "worldPosition": [
+      0.46353,
+      0.47553
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 79,
+    "rightTileId": 2,
+    "upTileId": 76,
+    "downTileId": 78
+  },
+  {
+    "tileId": 16,
+    "worldPosition": [
+      -0.30902,
+      0.58779
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 84,
+    "rightTileId": 82,
+    "upTileId": 81,
+    "downTileId": 3
+  },
+  {
+    "tileId": 17,
+    "worldPosition": [
+      -0.65451,
+      1.06332
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 3,
+    "rightTileId": 87,
+    "upTileId": 86,
+    "downTileId": 88
+  },
+  {
+    "tileId": 18,
+    "worldPosition": [
+      -1.21353,
+      0.88168
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 94,
+    "rightTileId": 92,
+    "upTileId": 91,
+    "downTileId": 93
+  },
+  {
+    "tileId": 19,
+    "worldPosition": [
+      -1.21353,
+      0.2939
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 99,
+    "rightTileId": 97,
+    "upTileId": 3,
+    "downTileId": 98
+  },
+  {
+    "tileId": 20,
+    "worldPosition": [
+      -0.65451,
+      0.11226
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 104,
+    "rightTileId": 3,
+    "upTileId": 101,
+    "downTileId": 103
+  },
+  {
+    "tileId": 21,
+    "worldPosition": [
+      -0.30902,
+      -0.58779
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 109,
+    "rightTileId": 107,
+    "upTileId": 106,
+    "downTileId": 4
+  },
+  {
+    "tileId": 22,
+    "worldPosition": [
+      -0.65451,
+      -0.11226
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 4,
+    "rightTileId": 112,
+    "upTileId": 111,
+    "downTileId": 113
+  },
+  {
+    "tileId": 23,
+    "worldPosition": [
+      -1.21353,
+      -0.2939
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 119,
+    "rightTileId": 117,
+    "upTileId": 116,
+    "downTileId": 118
+  },
+  {
+    "tileId": 24,
+    "worldPosition": [
+      -1.21353,
+      -0.88168
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 124,
+    "rightTileId": 122,
+    "upTileId": 4,
+    "downTileId": 123
+  },
+  {
+    "tileId": 25,
+    "worldPosition": [
+      -0.65451,
+      -1.06332
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 129,
+    "rightTileId": 4,
+    "upTileId": 126,
+    "downTileId": 128
+  },
+  {
+    "tileId": 26,
+    "worldPosition": [
+      0.80902,
+      -0.95106
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 134,
+    "rightTileId": 132,
+    "upTileId": 131,
+    "downTileId": 5
+  },
+  {
+    "tileId": 27,
+    "worldPosition": [
+      0.46353,
+      -0.47553
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 5,
+    "rightTileId": 137,
+    "upTileId": 136,
+    "downTileId": 138
+  },
+  {
+    "tileId": 28,
+    "worldPosition": [
+      -0.09549,
+      -0.65717
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 144,
+    "rightTileId": 142,
+    "upTileId": 141,
+    "downTileId": 143
+  },
+  {
+    "tileId": 29,
+    "worldPosition": [
+      -0.09549,
+      -1.24495
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 149,
+    "rightTileId": 147,
+    "upTileId": 5,
+    "downTileId": 148
+  },
+  {
+    "tileId": 30,
+    "worldPosition": [
+      0.46353,
+      -1.42659
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 154,
+    "rightTileId": 5,
+    "upTileId": 151,
+    "downTileId": 153
+  },
+  {
+    "tileId": 31,
+    "worldPosition": [
+      1.83333,
+      0.0
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 6
+  },
+  {
+    "tileId": 32,
+    "worldPosition": [
+      1.60301,
+      0.31702
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 6,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 33,
+    "worldPosition": [
+      1.23033,
+      0.19593
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 34,
+    "worldPosition": [
+      1.23033,
+      -0.19593
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 6,
+    "downTileId": -1
+  },
+  {
+    "tileId": 35,
+    "worldPosition": [
+      1.60301,
+      -0.31702
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 6,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 36,
+    "worldPosition": [
+      1.48784,
+      0.47553
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 7
+  },
+  {
+    "tileId": 37,
+    "worldPosition": [
+      1.25752,
+      0.79255
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 7,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 38,
+    "worldPosition": [
+      0.88484,
+      0.67146
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 39,
+    "worldPosition": [
+      0.88484,
+      0.2796
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 7,
+    "downTileId": -1
+  },
+  {
+    "tileId": 40,
+    "worldPosition": [
+      1.25752,
+      0.15851
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 7,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 41,
+    "worldPosition": [
+      0.92882,
+      0.29389
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 8
+  },
+  {
+    "tileId": 42,
+    "worldPosition": [
+      0.6985,
+      0.61091
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 8,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 43,
+    "worldPosition": [
+      0.32582,
+      0.48982
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 44,
+    "worldPosition": [
+      0.32582,
+      0.09796
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 8,
+    "downTileId": -1
+  },
+  {
+    "tileId": 45,
+    "worldPosition": [
+      0.6985,
+      -0.02313
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 8,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 46,
+    "worldPosition": [
+      0.92882,
+      -0.29389
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 9
+  },
+  {
+    "tileId": 47,
+    "worldPosition": [
+      0.6985,
+      0.02313
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 9,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 48,
+    "worldPosition": [
+      0.32582,
+      -0.09796
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 49,
+    "worldPosition": [
+      0.32582,
+      -0.48982
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 9,
+    "downTileId": -1
+  },
+  {
+    "tileId": 50,
+    "worldPosition": [
+      0.6985,
+      -0.61091
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 9,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 51,
+    "worldPosition": [
+      1.48784,
+      -0.47553
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 10
+  },
+  {
+    "tileId": 52,
+    "worldPosition": [
+      1.25752,
+      -0.15851
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 10,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 53,
+    "worldPosition": [
+      0.88484,
+      -0.2796
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 54,
+    "worldPosition": [
+      0.88484,
+      -0.67146
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 10,
+    "downTileId": -1
+  },
+  {
+    "tileId": 55,
+    "worldPosition": [
+      1.25752,
+      -0.79255
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 10,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 56,
+    "worldPosition": [
+      1.14235,
+      0.95106
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 11
+  },
+  {
+    "tileId": 57,
+    "worldPosition": [
+      0.91203,
+      1.26808
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 11,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 58,
+    "worldPosition": [
+      0.53935,
+      1.14699
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 59,
+    "worldPosition": [
+      0.53935,
+      0.75513
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 11,
+    "downTileId": -1
+  },
+  {
+    "tileId": 60,
+    "worldPosition": [
+      0.91203,
+      0.63404
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 11,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 61,
+    "worldPosition": [
+      0.79686,
+      1.42659
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 12
+  },
+  {
+    "tileId": 62,
+    "worldPosition": [
+      0.56654,
+      1.74361
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 12,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 63,
+    "worldPosition": [
+      0.19386,
+      1.62252
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 64,
+    "worldPosition": [
+      0.19386,
+      1.23066
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 12,
+    "downTileId": -1
+  },
+  {
+    "tileId": 65,
+    "worldPosition": [
+      0.56654,
+      1.10957
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 12,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 66,
+    "worldPosition": [
+      0.23784,
+      1.24495
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 13
+  },
+  {
+    "tileId": 67,
+    "worldPosition": [
+      0.00752,
+      1.56197
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 13,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 68,
+    "worldPosition": [
+      -0.36516,
+      1.44088
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 69,
+    "worldPosition": [
+      -0.36516,
+      1.04902
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 13,
+    "downTileId": -1
+  },
+  {
+    "tileId": 70,
+    "worldPosition": [
+      0.00752,
+      0.92793
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 13,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 71,
+    "worldPosition": [
+      0.23784,
+      0.65717
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 14
+  },
+  {
+    "tileId": 72,
+    "worldPosition": [
+      0.00752,
+      0.97419
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 14,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 73,
+    "worldPosition": [
+      -0.36516,
+      0.8531
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 74,
+    "worldPosition": [
+      -0.36516,
+      0.46124
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 14,
+    "downTileId": -1
+  },
+  {
+    "tileId": 75,
+    "worldPosition": [
+      0.00752,
+      0.34015
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 14,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 76,
+    "worldPosition": [
+      0.79686,
+      0.47553
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 15
+  },
+  {
+    "tileId": 77,
+    "worldPosition": [
+      0.56654,
+      0.79255
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 15,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 78,
+    "worldPosition": [
+      0.19386,
+      0.67146
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 79,
+    "worldPosition": [
+      0.19386,
+      0.2796
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 15,
+    "downTileId": -1
+  },
+  {
+    "tileId": 80,
+    "worldPosition": [
+      0.56654,
+      0.15851
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 15,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 81,
+    "worldPosition": [
+      0.02431,
+      0.58779
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 16
+  },
+  {
+    "tileId": 82,
+    "worldPosition": [
+      -0.20601,
+      0.90481
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 16,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 83,
+    "worldPosition": [
+      -0.57869,
+      0.78372
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 84,
+    "worldPosition": [
+      -0.57869,
+      0.39186
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 16,
+    "downTileId": -1
+  },
+  {
+    "tileId": 85,
+    "worldPosition": [
+      -0.20601,
+      0.27077
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 16,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 86,
+    "worldPosition": [
+      -0.32118,
+      1.06332
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 17
+  },
+  {
+    "tileId": 87,
+    "worldPosition": [
+      -0.5515,
+      1.38034
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 17,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 88,
+    "worldPosition": [
+      -0.92418,
+      1.25925
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 89,
+    "worldPosition": [
+      -0.92418,
+      0.86739
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 17,
+    "downTileId": -1
+  },
+  {
+    "tileId": 90,
+    "worldPosition": [
+      -0.5515,
+      0.7463
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 17,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 91,
+    "worldPosition": [
+      -0.8802,
+      0.88168
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 18
+  },
+  {
+    "tileId": 92,
+    "worldPosition": [
+      -1.11052,
+      1.1987
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 18,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 93,
+    "worldPosition": [
+      -1.4832,
+      1.07761
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 94,
+    "worldPosition": [
+      -1.4832,
+      0.68575
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 18,
+    "downTileId": -1
+  },
+  {
+    "tileId": 95,
+    "worldPosition": [
+      -1.11052,
+      0.56466
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 18,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 96,
+    "worldPosition": [
+      -0.8802,
+      0.2939
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 19
+  },
+  {
+    "tileId": 97,
+    "worldPosition": [
+      -1.11052,
+      0.61092
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 19,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 98,
+    "worldPosition": [
+      -1.4832,
+      0.48983
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 99,
+    "worldPosition": [
+      -1.4832,
+      0.09797
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 19,
+    "downTileId": -1
+  },
+  {
+    "tileId": 100,
+    "worldPosition": [
+      -1.11052,
+      -0.02312
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 19,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 101,
+    "worldPosition": [
+      -0.32118,
+      0.11226
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 20
+  },
+  {
+    "tileId": 102,
+    "worldPosition": [
+      -0.5515,
+      0.42928
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 20,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 103,
+    "worldPosition": [
+      -0.92418,
+      0.30819
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 104,
+    "worldPosition": [
+      -0.92418,
+      -0.08367
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 20,
+    "downTileId": -1
+  },
+  {
+    "tileId": 105,
+    "worldPosition": [
+      -0.5515,
+      -0.20476
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 20,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 106,
+    "worldPosition": [
+      0.02431,
+      -0.58779
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 21
+  },
+  {
+    "tileId": 107,
+    "worldPosition": [
+      -0.20601,
+      -0.27077
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 21,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 108,
+    "worldPosition": [
+      -0.57869,
+      -0.39186
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 109,
+    "worldPosition": [
+      -0.57869,
+      -0.78372
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 21,
+    "downTileId": -1
+  },
+  {
+    "tileId": 110,
+    "worldPosition": [
+      -0.20601,
+      -0.90481
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 21,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 111,
+    "worldPosition": [
+      -0.32118,
+      -0.11226
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 22
+  },
+  {
+    "tileId": 112,
+    "worldPosition": [
+      -0.5515,
+      0.20476
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 22,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 113,
+    "worldPosition": [
+      -0.92418,
+      0.08367
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 114,
+    "worldPosition": [
+      -0.92418,
+      -0.30819
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 22,
+    "downTileId": -1
+  },
+  {
+    "tileId": 115,
+    "worldPosition": [
+      -0.5515,
+      -0.42928
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 22,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 116,
+    "worldPosition": [
+      -0.8802,
+      -0.2939
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 23
+  },
+  {
+    "tileId": 117,
+    "worldPosition": [
+      -1.11052,
+      0.02312
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 23,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 118,
+    "worldPosition": [
+      -1.4832,
+      -0.09797
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 119,
+    "worldPosition": [
+      -1.4832,
+      -0.48983
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 23,
+    "downTileId": -1
+  },
+  {
+    "tileId": 120,
+    "worldPosition": [
+      -1.11052,
+      -0.61092
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 23,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 121,
+    "worldPosition": [
+      -0.8802,
+      -0.88168
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 24
+  },
+  {
+    "tileId": 122,
+    "worldPosition": [
+      -1.11052,
+      -0.56466
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 24,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 123,
+    "worldPosition": [
+      -1.4832,
+      -0.68575
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 124,
+    "worldPosition": [
+      -1.4832,
+      -1.07761
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 24,
+    "downTileId": -1
+  },
+  {
+    "tileId": 125,
+    "worldPosition": [
+      -1.11052,
+      -1.1987
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 24,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 126,
+    "worldPosition": [
+      -0.32118,
+      -1.06332
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 25
+  },
+  {
+    "tileId": 127,
+    "worldPosition": [
+      -0.5515,
+      -0.7463
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 25,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 128,
+    "worldPosition": [
+      -0.92418,
+      -0.86739
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 129,
+    "worldPosition": [
+      -0.92418,
+      -1.25925
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 25,
+    "downTileId": -1
+  },
+  {
+    "tileId": 130,
+    "worldPosition": [
+      -0.5515,
+      -1.38034
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 25,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 131,
+    "worldPosition": [
+      1.14235,
+      -0.95106
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 26
+  },
+  {
+    "tileId": 132,
+    "worldPosition": [
+      0.91203,
+      -0.63404
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 26,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 133,
+    "worldPosition": [
+      0.53935,
+      -0.75513
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 134,
+    "worldPosition": [
+      0.53935,
+      -1.14699
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 26,
+    "downTileId": -1
+  },
+  {
+    "tileId": 135,
+    "worldPosition": [
+      0.91203,
+      -1.26808
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 26,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 136,
+    "worldPosition": [
+      0.79686,
+      -0.47553
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 27
+  },
+  {
+    "tileId": 137,
+    "worldPosition": [
+      0.56654,
+      -0.15851
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 27,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 138,
+    "worldPosition": [
+      0.19386,
+      -0.2796
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 139,
+    "worldPosition": [
+      0.19386,
+      -0.67146
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 27,
+    "downTileId": -1
+  },
+  {
+    "tileId": 140,
+    "worldPosition": [
+      0.56654,
+      -0.79255
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 27,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 141,
+    "worldPosition": [
+      0.23784,
+      -0.65717
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 28
+  },
+  {
+    "tileId": 142,
+    "worldPosition": [
+      0.00752,
+      -0.34015
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 28,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 143,
+    "worldPosition": [
+      -0.36516,
+      -0.46124
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 144,
+    "worldPosition": [
+      -0.36516,
+      -0.8531
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 28,
+    "downTileId": -1
+  },
+  {
+    "tileId": 145,
+    "worldPosition": [
+      0.00752,
+      -0.97419
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 28,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 146,
+    "worldPosition": [
+      0.23784,
+      -1.24495
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 29
+  },
+  {
+    "tileId": 147,
+    "worldPosition": [
+      0.00752,
+      -0.92793
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 29,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 148,
+    "worldPosition": [
+      -0.36516,
+      -1.04902
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 149,
+    "worldPosition": [
+      -0.36516,
+      -1.44088
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 29,
+    "downTileId": -1
+  },
+  {
+    "tileId": 150,
+    "worldPosition": [
+      0.00752,
+      -1.56197
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 29,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 151,
+    "worldPosition": [
+      0.79686,
+      -1.42659
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": 30
+  },
+  {
+    "tileId": 152,
+    "worldPosition": [
+      0.56654,
+      -1.10957
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": 30,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 153,
+    "worldPosition": [
+      0.19386,
+      -1.23066
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": -1,
+    "downTileId": -1
+  },
+  {
+    "tileId": 154,
+    "worldPosition": [
+      0.19386,
+      -1.62252
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": -1,
+    "upTileId": 30,
+    "downTileId": -1
+  },
+  {
+    "tileId": 155,
+    "worldPosition": [
+      0.56654,
+      -1.74361
+    ],
+    "sprite": "floor2.jpg",
+    "leftTileId": -1,
+    "rightTileId": 30,
+    "upTileId": -1,
+    "downTileId": -1
+  }
+]

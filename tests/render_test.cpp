@@ -47,6 +47,7 @@ private:
         {
             registry.destroy(entity);
         }
+        // renderer->Clear();
         auto view2 = registry.view<AtlasPQtile>();
         // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
         std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist);
@@ -59,7 +60,7 @@ private:
 
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
-        Tile currentTile = tilemap->getTileByID(82);
+        Tile currentTile = tilemap->getTileByID(1);
 
         std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
@@ -160,7 +161,7 @@ private:
         if (timeSinceLastMove < moveCooldown)
             return;
 
-        else if (input->isKeyPressed(GLFW_KEY_W))
+        else if (input->wasKeyPressed(GLFW_KEY_W))
         {
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._upTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._upTileId), tilemap))
@@ -170,9 +171,9 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->isKeyPressed(GLFW_KEY_A))
+        else if (input->wasKeyPressed(GLFW_KEY_A))
         {
-            // std::cout << tilemap->currentTile.to_string() << "\n";
+            std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._leftTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId);
@@ -180,9 +181,9 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->isKeyPressed(GLFW_KEY_S))
+        else if (input->wasKeyPressed(GLFW_KEY_S))
         {
-            // std::cout << tilemap->currentTile.to_string() << "\n";
+            std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._downTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._downTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._downTileId);
@@ -190,9 +191,9 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->isKeyPressed(GLFW_KEY_D))
+        else if (input->wasKeyPressed(GLFW_KEY_D))
         {
-            // std::cout << tilemap->currentTile.to_string() << "\n";
+            std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._rightTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId), tilemap))
             {
 
