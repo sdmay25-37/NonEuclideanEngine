@@ -19,8 +19,10 @@
 #include "Tile.hpp"
 #include "Input.hpp"
 
+#include <queue>
+
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-#define rendDist 2
+#define rendDist 8
 
 static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
@@ -47,14 +49,14 @@ private:
         {
             registry.destroy(entity);
         }
-
         // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
         std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = tilemap->currentTile;
         SpriteTile.to_weirstrass();
-        std::unordered_set<int> processed_tiles;
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles);
+        std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
+
+        addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
     }
 
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
@@ -65,25 +67,105 @@ private:
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = currentTile;
         SpriteTile.to_weirstrass();
-        std::unordered_set<int> processed_tiles;
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles);
+        std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
+
+        std::cout << "Here \n";
+        addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+    }
+
+    static void addTileAndNeighborsBFS2(entt::registry &registry, Resource<TextureManager> texture_manager,
+                                        const Tile &root_tile, int radius,
+                                        const std::string &texturePath, const PQTile &Sprite_tile, Resource<TileMap> tilemap, std::unordered_set<int> *processed_tiles, float ThetaX, float ThetaY)
+    {
+        // Queue for BFS, now storing Tile, currentRelation, and PQTile
+        std::queue<std::tuple<Tile, int, PQTile>> tile_queue;
+        tile_queue.push({root_tile, 0, Sprite_tile}); // Start with root tile, currentRelation 0, and the initial PQTile
+
+        while (!tile_queue.empty())
+        {
+            // Get the tile, current relation, and PQTile from the queue
+            auto [tile, currentRelation, pq_tile] = tile_queue.front();
+            tile_queue.pop();
+
+            // Skip the tile if it has already been processed or if it exceeds the radius
+            if (currentRelation >= radius || processed_tiles->find(tile._tileId) != processed_tiles->end() || tile._tileId == -1)
+            {
+                continue; // Skip this tile and go to the next one in the queue
+            }
+
+            // Mark the tile as processed
+            processed_tiles->insert(tile._tileId);
+
+            // Add the tile to the registry and create an entity
+            const auto entity = registry.create();
+            auto texture_result = texture_manager->getTexture(tile.sprite);
+            if (texture_result)
+            {
+                AtlasedTexture texture = texture_result.value();
+                pq_tile.recalculate_uvs(); // Ensure the PQTile has its UVs recalculated before adding it
+                registry.emplace<AtlasPQtile>(entity, pq_tile, texture, (float)0.0);
+            }
+            else
+            {
+                std::cout << "Error: Failed to load texture '" << texturePath << "'!" << "\n";
+                continue; // Skip to next tile if texture loading fails
+            }
+
+            // Enqueue neighbors (left, right, up, down) if valid, along with their PQTile
+            if (tile._leftTileId != -1 && tilemap->getTileInRenderedList(tile._leftTileId)._tileId != -1)
+            {
+                Tile left_tile = tilemap->getTileInRenderedList(tile._leftTileId);
+                PQTile left_tile_sprite = pq_tile;
+                left_tile_sprite.rotateYHyperbolic(-Theta);
+                tile_queue.push({left_tile, currentRelation + 1, left_tile_sprite});
+            }
+
+            if (tile._rightTileId != -1 && tilemap->getTileInRenderedList(tile._rightTileId)._tileId != -1)
+            {
+                Tile right_tile = tilemap->getTileInRenderedList(tile._rightTileId);
+                PQTile right_tile_sprite = pq_tile;
+                right_tile_sprite.rotateYHyperbolic(Theta);
+                tile_queue.push({right_tile, currentRelation + 1, right_tile_sprite});
+            }
+
+            if (tile._upTileId != -1 && tilemap->getTileInRenderedList(tile._upTileId)._tileId != -1)
+            {
+                Tile up_tile = tilemap->getTileInRenderedList(tile._upTileId);
+                PQTile up_tile_sprite = pq_tile;
+                up_tile_sprite.rotateXHyperbolic(Theta);
+                tile_queue.push({up_tile, currentRelation + 1, up_tile_sprite});
+            }
+
+            if (tile._downTileId != -1 && tilemap->getTileInRenderedList(tile._downTileId)._tileId != -1)
+            {
+                Tile down_tile = tilemap->getTileInRenderedList(tile._downTileId);
+                PQTile down_tile_sprite = pq_tile;
+                down_tile_sprite.rotateXHyperbolic(-Theta);
+                tile_queue.push({down_tile, currentRelation + 1, down_tile_sprite});
+            }
+        }
     }
 
     static void addTileAndNeighbors(entt::registry &registry, Resource<TextureManager> texture_manager,
                                     const Tile &root_tile, int currentRelation, int radius,
-                                    const std::string &texturePath, const PQTile &Sprite_tile, Resource<TileMap> tilemap, std::unordered_set<int> processed_tiles)
+                                    const std::string &texturePath, const PQTile &Sprite_tile, Resource<TileMap> tilemap, std::unordered_set<int> processed_tiles, float ThetaX, float ThetaY)
     {
-        if (currentRelation >= radius)
-            return;
 
+        if (currentRelation >= radius)
+        {
+            return;
+        }
         if (processed_tiles.find(root_tile._tileId) != processed_tiles.end())
         {
             return; // Tile has already been added, exit the function
         }
         if (root_tile._tileId == -1)
         {
+
             return;
         }
+
+        // std::cout << "Here5 \n";
 
         // Add the tile to the processed set
         processed_tiles.insert(root_tile._tileId);
@@ -95,11 +177,15 @@ private:
         {
             AtlasedTexture texture = texture_result.value();
             // std::cout << "Tile Added: " << root_tile._tileId << "\n";
-            // for (int ID : processed_tiles)
+            // for (auto it = processed_tiles->begin(); it != processed_tiles->end(); ++it)
             // {
-            //     std::cout << "Processed_Tiles" << ID << "\n";
+            //     int tile = *it;
+
+            //     std::cout << "Processed_Tiles" << tile << "\n";
             // }
-            registry.emplace<AtlasPQtile>(entity, Sprite_tile, texture, (float)0.0);
+            PQTile render_Tile = Sprite_tile;
+            render_Tile.recalculate_uvs();
+            registry.emplace<AtlasPQtile>(entity, render_Tile, texture, (float)0.0);
         }
         else
         {
@@ -114,7 +200,13 @@ private:
             Tile tile_left = tilemap->getTileInRenderedList(root_tile._leftTileId);
             PQTile left_tile = Sprite_tile;
             left_tile.rotateYHyperbolic(-Theta);
-            addTileAndNeighbors(registry, texture_manager, tile_left, currentRelation + 1, radius, tile_left.sprite, left_tile, tilemap, processed_tiles);
+            float newThetaY = ThetaY - Theta;
+            // std::cout << tile_left._tileId << "\n"
+            //           << ThetaX << "\n"
+            //           << newThetaY << "\n"
+            //           << Theta << "\n";
+            // left_tile.rotateXYHyperbolic(ThetaX, newThetaY);
+            addTileAndNeighbors(registry, texture_manager, tile_left, currentRelation + 1, radius, tile_left.sprite, left_tile, tilemap, processed_tiles, ThetaX, newThetaY);
         }
         if (root_tile._rightTileId != -1 && tilemap->getTileInRenderedList(root_tile._downTileId)._rightTileId != -1)
         {
@@ -122,21 +214,39 @@ private:
             Tile tile_right = tilemap->getTileInRenderedList(root_tile._rightTileId);
             PQTile right_tile = Sprite_tile;
             right_tile.rotateYHyperbolic(Theta);
-            addTileAndNeighbors(registry, texture_manager, tile_right, currentRelation + 1, radius, tile_right.sprite, right_tile, tilemap, processed_tiles);
+            float newThetaY = ThetaY + Theta;
+            // std::cout << tile_right._tileId << "\n"
+            //           << ThetaX << "\n"
+            //           << newThetaY << "\n"
+            //           << Theta << "\n";
+            // right_tile.rotateXYHyperbolic(ThetaX, newThetaY);
+            addTileAndNeighbors(registry, texture_manager, tile_right, currentRelation + 1, radius, tile_right.sprite, right_tile, tilemap, processed_tiles, ThetaX, newThetaY);
         }
         if (root_tile._upTileId != -1 && tilemap->getTileInRenderedList(root_tile._upTileId)._tileId != -1)
         {
             Tile tile_top = tilemap->getTileInRenderedList(root_tile._upTileId);
             PQTile top_tile = Sprite_tile;
             top_tile.rotateXHyperbolic(Theta);
-            addTileAndNeighbors(registry, texture_manager, tile_top, currentRelation + 1, radius, tile_top.sprite, top_tile, tilemap, processed_tiles);
+            float newThetaX = ThetaX + Theta;
+
+            // std::cout << tile_top._tileId << "\n"
+            //           << newThetaX << "\n"
+            //           << ThetaY << "\n"
+            //           << Theta << "\n";
+            // top_tile.rotateXYHyperbolic(newThetaX, ThetaY);
+            addTileAndNeighbors(registry, texture_manager, tile_top, currentRelation + 1, radius, tile_top.sprite, top_tile, tilemap, processed_tiles, newThetaX, ThetaY);
         }
         if (root_tile._downTileId != -1 && tilemap->getTileInRenderedList(root_tile._downTileId)._tileId != -1)
         {
             Tile tile_bottom = tilemap->getTileInRenderedList(root_tile._downTileId);
             PQTile bottom__tile = Sprite_tile;
+            // std::cout << tile_bottom._tileId << "\n"
+            //           << ThetaX << "\n"
+            //           << ThetaY << "\n"
+            //           << Theta << "\n";
             bottom__tile.rotateXHyperbolic(-Theta);
-            addTileAndNeighbors(registry, texture_manager, tile_bottom, currentRelation + 1, radius, tile_bottom.sprite, bottom__tile, tilemap, processed_tiles);
+            float newThetaX = ThetaX - Theta;
+            addTileAndNeighbors(registry, texture_manager, tile_bottom, currentRelation + 1, radius, tile_bottom.sprite, bottom__tile, tilemap, processed_tiles, newThetaX, ThetaY);
         }
     }
     static void

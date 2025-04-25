@@ -82,7 +82,7 @@ void Mesh::rotateXHyperbolic(float theta)
     {
         poly_mesh[i].rotateXHyperbolic(theta);
     }
-    recalculate_uvs();
+    // recalculate_uvs();
 }
 void Mesh::recalculate_uvs()
 {
@@ -124,13 +124,37 @@ void Mesh::recalculate_uvs()
         poly_mesh[0].uv = glm::vec2(0.5f, 0.5f);
 }
 
+void Mesh::rotateXYHyperbolic(float thetaX, float thetaY)
+{
+    // Apply X rotation
+    if (thetaX != 0.0)
+    {
+        for (unsigned int i = 0; i < poly_mesh.size(); i++)
+        {
+            poly_mesh[i].rotateXHyperbolic(thetaX);
+        }
+    }
+
+    // Apply Y rotation
+    if (thetaY != 0.0)
+    {
+        for (unsigned int i = 0; i < poly_mesh.size(); i++)
+        {
+            poly_mesh[i].rotateYHyperbolic(thetaY);
+        }
+    }
+
+    // Recalculate UVs after both rotations
+    recalculate_uvs();
+}
+
 void Mesh::rotateYHyperbolic(float theta)
 {
     for (unsigned int i = 0; i < poly_mesh.size(); i++)
     {
         poly_mesh[i].rotateYHyperbolic(theta);
     }
-    recalculate_uvs();
+    // recalculate_uvs();
 }
 
 void Mesh::to_poincare()
