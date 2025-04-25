@@ -28,6 +28,7 @@ Renderer::~Renderer()
 	glDeleteBuffers(1, &EBO);
 	glDeleteBuffers(1, &VE0);
 	glDeleteBuffers(1, &UV_VBO);
+	glDeleteBuffers(1, &UV_VBO2);
 }
 void Renderer::Init()
 {
@@ -37,6 +38,7 @@ void Renderer::Init()
 	glGenBuffers(1, &EBO);
 	glGenBuffers(1, &VE0);
 	glGenBuffers(1, &UV_VBO);
+	glGenBuffers(1, &UV_VBO2);
 
 	// --- Instanced Rendering Setup ---
 	glBindVertexArray(VAO);
@@ -58,6 +60,12 @@ void Renderer::Init()
 	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(3);
 	glVertexAttribDivisor(3, 1); // THIS IS WHAT CAUSED MY PAIN FOR LIKE 8 HOURS
+
+	// BIND TO NEW BUFFER TODO
+	glBindBuffer(GL_ARRAY_BUFFER, UV_VBO2);
+	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 1 * sizeof(float), (void *)0);
+	glEnableVertexAttribArray(4);
+	glVertexAttribDivisor(3, 1);
 
 	// "../ne_engine/shaders/pq_test.vert",
 	// 		"../ne_engine/shaders/pq_color.frag"
@@ -106,8 +114,8 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 	{
 		auto mesh_ptr = static_cast<const void *>(currentTile.tile.data()); // use mesh_data pointer as a key
 		auto atlas_id = currentTile.texture.atlas_id;
-
-		batched_tiles[{mesh_ptr, atlas_id}].push_back(&currentTile);
+		batched_tiles[{mesh_ptr, atlas_id}]
+			.push_back(&currentTile);
 	}
 
 	for (auto &[key, tiles] : batched_tiles)
@@ -123,17 +131,22 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 
 		// Collect per-instance UVs
 		std::vector<glm::vec4> uv_ranges;
+		std::vector<float> zindexVector;
 
 		for (auto *tile : tiles)
 		{
 			// tile->tile.to_weirstrass(); // already converted earlier? Do once, not per frame
 			const auto &tex = tile->texture;
 			uv_ranges.emplace_back(tex.uv_min.x, tex.uv_min.y, tex.uv_max.x, tex.uv_max.y);
+			zindexVector.emplace_back(tile->zIndex);
 		}
 
 		// Upload instance UVs
 		glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
+
+		glBindBuffer(GL_ARRAY_BUFFER, UV_VBO2);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * zindexVector.size(), zindexVector.data(), GL_STATIC_DRAW);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, atlas_id);

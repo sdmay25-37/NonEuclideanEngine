@@ -27,8 +27,8 @@ Result<Texture, Texture::CreateError> Texture::createFromImage(const Image &imag
 	using Result = Result<Texture, CreateError>;
 
 	unsigned int textureId;
-	glGenTextures(1, &textureId);
-	glBindTexture(GL_TEXTURE_2D, textureId);
+	// glGenTextures(1, &textureId);
+	// glBindTexture(GL_TEXTURE_2D, textureId);
 	int texWidth, texHeight, texChannels;
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

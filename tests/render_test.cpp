@@ -20,7 +20,7 @@
 #include "Input.hpp"
 
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-#define rendDist 6
+#define rendDist 2
 
 static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
@@ -37,7 +37,7 @@ public:
     }
 
 private:
-    static void UpdateTile2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap, Resource<Renderer> renderer)
+    static void UpdateTile2(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap, Resource<Renderer> renderer, Resource<Window> window)
     {
         // THIS FEELS UNCESSARY BUT IT MADE IT WORK
         // ASK BEN IF THIS IS GOOD ENOUGH
@@ -47,8 +47,7 @@ private:
         {
             registry.destroy(entity);
         }
-        // renderer->Clear();
-        auto view2 = registry.view<AtlasPQtile>();
+
         // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
         std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
@@ -100,7 +99,7 @@ private:
             // {
             //     std::cout << "Processed_Tiles" << ID << "\n";
             // }
-            registry.emplace<AtlasPQtile>(entity, Sprite_tile, texture);
+            registry.emplace<AtlasPQtile>(entity, Sprite_tile, texture, (float)0.0);
         }
         else
         {
@@ -152,53 +151,53 @@ private:
         tileMap->loadTiles("../tests/json/maze_output_small.json");
     }
 
-    static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager, Resource<Renderer> renderer)
+    static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager, Resource<Renderer> renderer, Resource<Window> window)
     {
-        const float moveCooldown = 0.0f; // ADDED DELAY SO THAT MOVEMENT IS SLOWER AND IS FLUID
+        const float moveCooldown = 0.01f; // ADDED DELAY SO THAT MOVEMENT IS SLOWER AND IS FLUID
 
         float deltaTime = ImGui::GetIO().DeltaTime; // USING IMGUI because it was already in here
         timeSinceLastMove += deltaTime;
         if (timeSinceLastMove < moveCooldown)
             return;
 
-        else if (input->wasKeyPressed(GLFW_KEY_W))
+        else if (input->isKeyPressed(GLFW_KEY_W))
         {
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._upTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._upTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._upTileId);
-                UpdateTile2(registry, texture_manager, tilemap, renderer);
+                UpdateTile2(registry, texture_manager, tilemap, renderer, window);
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->wasKeyPressed(GLFW_KEY_A))
+        else if (input->isKeyPressed(GLFW_KEY_A))
         {
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._leftTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId);
-                UpdateTile2(registry, texture_manager, tilemap, renderer);
+                UpdateTile2(registry, texture_manager, tilemap, renderer, window);
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->wasKeyPressed(GLFW_KEY_S))
+        else if (input->isKeyPressed(GLFW_KEY_S))
         {
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._downTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._downTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._downTileId);
-                UpdateTile2(registry, texture_manager, tilemap, renderer);
+                UpdateTile2(registry, texture_manager, tilemap, renderer, window);
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->wasKeyPressed(GLFW_KEY_D))
+        else if (input->isKeyPressed(GLFW_KEY_D))
         {
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._rightTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId), tilemap))
             {
 
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId);
-                UpdateTile2(registry, texture_manager, tilemap, renderer);
+                UpdateTile2(registry, texture_manager, tilemap, renderer, window);
                 timeSinceLastMove = 0.0f;
             }
         }

@@ -12,6 +12,7 @@ layout(location = 2) in vec2 vert_uv;        // UV coordinates for the texture (
 
 // Per-instance attributes
 layout(location = 3) in vec4 sprite_uv;
+layout(location = 4) in float zindex;
 
 // Outputs to fragment shader
 out vec4 frag_color;
@@ -25,15 +26,15 @@ void main() {
     // Hyperbolic Weierstrass -> Poincaré disk projection
     position.x /= (1.0 + position.z);
     position.y /= (1.0 + position.z);
-    position.z = 0.0;
+    position.z =zindex;
 
     gl_Position = position;
 
     frag_color = vert_color;
 
- vec2 uv_range = sprite_uv.zw - sprite_uv.xy;
-frag_uv = sprite_uv.xy + vert_uv * uv_range;
-
+//vec2 uv_range = sprite_uv.zw - sprite_uv.xy;
+//frag_uv = sprite_uv.xy + vert_uv * uv_range;
+frag_uv = mix(sprite_uv.xy, sprite_uv.zw, vert_uv);
 // Clamp UV coordinates to ensure they are within the texture's bounds
 frag_uv = clamp(frag_uv, vec2(0.0), vec2(1.0));
 

@@ -40,6 +40,7 @@ struct AtlasPQtile
 {
 	PQTile tile;
 	AtlasedTexture texture;
+	float zIndex;
 };
 class Renderer
 {
@@ -55,7 +56,7 @@ public:
 	static constexpr int N_INDICES = 6;
 
 private:
-	unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO, VE0;
+	unsigned int VBO, UV_VBO, MODEL_MAT_VBO, VAO, EBO, VE0, UV_VBO2;
 	std::unique_ptr<ShaderProgram> _shader_program;
 };
 

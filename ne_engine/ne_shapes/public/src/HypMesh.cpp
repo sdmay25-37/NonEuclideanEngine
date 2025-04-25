@@ -118,17 +118,18 @@ void HypMesh::gen_poly_mesh()
 void HypMesh::init_poly_mesh()
 {
     // reserve space for all edge points and center point
-    mesh_size = (poly_vertices.size() * (points_per_arc - 1)) + 1;
+    mesh_size = (poly_vertices.size() * (points_per_arc)) + 1;
     poly_mesh.reserve(mesh_size);
 
     Point poly_center = Point(color, PointType::POINCARE);
 
-    poly_center.uv = glm::vec2({0.5f, 0.5f});
     for (int i = 0; i < poly_vertices.size(); i++)
     {
+
         poly_center += poly_vertices[i];
     }
-
+    // poly_center.uv = glm::vec2({(MIN_X + MAX_X) / 2, (MIN_Y + MAX_Y) / 2});
+    poly_center.uv = glm::vec2({0.5f, 0.5f});
     poly_center /= poly_vertices.size();
 
     poly_mesh.emplace_back(poly_center);

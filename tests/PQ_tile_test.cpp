@@ -46,6 +46,11 @@ int main()
     tile4.to_weirstrass();
     tile5.to_weirstrass();
 
+    // tile2.translate(1.25, 0, 0);
+    // tile3.translate(-1.25, 0, 0);
+    // tile4.translate(0, 1.25, 0);
+    // tile5.translate(0, 1.25, 0);
+
     tile2.rotateXHyperbolic(4.5 * M_PI / 16.0f);
     tile3.rotateYHyperbolic(-4.5 * M_PI / 16.0f);
     tile4.rotateXHyperbolic(4.5 * M_PI / 16.0f);

@@ -200,7 +200,6 @@ void Point::rotateYHyperbolic(float theta)
 
     float x_new = std::cosh(theta) * x + std::sinh(theta) * z;
     float z_new = std::sinh(theta) * x + std::cosh(theta) * z;
-
     x = x_new;
     z = z_new;
 }
