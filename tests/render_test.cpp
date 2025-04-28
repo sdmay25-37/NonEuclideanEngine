@@ -49,6 +49,11 @@ private:
         {
             registry.destroy(entity);
         }
+        auto view2 = registry.view<Character>();
+        for (auto entity : view)
+        {
+            registry.destroy(entity);
+        }
 
         // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
         std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist + 1);
@@ -62,6 +67,7 @@ private:
         // addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
         PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
         SpriteTile2.scale(0.5f);
+        // SpriteTile2.translate(0.1, 0.0, 0.0);
         SpriteTile2.to_weirstrass();
         SpriteTile2.recalculate_uvs();
         const auto entity = registry.create();
@@ -69,7 +75,7 @@ private:
         if (texture_result)
         {
             AtlasedTexture texture = texture_result.value();
-            registry.emplace<AtlasPQtile>(entity, SpriteTile2, texture, (float)0.1);
+            registry.emplace<Character>(entity, SpriteTile2, texture);
         }
         else
         {
@@ -94,6 +100,7 @@ private:
         // addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
         PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
         SpriteTile2.scale(0.5f);
+        // SpriteTile2.translate(0.1, 0.0, 0.0);
         SpriteTile2.to_weirstrass();
         SpriteTile2.recalculate_uvs();
         const auto entity = registry.create();
@@ -101,7 +108,7 @@ private:
         if (texture_result)
         {
             AtlasedTexture texture = texture_result.value();
-            registry.emplace<AtlasPQtile>(entity, SpriteTile2, texture, (float)0.1);
+            registry.emplace<Character>(entity, SpriteTile2, texture);
         }
         else
         {
@@ -150,19 +157,19 @@ private:
             {
                 AtlasedTexture texture = texture_result.value();
                 pq_tile.recalculate_uvs(); // Ensure the PQTile has its UVs recalculated before adding it
-                if (tile._tileId == root_tile._tileId)
-                {
-                    std::cout << "AAAAAAAAAAAAAH " << tile._tileId << "AND " << currentRelation << "\n";
-                    PQTile testTile = pq_tile;
-                    testTile.scale(0.25);
-                    testTile.recalculate_uvs();
-                    registry.emplace<AtlasPQtile>(entity, testTile, texture, (float)-0.1);
-                    std::cout << "AAAAAAAAAAAAAH2 " << tile._tileId << "AND " << currentRelation << "\n";
-                }
-                else
-                {
-                    registry.emplace<AtlasPQtile>(entity, pq_tile, texture, (float)0.0);
-                }
+                                           // if (tile._tileId == root_tile._tileId)
+                                           // {
+                                           //     std::cout << "AAAAAAAAAAAAAH " << tile._tileId << "AND " << currentRelation << "\n";
+                                           //     PQTile testTile = pq_tile;
+                                           //     testTile.scale(0.25);
+                                           //     testTile.recalculate_uvs();
+                                           //     registry.emplace<AtlasPQtile>(entity, testTile, texture, (float)-1.0);
+                                           //     std::cout << "AAAAAAAAAAAAAH2 " << tile._tileId << "AND " << currentRelation << "\n";
+                                           // }
+                                           // else
+                                           // {
+                registry.emplace<AtlasPQtile>(entity, pq_tile, texture, (float)-1.0);
+                // }
             }
             else
             {
