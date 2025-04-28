@@ -139,7 +139,7 @@ private:
 
             if (tile._tileId == root_tile._tileId)
             {
-                std::cout << "This Shouldnt Happen " << tile._tileId << "AND " << currentRelation << "\n";
+                std::cout << "This Shouldnt Happen more than once " << tile._tileId << "AND " << currentRelation << "\n";
             }
             // Mark the tile as processed
 
