@@ -22,7 +22,7 @@
 #include <queue>
 
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-#define rendDist 8
+#define rendDist 5
 
 static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
@@ -49,32 +49,60 @@ private:
         {
             registry.destroy(entity);
         }
+        PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
+        SpriteTile2.to_weirstrass();
+        const auto entity = registry.create();
+        auto texture_result = texture_manager->getTexture("character.png");
+        if (texture_result)
+        {
+            AtlasedTexture texture = texture_result.value();
+            registry.emplace<AtlasPQtile>(entity, SpriteTile2, texture, (float)1.0);
+        }
+        else
+        {
+            std::cout << "Error: Failed to load texture '" << "character.png" << "'!" << "\n";
+        }
         // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist);
+        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist + 1);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = tilemap->currentTile;
         SpriteTile.to_weirstrass();
-        std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
-        // std::unordered_set<int> processed_tiles;
+        // std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
+        std::unordered_set<int> processed_tiles;
 
-        addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
-        // addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+        // addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
     }
 
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
-        Tile currentTile = tilemap->getTileByID(1);
+        Tile currentTile = tilemap->getTileByID(25);
 
-        std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist);
+        std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist + 1);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = currentTile;
         SpriteTile.to_weirstrass();
-        std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
-        // std::unordered_set<int> processed_tiles ;
+
+        PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
+        SpriteTile2.to_weirstrass();
+        const auto entity = registry.create();
+        auto texture_result = texture_manager->getTexture("character.png");
+        if (texture_result)
+        {
+            AtlasedTexture texture = texture_result.value();
+            registry.emplace<AtlasPQtile>(entity, SpriteTile2, texture, (float)1.0);
+        }
+        else
+        {
+            std::cout << "Error: Failed to load texture '" << "character.png" << "'!" << "\n";
+        }
+
+        // std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
+        std::unordered_set<int> processed_tiles;
 
         std::cout << "Here \n";
-        addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
-        // addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+        // addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
     }
 
     static void addTileAndNeighborsBFS2(entt::registry &registry, Resource<TextureManager> texture_manager,
@@ -232,12 +260,6 @@ private:
             PQTile top_tile = Sprite_tile;
             top_tile.rotateXHyperbolic(Theta);
             float newThetaX = ThetaX + Theta;
-
-            // std::cout << tile_top._tileId << "\n"
-            //           << newThetaX << "\n"
-            //           << ThetaY << "\n"
-            //           << Theta << "\n";
-            // top_tile.rotateXYHyperbolic(newThetaX, ThetaY);
             addTileAndNeighbors(registry, texture_manager, tile_top, currentRelation + 1, radius, tile_top.sprite, top_tile, tilemap, processed_tiles, newThetaX, ThetaY);
         }
         if (root_tile._downTileId != -1 && tilemap->getTileInRenderedList(root_tile._downTileId)._tileId != -1)
@@ -262,7 +284,7 @@ private:
     static void LoadTiles(Resource<TileMap> tileMap)
     {
         // Where Tiles are loaded from
-        tileMap->loadTiles("../tests/json/test.json");
+        tileMap->loadTiles("../tests/json/maze_output_small.json");
     }
 
     static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager, Resource<Renderer> renderer, Resource<Window> window)
@@ -274,7 +296,7 @@ private:
         if (timeSinceLastMove < moveCooldown)
             return;
 
-        else if (input->isKeyPressed(GLFW_KEY_W))
+        else if (input->wasKeyPressed(GLFW_KEY_W))
         {
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._upTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._upTileId), tilemap))
@@ -284,7 +306,7 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->isKeyPressed(GLFW_KEY_A))
+        else if (input->wasKeyPressed(GLFW_KEY_A))
         {
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._leftTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId), tilemap))
@@ -294,7 +316,7 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->isKeyPressed(GLFW_KEY_S))
+        else if (input->wasKeyPressed(GLFW_KEY_S))
         {
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._downTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._downTileId), tilemap))
@@ -304,7 +326,7 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->isKeyPressed(GLFW_KEY_D))
+        else if (input->wasKeyPressed(GLFW_KEY_D))
         {
             std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._rightTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId), tilemap))
@@ -338,14 +360,49 @@ private:
 int main()
 {
 
-    glm::vec3 camera_pos(0.0, 0.0, 2.0);
-    glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
+    // glm::vec3 camera_pos(0.0, 0.0, 2.0);
+    // glm::vec4 camera_up(0.0, 1.0, 0.0, 1.0);
 
-    float fov = glm::radians(45.0f);
+    // float fov = glm::radians(45.0f);
+    // float nearPlane = 0.1f;
+    // float farPlane = 100.0f;
+
+    // glm::mat4 proj_mat = glm::perspective(fov, (1080.0f / 1080.0f), nearPlane, farPlane);
+
+    glm::vec3 camera_pos(0.0f, 0.0f, 2.0f);
+    glm::vec4 camera_up(0.0f, 1.0f, 0.0f, 1.0);
+
     float nearPlane = 0.1f;
     float farPlane = 100.0f;
 
-    glm::mat4 proj_mat = glm::perspective(fov, (1080.0f / 1080.0f), nearPlane, farPlane);
+    float orthoLeft = -1.0f;
+    float orthoRight = 1.0f;
+    float orthoBottom = -1.0f;
+    float orthoTop = 1.0f;
+
+    float windowWidth = 1080.0f;
+    float windowHeight = 1080.0f;
+    // Scale the ortho bounds if your window isn't square
+    if (windowWidth > windowHeight)
+    {
+        float ratio = (float)windowWidth / (float)windowHeight;
+        orthoLeft *= ratio;
+        orthoRight *= ratio;
+    }
+    else
+    {
+        float ratio = (float)windowHeight / (float)windowWidth;
+        orthoBottom *= ratio;
+        orthoTop *= ratio;
+    }
+
+    glm::mat4 proj_mat = glm::ortho(
+        orthoLeft,
+        orthoRight,
+        orthoBottom,
+        orthoTop,
+        nearPlane,
+        farPlane);
 
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();

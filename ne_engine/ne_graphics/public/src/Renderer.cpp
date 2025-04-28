@@ -39,6 +39,7 @@ void Renderer::Init()
 	glGenBuffers(1, &VE0);
 	glGenBuffers(1, &UV_VBO);
 	glGenBuffers(1, &UV_VBO2);
+	glEnable(GL_DEPTH_TEST);
 
 	// --- Instanced Rendering Setup ---
 	glBindVertexArray(VAO);
@@ -92,6 +93,8 @@ void Renderer::Init()
 // I don't like having to copy UV data every frame when it likely doesn't change
 void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 {
+
+	glEnable(GL_DEPTH_TEST);
 
 	HypRotate r_uniform_matrix = HypRotate(true);
 
