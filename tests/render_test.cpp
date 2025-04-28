@@ -22,7 +22,7 @@
 #include <queue>
 
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-#define rendDist 3
+#define rendDist 5
 
 static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
@@ -69,7 +69,7 @@ private:
         if (texture_result)
         {
             AtlasedTexture texture = texture_result.value();
-            registry.emplace<AtlasPQtile>(entity, SpriteTile2, texture, (float)1.0);
+            registry.emplace<AtlasPQtile>(entity, SpriteTile2, texture, (float)0.1);
         }
         else
         {
@@ -101,7 +101,7 @@ private:
         if (texture_result)
         {
             AtlasedTexture texture = texture_result.value();
-            registry.emplace<AtlasPQtile>(entity, SpriteTile2, texture, (float)1.0);
+            registry.emplace<AtlasPQtile>(entity, SpriteTile2, texture, (float)0.1);
         }
         else
         {
@@ -126,11 +126,22 @@ private:
             // Skip the tile if it has already been processed or if it exceeds the radius
             if (currentRelation >= radius || processed_tiles->find(tile._tileId) != processed_tiles->end() || tile._tileId == -1)
             {
+                std::cout << "TILE HERE " << tile._tileId << "AND " << currentRelation << "\n";
                 continue; // Skip this tile and go to the next one in the queue
             }
-
-            // Mark the tile as processed
             processed_tiles->insert(tile._tileId);
+
+            if (currentRelation == 0)
+            {
+                std::cout << "RootTile " << root_tile._tileId << "AND " << currentRelation << "\n";
+                std::cout << "This Tile " << tile._tileId << "AND " << currentRelation << "\n";
+            }
+
+            if (tile._tileId == root_tile._tileId)
+            {
+                std::cout << "This Shouldnt Happen " << tile._tileId << "AND " << currentRelation << "\n";
+            }
+            // Mark the tile as processed
 
             // Add the tile to the registry and create an entity
             const auto entity = registry.create();
@@ -139,7 +150,19 @@ private:
             {
                 AtlasedTexture texture = texture_result.value();
                 pq_tile.recalculate_uvs(); // Ensure the PQTile has its UVs recalculated before adding it
-                registry.emplace<AtlasPQtile>(entity, pq_tile, texture, (float)0.0);
+                if (tile._tileId == root_tile._tileId)
+                {
+                    std::cout << "AAAAAAAAAAAAAH " << tile._tileId << "AND " << currentRelation << "\n";
+                    PQTile testTile = pq_tile;
+                    testTile.scale(0.25);
+                    testTile.recalculate_uvs();
+                    registry.emplace<AtlasPQtile>(entity, testTile, texture, (float)-0.1);
+                    std::cout << "AAAAAAAAAAAAAH2 " << tile._tileId << "AND " << currentRelation << "\n";
+                }
+                else
+                {
+                    registry.emplace<AtlasPQtile>(entity, pq_tile, texture, (float)0.0);
+                }
             }
             else
             {
@@ -182,9 +205,10 @@ private:
         }
     }
 
-    static void addTileAndNeighbors(entt::registry &registry, Resource<TextureManager> texture_manager,
-                                    const Tile &root_tile, int currentRelation, int radius,
-                                    const std::string &texturePath, const PQTile &Sprite_tile, Resource<TileMap> tilemap, std::unordered_set<int> processed_tiles, float ThetaX, float ThetaY)
+    static void
+    addTileAndNeighbors(entt::registry &registry, Resource<TextureManager> texture_manager,
+                        const Tile &root_tile, int currentRelation, int radius,
+                        const std::string &texturePath, const PQTile &Sprite_tile, Resource<TileMap> tilemap, std::unordered_set<int> processed_tiles, float ThetaX, float ThetaY)
     {
 
         if (currentRelation >= radius)

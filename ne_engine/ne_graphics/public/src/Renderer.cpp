@@ -98,6 +98,9 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Transparent clear color
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	HypRotate r_uniform_matrix = HypRotate(true);
 
 	_shader_program->setUniform1i("texture_atlas", 0);
@@ -128,10 +131,7 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 		const auto &[mesh_key, atlas_id] = key;
 		auto &sample_tile = tiles[0]->tile;
 		// Upload mesh data (shared for all instances)
-		glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Transparent clear color
-		glEnable(GL_DEPTH_TEST);
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Point) * sample_tile.data_size(), sample_tile.data(), GL_DYNAMIC_DRAW);
 
