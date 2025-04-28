@@ -32,6 +32,8 @@ public:
     void *data_offset() override;
     void *color_offset() override;
     void *uv_offset() override;
+    void scale(float factor);
+    void scale(float sx, float sy, float sz);
 
     void rotateXHyperbolic(float theta);
     void rotateYHyperbolic(float theta);
@@ -40,6 +42,8 @@ public:
 
     unsigned int *indices_data() override;
     unsigned int indices_size() override;
+    std::vector<Point> poly_vertices;
+    std::vector<Point> poly_mesh;
 
 private:
     unsigned int NUM_X_POINTS;
@@ -53,8 +57,6 @@ protected:
     float MAX_Y;
     Color color;
 
-    std::vector<Point> poly_vertices;
-    std::vector<Point> poly_mesh;
     std::vector<unsigned int> poly_indices;
 };
 

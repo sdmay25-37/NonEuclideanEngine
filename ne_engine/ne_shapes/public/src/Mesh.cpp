@@ -124,6 +124,21 @@ void Mesh::recalculate_uvs()
         poly_mesh[0].uv = glm::vec2(0.5f, 0.5f);
 }
 
+void Mesh::scale(float factor)
+{
+    scale(factor, factor, factor);
+}
+
+void Mesh::scale(float sx, float sy, float sz)
+{
+    for (auto &pt : poly_mesh)
+    {
+        pt.x *= sx;
+        pt.y *= sy;
+        pt.z *= sz;
+    }
+}
+
 void Mesh::rotateXYHyperbolic(float thetaX, float thetaY)
 {
     // Apply X rotation

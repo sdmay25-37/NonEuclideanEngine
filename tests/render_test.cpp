@@ -22,7 +22,7 @@
 #include <queue>
 
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-#define rendDist 5
+#define rendDist 3
 
 static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
@@ -49,8 +49,21 @@ private:
         {
             registry.destroy(entity);
         }
+
+        // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
+        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist + 1);
+        PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
+        Tile root_tile = tilemap->currentTile;
+        SpriteTile.to_weirstrass();
+        std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
+        // std::unordered_set<int> processed_tiles;
+
+        addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+        // addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
         PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
+        SpriteTile2.scale(0.5f);
         SpriteTile2.to_weirstrass();
+        SpriteTile2.recalculate_uvs();
         const auto entity = registry.create();
         auto texture_result = texture_manager->getTexture("character2.png");
         if (texture_result)
@@ -62,16 +75,6 @@ private:
         {
             std::cout << "Error: Failed to load texture '" << "character.png" << "'!" << "\n";
         }
-        // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist + 1);
-        PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
-        Tile root_tile = tilemap->currentTile;
-        SpriteTile.to_weirstrass();
-        // std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
-        std::unordered_set<int> processed_tiles;
-
-        // addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
     }
 
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
@@ -83,8 +86,16 @@ private:
         Tile root_tile = currentTile;
         SpriteTile.to_weirstrass();
 
+        std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
+        // std::unordered_set<int> processed_tiles;
+
+        std::cout << "Here \n";
+        addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+        // addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
         PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
+        SpriteTile2.scale(0.5f);
         SpriteTile2.to_weirstrass();
+        SpriteTile2.recalculate_uvs();
         const auto entity = registry.create();
         auto texture_result = texture_manager->getTexture("character2.png");
         if (texture_result)
@@ -96,13 +107,6 @@ private:
         {
             std::cout << "Error: Failed to load texture '" << "character.png" << "'!" << "\n";
         }
-
-        // std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
-        std::unordered_set<int> processed_tiles;
-
-        std::cout << "Here \n";
-        // addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
-        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
     }
 
     static void addTileAndNeighborsBFS2(entt::registry &registry, Resource<TextureManager> texture_manager,
@@ -298,7 +302,7 @@ private:
 
         else if (input->wasKeyPressed(GLFW_KEY_W))
         {
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._upTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._upTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._upTileId);
@@ -308,7 +312,7 @@ private:
         }
         else if (input->wasKeyPressed(GLFW_KEY_A))
         {
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._leftTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId);
@@ -318,7 +322,7 @@ private:
         }
         else if (input->wasKeyPressed(GLFW_KEY_S))
         {
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._downTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._downTileId), tilemap))
             {
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._downTileId);
@@ -328,13 +332,64 @@ private:
         }
         else if (input->wasKeyPressed(GLFW_KEY_D))
         {
-            std::cout << tilemap->currentTile.to_string() << "\n";
+            // std::cout << tilemap->currentTile.to_string() << "\n";
             if (tilemap->currentTile._rightTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId), tilemap))
             {
 
                 tilemap->currentTile = tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId);
                 UpdateTile2(registry, texture_manager, tilemap, renderer, window);
                 timeSinceLastMove = 0.0f;
+            }
+        }
+        else if (input->wasKeyPressed(GLFW_KEY_R))
+        {
+            std::cout << tilemap->currentTile.to_string() << "\n";
+
+            std::unordered_map<std::string, entt::entity> debug_tile_positions; // key = "x_y", value = entity
+
+            // Compute center point from poly_vertices
+            auto view = registry.view<AtlasPQtile>();
+            for (auto entity : view)
+            {
+                AtlasPQtile &atlas_tile = view.get<AtlasPQtile>(entity);
+                PQTile &pq_tile = atlas_tile.tile;
+                glm::vec2 center(0.0f, 0.0f);
+
+                for (const auto &pt : pq_tile.poly_mesh)
+                {
+                    center.x += pt.x;
+                    center.y += pt.y;
+                }
+                center.x /= static_cast<float>(pq_tile.poly_mesh.size());
+                center.y /= static_cast<float>(pq_tile.poly_mesh.size());
+
+                // Create a simple string key from center
+                std::string position_key = std::to_string(center.x) + "_" + std::to_string(center.y);
+
+                // Debug: check for overlap
+                constexpr float tolerance = 0.001f;
+                bool found_overlap = false;
+                for (const auto &[existing_key, existing_entity] : debug_tile_positions)
+                {
+                    float ex, ey;
+                    sscanf(existing_key.c_str(), "%f_%f", &ex, &ey);
+
+                    if (std::abs(center.x - ex) < tolerance && std::abs(center.y - ey) < tolerance)
+                    {
+                        std::cout << "Debug: Overlapping tiles! "
+                                  << "Entity " << (int)entity << " and Entity " << (int)existing_entity
+                                  << " are at (" << center.x << ", " << center.y << ")\n";
+                        found_overlap = true;
+                        break;
+                    }
+                }
+
+                if (!found_overlap)
+                {
+                    debug_tile_positions[position_key] = entity;
+                }
+                renderer->Clear();
+                renderer->Render(registry, camera);
             }
         }
     }

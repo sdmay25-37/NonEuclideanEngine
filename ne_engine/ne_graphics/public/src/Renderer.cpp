@@ -40,6 +40,8 @@ void Renderer::Init()
 	glGenBuffers(1, &UV_VBO);
 	glGenBuffers(1, &UV_VBO2);
 	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	// --- Instanced Rendering Setup ---
 	glBindVertexArray(VAO);
@@ -84,7 +86,7 @@ void Renderer::Init()
 
 	_shader_program = std::make_unique<ShaderProgram>(shader_result.ok());
 	_shader_program->bind();
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Transparent clear color
 	glClear(GL_COLOR_BUFFER_BIT);
 }
 
@@ -93,8 +95,8 @@ void Renderer::Init()
 // I don't like having to copy UV data every frame when it likely doesn't change
 void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 {
-
-	glEnable(GL_DEPTH_TEST);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Transparent clear color
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	HypRotate r_uniform_matrix = HypRotate(true);
 
@@ -126,6 +128,10 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 		const auto &[mesh_key, atlas_id] = key;
 		auto &sample_tile = tiles[0]->tile;
 		// Upload mesh data (shared for all instances)
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Transparent clear color
+		glEnable(GL_DEPTH_TEST);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glBindBuffer(GL_ARRAY_BUFFER, VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(Point) * sample_tile.data_size(), sample_tile.data(), GL_DYNAMIC_DRAW);
 
@@ -168,6 +174,6 @@ void Renderer::Bind()
 // NOT USED
 void Renderer::Clear()
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Transparent clear color
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

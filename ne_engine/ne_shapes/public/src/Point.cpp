@@ -203,6 +203,7 @@ void Point::rotateYHyperbolic(float theta)
     x = x_new;
     z = z_new;
 }
+
 #define ZERO_THRESHOLD 1e-6f
 void Point::zero_under_threshold()
 {

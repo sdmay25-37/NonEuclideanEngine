@@ -11,6 +11,8 @@ public:
     PQTile(int p = 4, int q = 5, const Color &color = COLOR::RED);
     ~PQTile();
 
+    bool recalc_uvs = false;
+
 private:
     void gen_vertices();
     void gen_indices();

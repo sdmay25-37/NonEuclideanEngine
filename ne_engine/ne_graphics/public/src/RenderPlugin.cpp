@@ -11,4 +11,5 @@ void RenderPlugin::Render(entt::registry &registry, Resource<Renderer> renderer,
 	renderer->Clear();
 	renderer->Render(registry, camera);
 	window->SwapBuffers();
+	renderer->Clear();
 }
