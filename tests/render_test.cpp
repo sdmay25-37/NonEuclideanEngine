@@ -52,7 +52,7 @@ private:
         PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
         SpriteTile2.to_weirstrass();
         const auto entity = registry.create();
-        auto texture_result = texture_manager->getTexture("character.png");
+        auto texture_result = texture_manager->getTexture("character2.png");
         if (texture_result)
         {
             AtlasedTexture texture = texture_result.value();
@@ -86,7 +86,7 @@ private:
         PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
         SpriteTile2.to_weirstrass();
         const auto entity = registry.create();
-        auto texture_result = texture_manager->getTexture("character.png");
+        auto texture_result = texture_manager->getTexture("character2.png");
         if (texture_result)
         {
             AtlasedTexture texture = texture_result.value();
@@ -372,7 +372,7 @@ int main()
     glm::vec3 camera_pos(0.0f, 0.0f, 2.0f);
     glm::vec4 camera_up(0.0f, 1.0f, 0.0f, 1.0);
 
-    float nearPlane = 0.1f;
+    float nearPlane = -1.0f;
     float farPlane = 100.0f;
 
     float orthoLeft = -1.0f;

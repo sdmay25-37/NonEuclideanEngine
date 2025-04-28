@@ -26,7 +26,7 @@ void main() {
     // Hyperbolic Weierstrass -> Poincaré disk projection
     position.x /= (1.0 + position.z);
     position.y /= (1.0 + position.z);
-    position.z =zindex;
+    position.z = -zindex;
 
     gl_Position = position;
 
