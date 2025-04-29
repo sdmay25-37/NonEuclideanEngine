@@ -67,7 +67,6 @@ private:
         // addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
         PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
         SpriteTile2.scale(0.5f);
-        // SpriteTile2.translate(0.1, 0.0, 0.0);
         SpriteTile2.to_weirstrass();
         SpriteTile2.recalculate_uvs();
         const auto entity = registry.create();
@@ -95,7 +94,6 @@ private:
         std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
         // std::unordered_set<int> processed_tiles;
 
-        std::cout << "Here \n";
         addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
         // addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
         PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
@@ -133,21 +131,11 @@ private:
             // Skip the tile if it has already been processed or if it exceeds the radius
             if (currentRelation >= radius || processed_tiles->find(tile._tileId) != processed_tiles->end() || tile._tileId == -1)
             {
-                std::cout << "TILE HERE " << tile._tileId << "AND " << currentRelation << "\n";
+                // std::cout << "TILE HERE " << tile._tileId << "AND " << currentRelation << "\n";
                 continue; // Skip this tile and go to the next one in the queue
             }
             processed_tiles->insert(tile._tileId);
 
-            if (currentRelation == 0)
-            {
-                std::cout << "RootTile " << root_tile._tileId << "AND " << currentRelation << "\n";
-                std::cout << "This Tile " << tile._tileId << "AND " << currentRelation << "\n";
-            }
-
-            if (tile._tileId == root_tile._tileId)
-            {
-                std::cout << "This Shouldnt Happen more than once " << tile._tileId << "AND " << currentRelation << "\n";
-            }
             // Mark the tile as processed
 
             // Add the tile to the registry and create an entity
