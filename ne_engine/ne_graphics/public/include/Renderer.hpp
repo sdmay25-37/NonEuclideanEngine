@@ -36,6 +36,7 @@ struct AtlasSprite
 };
 
 // Atlas Object Used to render non euclidean math
+// TODO ADD ANIMATIONS
 struct Character
 {
 	PQTile tile;

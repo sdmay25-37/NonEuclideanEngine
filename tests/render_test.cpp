@@ -60,17 +60,17 @@ private:
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = tilemap->currentTile;
         SpriteTile.to_weirstrass();
-        std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
-        // std::unordered_set<int> processed_tiles;
+        // std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
+        std::unordered_set<int> processed_tiles;
 
-        addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
-        // addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+        // addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
         PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
         SpriteTile2.scale(0.5f);
         SpriteTile2.to_weirstrass();
         SpriteTile2.recalculate_uvs();
         const auto entity = registry.create();
-        auto texture_result = texture_manager->getTexture("character2.png");
+        auto texture_result = texture_manager->getTexture("character.png");
         if (texture_result)
         {
             AtlasedTexture texture = texture_result.value();
@@ -91,18 +91,18 @@ private:
         Tile root_tile = currentTile;
         SpriteTile.to_weirstrass();
 
-        std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
-        // std::unordered_set<int> processed_tiles;
+        // std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
+        std::unordered_set<int> processed_tiles;
 
-        addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
-        // addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+        // addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
+        addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
         PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
         SpriteTile2.scale(0.5f);
         // SpriteTile2.translate(0.1, 0.0, 0.0);
         SpriteTile2.to_weirstrass();
         SpriteTile2.recalculate_uvs();
         const auto entity = registry.create();
-        auto texture_result = texture_manager->getTexture("character2.png");
+        auto texture_result = texture_manager->getTexture("character.png");
         if (texture_result)
         {
             AtlasedTexture texture = texture_result.value();
