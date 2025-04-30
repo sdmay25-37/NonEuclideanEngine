@@ -18,6 +18,7 @@ add_subdirectory(.. ne_engine)
 
 set(SOURCES
     "render_test.cpp"
+    "render_standard.cpp"
     #"render_test.cpp"
     #"input_test.cpp"
     # "point_square_demo.cpp"

@@ -1,14 +1,11 @@
 
 #include "RenderPlugin.hpp"
 
-void RenderPlugin::Setup(Resource<Renderer> renderer)
-{
+void RenderPlugin::Setup(Resource<Renderer> renderer) {
 	renderer->Init();
 }
 
-void RenderPlugin::Render(entt::registry &registry, Resource<Renderer> renderer, Resource<Camera> camera, Resource<Window> window)
-{
-	renderer->Clear();
+void RenderPlugin::Render(entt::registry &registry, Resource<Renderer> renderer, Resource<Camera> camera, Resource<Window> window) {
 	renderer->Render(registry, camera);
 	window->SwapBuffers();
 }

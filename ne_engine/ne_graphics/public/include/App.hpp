@@ -5,7 +5,7 @@
 
 #include <entt/entt.hpp>
 
-#include "Renderer.hpp"
+#include "RendererHyp.hpp"
 #include "ne_system/Plugin.hpp"
 #include "ne_system/SystemExecutor.hpp"
 

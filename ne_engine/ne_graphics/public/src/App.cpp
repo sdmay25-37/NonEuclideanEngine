@@ -1,5 +1,5 @@
 #include "App.hpp"
-#include "Renderer.hpp"
+#include "RendererHyp.hpp"
 
 void App::Run() {
 

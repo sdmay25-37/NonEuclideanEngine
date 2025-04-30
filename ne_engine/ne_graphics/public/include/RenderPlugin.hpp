@@ -1,10 +1,11 @@
 #ifndef RENDERPLUGIN_HPP
 #define RENDERPLUGIN_HPP
 
-#include <ne_plugin/window/Window.hpp>
+#include "ne_plugin/window/Window.hpp"
 
 #include "App.hpp"
 #include "ne_system/Plugin.hpp"
+#include "Renderer.hpp"
 
 class RenderPlugin final : public Plugin {
 public:

@@ -1,6 +1,6 @@
 #version 330 core
 
-in vec4 frag_color;  // Optional per-vertex color
+in vec4 frag_color;// Optional per-vertex color
 in vec2 frag_uv;
 
 uniform sampler2D texture_atlas;
@@ -12,5 +12,5 @@ void main() {
 
 
     // Combine with vertex color (if desired), or just output texture
-    FragColor = tex_color * frag_color;  // Tint texture with color
+    FragColor = tex_color * frag_color;// Tint texture with color
 }
