@@ -4,15 +4,13 @@
 #include "Texture.hpp"
 #include <iostream>
 
-Result<Texture, Texture::CreateError> Texture::create(const std::string &filepath)
-{
+Result<Texture, Texture::CreateError> Texture::create(const std::string &filepath) {
 	using Result = Result<Texture, CreateError>;
 
 	// Load image
 
 	auto image_result = Image::create(filepath);
-	if (image_result.is_error())
-	{
+	if(image_result.is_error()) {
 		return Result::Error(CreateError::IMAGE_LOAD_FAILURE);
 	}
 
@@ -22,14 +20,12 @@ Result<Texture, Texture::CreateError> Texture::create(const std::string &filepat
 	return createFromImage(image);
 }
 
-Result<Texture, Texture::CreateError> Texture::createFromImage(const Image &image)
-{
+Result<Texture, Texture::CreateError> Texture::createFromImage(const Image &image) {
 	using Result = Result<Texture, CreateError>;
 
 	unsigned int textureId;
-	// glGenTextures(1, &textureId);
-	// glBindTexture(GL_TEXTURE_2D, textureId);
-	int texWidth, texHeight, texChannels;
+	glGenTextures(1, &textureId);
+	glBindTexture(GL_TEXTURE_2D, textureId);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -42,10 +38,8 @@ Result<Texture, Texture::CreateError> Texture::createFromImage(const Image &imag
 	return Result::Ok(Texture(textureId, image.width(), image.height()));
 }
 
-Texture::~Texture()
-{
-	if (_textureId != 0)
-	{
+Texture::~Texture() {
+	if(_textureId != 0) {
 		glDeleteTextures(1, &_textureId);
 	}
 }

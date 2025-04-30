@@ -16,12 +16,17 @@ struct Vertex {
 	float u, v;
 };
 
-struct Sprite {
+struct SpriteData {
+	unsigned int z_index;
 	glm::mat4 model_mat;
-	glm::vec2 uv_min, uv_max;
+	glm::vec4 uvs;
+
+	SpriteData(unsigned int z_index, glm::mat4 model_mat, glm::vec4 uvs)
+		: z_index(z_index), model_mat(model_mat), uvs(uvs) {}
 };
 
 struct AtlasSprite {
+	unsigned int z_index;
 	glm::mat4 model_mat;
 	AtlasedTexture texture;
 };

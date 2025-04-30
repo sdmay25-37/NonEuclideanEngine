@@ -9,6 +9,8 @@
 
 #include <glad/glad.h>
 
+#include "stb/stb_image_write.h"
+
 
 Result<std::nullptr_t, std::string> TextureManager::loadAtlas(const char* path) {
 	using Result = Result<std::nullptr_t, std::string>;

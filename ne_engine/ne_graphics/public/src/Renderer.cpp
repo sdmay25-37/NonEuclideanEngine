@@ -13,6 +13,9 @@ Renderer::~Renderer() {
 }
 
 void Renderer::Init() {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &UV_VBO);
@@ -97,18 +100,31 @@ void Renderer::Render(entt::registry& registry, Resource<Camera> camera) const {
 
 	auto const view = registry.view<AtlasSprite>();
 
-	std::unordered_map<unsigned int, std::pair<std::vector<glm::mat4>, std::vector<glm::vec4>>> atlas_data;
+	std::unordered_map<unsigned int, std::vector<SpriteData>> atlas_data;
 
 	// Group sprite texture data by atlas
 	for(auto [entity, sprite] : view.each()) {
-		auto& [model_mats, uv_ranges] = atlas_data[sprite.texture.atlas_id];
-		model_mats.push_back(sprite.model_mat);
-		uv_ranges.emplace_back(sprite.texture.uv_min.x, sprite.texture.uv_min.y, sprite.texture.uv_max.x, sprite.texture.uv_max.y);
+		auto uvs = glm::vec4(sprite.texture.uv_min.x, sprite.texture.uv_min.y, sprite.texture.uv_max.x, sprite.texture.uv_max.y);
+		atlas_data[sprite.texture.atlas_id].emplace_back(sprite.z_index, sprite.model_mat, uvs);
+	}
+
+	// Sort sprites by z-index (for each atlas)
+	for(auto& [_, list] : atlas_data) {
+		std::sort(list.begin(), list.end(), [](const SpriteData& a, const SpriteData& b) {
+			return a.z_index < b.z_index;
+		});
 	}
 
 	// Render one atlas at a time
-	for(const auto& [atlas_id, val] : atlas_data) {
-		const auto& [model_mats, uv_ranges] = val;
+	for(const auto& [atlas_id, list] : atlas_data) {
+		std::vector<glm::mat4> model_mats;
+		std::vector<glm::vec4> uv_ranges;
+
+		// Todo: this 'extra' copy to new vectors can be avoided by unpacking SpriteData and sorting both lists at once
+		for (const auto& sprite_data : list) {
+			model_mats.push_back(sprite_data.model_mat);
+			uv_ranges.push_back(sprite_data.uvs);
+		}
 
 		// Todo: If we are feeling really crazy we could double buffer this data to reduce latency
 		// Buffer model matrix data
