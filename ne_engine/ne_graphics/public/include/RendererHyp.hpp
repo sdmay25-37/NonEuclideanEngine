@@ -19,28 +19,32 @@
 
 // Atlas Object Used to render non euclidean math
 // TODO ADD ANIMATIONS
-struct Character
-{
+struct Character {
 	PQTile tile;
 	AtlasedTexture texture;
 };
-struct AtlasPQtile
-{
+
+struct AtlasPQtile {
 	PQTile tile;
 	AtlasedTexture texture;
 	float zIndex;
 };
-class RendererHyp
-{
+
+class RendererHyp {
 public:
 	RendererHyp() = default;
+
 	~RendererHyp();
 
 	void Init();
+
 	void Render(entt::registry &registry, Resource<Camera> camera) const;
+
 	void Bind();
+
 	void Clear(); // NOT USED
-	void renderTiles(entt::registry &registry) const;
+	void RenderTiles(entt::registry &registry) const;
+
 	static constexpr int N_INDICES = 6;
 
 private:

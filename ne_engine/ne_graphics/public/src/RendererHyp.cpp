@@ -29,27 +29,21 @@ RendererHyp::~RendererHyp() {
 }
 
 void RendererHyp::Init() {
-	// Generate all buffers
+	// Generate buffers
 	glGenVertexArrays(1, &VAO);
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
 	glGenBuffers(1, &VE0);
 	glGenBuffers(1, &UV_VBO);
 
-	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	// glBlendFunc(GL_SRC_ALPHA, GL_ONE); // or glBlendFunc(GL_ONE, GL_ONE);
-	// glBlendFunc(GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA);
-	// glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
-
-	// --- Instanced Rendering Setup ---
+	// --- Instanced Rendering Setup --- //
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
 
-	// THESE CAUSE WARNINGS BUT I DON'T KNOW HOW TO MAKE IT WORK Without it
 	// Setting up the buffer for the PQ shaders
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Point), (void *) offsetof(Point, x));
 	glEnableVertexAttribArray(0);
@@ -61,12 +55,8 @@ void RendererHyp::Init() {
 
 	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) 0);
 	glEnableVertexAttribArray(2);
-	glVertexAttribDivisor(2, 1); // THIS IS WHAT CAUSED MY PAIN FOR LIKE 8 HOURS
+	glVertexAttribDivisor(2, 1);
 
-	// "../ne_engine/shaders/pq_test.vert",
-	// 		"../ne_engine/shaders/pq_color.frag"
-	// "../ne_engine/ne_math/shaders/pq_test.vert",
-	// 	"../ne_engine/ne_math/shaders/pq_color.frag");
 	// Load shaders
 	auto shader_result = ShaderProgram::create(
 		"../ne_engine/shaders/pq_tile.vert",
@@ -77,22 +67,20 @@ void RendererHyp::Init() {
 	}
 
 	_shader_program = std::make_unique<ShaderProgram>(shader_result.ok());
-	_shader_program->bind();
-	glClearColor(0.0f, 0.0f, 0.0f, 0.0f); // Transparent clear color
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 }
 
-// Todo: Not sure how I feel about this method
-// Update: Same Bro this ucks my yum
-// I don't like having to copy UV data every frame when it likely doesn't change
+
 void RendererHyp::Render(entt::registry &registry, Resource<Camera> camera) const {
-	// Clear the screen (both color and depth buffer)
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	// Setup the rotation matrix
 	HypRotate r_uniform_matrix = HypRotate(true);
 
 	// Set uniforms for shader
+	_shader_program->bind();
 	_shader_program->setUniform1i("texture_atlas", 0);
 	_shader_program->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
 
@@ -104,7 +92,6 @@ void RendererHyp::Render(entt::registry &registry, Resource<Camera> camera) cons
 	std::unordered_map<MeshAtlasKey, std::vector<AtlasPQtile *>, MeshAtlasKeyHash> batched_tiles;
 
 	// Batch tiles by mesh and atlas ID
-	int tile_counter = 0;
 	for(auto [entity, currentTile]: pqTile_view.each()) {
 		auto mesh_ptr = static_cast<const void *>(currentTile.tile.data());
 		auto atlas_id = currentTile.texture.atlas_id;
@@ -114,7 +101,6 @@ void RendererHyp::Render(entt::registry &registry, Resource<Camera> camera) cons
 	}
 
 	// Draw each batch of tiles
-	int batch_counter = 0;
 	for(auto &[key, tiles]: batched_tiles) {
 		const auto &[mesh_key, atlas_id] = key;
 		auto &sample_tile = tiles[0]->tile;
@@ -125,27 +111,23 @@ void RendererHyp::Render(entt::registry &registry, Resource<Camera> camera) cons
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * sample_tile.indices_size(),
-		             sample_tile.indices_data(), GL_STATIC_DRAW);
+		             sample_tile.indices_data(), GL_DYNAMIC_DRAW);
 
 		std::vector<glm::vec4> uv_ranges;
-		std::vector<float> zindexVector;
 
-		// Collect UV ranges and z-index values for the tiles
+		// Collect UV ranges for the tiles
 		for(auto *tile: tiles) {
 			const auto &tex = tile->texture;
 			uv_ranges.emplace_back(tex.uv_min.x, tex.uv_min.y, tex.uv_max.x, tex.uv_max.y);
-			zindexVector.emplace_back(tile->zIndex);
 		}
 
 		glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_DYNAMIC_DRAW);
 
-		// Activate texture unit and bind the texture atlas
+
+		// Bind atlas texture
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, atlas_id);
-
-		// Check if the z-index indicates a transparent tile (-1 is transparent)
-		bool isTransparent = tiles[0]->zIndex == -1;
 
 		// Draw the batch with instanced rendering
 		glDrawElementsInstanced(GL_TRIANGLES, sample_tile.indices_size(), GL_UNSIGNED_INT, 0, tiles.size());

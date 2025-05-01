@@ -24,7 +24,7 @@
 #include "RenderHypPlugin.hpp"
 
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-#define rendDist 5
+#define rendDist 8
 
 static float Theta = M_PI / 3.0f;
 // BRO TRUST THIS IS IMPORTANT
