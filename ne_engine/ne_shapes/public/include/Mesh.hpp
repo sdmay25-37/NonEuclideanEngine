@@ -12,7 +12,7 @@
 class Mesh : public Transformable, Element
 {
 public:
-    Mesh(const Color &color);
+    Mesh() = default;
     ~Mesh() = default;
 
     void rot_x(float theta) override;
@@ -30,7 +30,6 @@ public:
     Point *data() override;
     unsigned int data_size() override;
     void *data_offset() override;
-    void *color_offset() override;
     void *uv_offset() override;
     void scale(float factor);
     void scale(float sx, float sy, float sz);
@@ -55,7 +54,6 @@ protected:
     float MAX_X;
     float MIN_Y;
     float MAX_Y;
-    Color color;
 
     std::vector<unsigned int> poly_indices;
 };

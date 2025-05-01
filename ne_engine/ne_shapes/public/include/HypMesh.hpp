@@ -8,8 +8,8 @@
 class HypMesh : public Mesh
 {
 public:
-    HypMesh(const Color &color, unsigned int points_per_arc = DEFAULT_ARC_POINTS);
-    ~HypMesh();
+    HypMesh(unsigned int points_per_arc = DEFAULT_ARC_POINTS);
+    ~HypMesh() = default;
 
 protected:
     void gen_poly_mesh() override;

@@ -55,7 +55,7 @@ private:
 
 		// TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
 		std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist + 1);
-		PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
+		PQTile SpriteTile = PQTile(4, 5);
 		Tile root_tile = tilemap->currentTile;
 		SpriteTile.to_weirstrass();
 		// std::unordered_set<int> *processed_tiles = new std::unordered_set<int>();
@@ -64,7 +64,7 @@ private:
 		// addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
 		addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap,
 		                    processed_tiles, 0.0, 0.0);
-		PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
+		PQTile SpriteTile2 = PQTile(4, 5);
 		SpriteTile2.scale(0.5f);
 		SpriteTile2.to_weirstrass();
 		SpriteTile2.recalculate_uvs();
@@ -83,7 +83,7 @@ private:
 		Tile currentTile = tilemap->getTileByID(25);
 
 		std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist + 1);
-		PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
+		PQTile SpriteTile = PQTile(4, 5);
 		Tile root_tile = currentTile;
 		SpriteTile.to_weirstrass();
 
@@ -93,7 +93,7 @@ private:
 		// addTileAndNeighborsBFS2(registry, texture_manager, root_tile, rendDist, root_tile.sprite, SpriteTile, tilemap, processed_tiles, 0.0, 0.0);
 		addTileAndNeighbors(registry, texture_manager, root_tile, 0, rendDist, root_tile.sprite, SpriteTile, tilemap,
 		                    processed_tiles, 0.0, 0.0);
-		PQTile SpriteTile2 = PQTile(4, 5, COLOR::WHITE);
+		PQTile SpriteTile2 = PQTile(4, 5);
 		SpriteTile2.scale(0.5f);
 		// SpriteTile2.translate(0.1, 0.0, 0.0);
 		SpriteTile2.to_weirstrass();

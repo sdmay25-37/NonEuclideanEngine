@@ -17,13 +17,12 @@ enum class PointType
 struct Point : public Transformable
 {
     float x, y, z, w;
-    Color color;
     PointType type;
     glm::vec2 uv;
 
-    Point(const Color &color, const PointType &point_type);
-    Point(float x = 0.0f, float y = 0.0f, float z = 0.0f, const Color &color = COLOR::RED, const PointType &point_type = PointType::NONE);
-    ~Point();
+    Point(const PointType &point_type);
+    Point(float x = 0.0f, float y = 0.0f, float z = 0.0f, const PointType &point_type = PointType::NONE);
+    ~Point() = default;
 
     void rot_x(float theta) override;
     void rot_y(float theta) override;
@@ -50,7 +49,6 @@ struct Point : public Transformable
         p.x = this->x + point.x;
         p.y = this->y + point.y;
         p.z = this->z + point.z;
-        p.color = this->color;
 
         if (this->type == point.type)
         {
@@ -77,7 +75,6 @@ struct Point : public Transformable
         p.x = this->x - point.x;
         p.y = this->y - point.y;
         p.z = this->z - point.z;
-        p.color = this->color;
         if (this->type == point.type)
         {
             p.type = this->type;
@@ -104,7 +101,6 @@ struct Point : public Transformable
         p.x = this->x * mul;
         p.y = this->y * mul;
         p.z = this->z * mul;
-        p.color = this->color;
         p.type = this->type;
 
         p.zero_under_threshold();
@@ -128,7 +124,6 @@ struct Point : public Transformable
         p.x = this->x / div;
         p.y = this->y / div;
         p.z = this->z / div;
-        p.color = this->color;
         p.type = this->type;
 
         p.zero_under_threshold();

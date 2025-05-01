@@ -3,14 +3,7 @@
 
 #include "PQTile.hpp"
 
-PQTile::PQTile(int p, int q)
-    : PQTile(p, q, COLOR::RED)
-{
-}
-
-PQTile::PQTile(int p, int q, const Color &color)
-    : HypMesh(color)
-{
+PQTile::PQTile(int p, int q) {
 
     float tile_check = (p - 2) * (q - 2);
 
@@ -24,10 +17,6 @@ PQTile::PQTile(int p, int q, const Color &color)
 
     gen_vertices();
     gen_poly_mesh();
-}
-
-PQTile::~PQTile()
-{
 }
 
 void PQTile::gen_vertices()
@@ -54,6 +43,6 @@ void PQTile::gen_vertices()
         float x = d * std::cos((5 + 2 * i) * angleA);
         float y = d * std::sin((5 + 2 * i) * angleA);
         float z = 0.0f;
-        poly_vertices.emplace_back(Point(x, y, z, color, PointType::POINCARE));
+        poly_vertices.emplace_back(Point(x, y, z, PointType::POINCARE));
     }
 }

@@ -2,26 +2,19 @@
 
 #include "Point.hpp"
 
-Point::Point(float x, float y, float z, const Color &color, const PointType &point_type)
+Point::Point(float x, float y, float z, const PointType &point_type)
 {
     this->x = x;
     this->y = y;
     this->z = z;
 
     this->w = 1.0;
-    this->color = color;
     this->type = point_type;
 
     zero_under_threshold();
 }
-Point::Point(const Color &color, const PointType &point_type)
-    : Point(0.0f, 0.0f, 0.0f, color, point_type)
-{
-}
-
-Point::~Point()
-{
-}
+Point::Point(const PointType &point_type)
+    : Point(0.0f, 0.0f, 0.0f, point_type) {}
 
 void Point::rot_x(float theta)
 {

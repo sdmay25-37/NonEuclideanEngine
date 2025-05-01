@@ -6,14 +6,8 @@
 #define CENTER_INDEX 0
 // #define DEFAULT_ARC_POINTS 500
 
-HypMesh::HypMesh(const Color &color, unsigned int points_per_arc)
-    : Mesh(color), points_per_arc(points_per_arc)
-{
-}
-
-HypMesh::~HypMesh()
-{
-}
+HypMesh::HypMesh(unsigned int points_per_arc)
+    : points_per_arc(points_per_arc) {}
 
 void HypMesh::gen_circles()
 {
@@ -72,7 +66,7 @@ void HypMesh::gen_poly_mesh()
 
         for (int j = 0; j < points_per_arc; j++)
         {
-            Point mesh_point = Point(color, PointType::POINCARE);
+            Point mesh_point = Point(PointType::POINCARE);
             float x = std::cos(theta) * circle_radii[i] + circle_centers[i].x;
             float y = std::sin(theta) * circle_radii[i] + circle_centers[i].y;
 
@@ -121,7 +115,7 @@ void HypMesh::init_poly_mesh()
     mesh_size = (poly_vertices.size() * (points_per_arc)) + 1;
     poly_mesh.reserve(mesh_size);
 
-    Point poly_center = Point(color, PointType::POINCARE);
+    Point poly_center = Point(PointType::POINCARE);
 
     for (int i = 0; i < poly_vertices.size(); i++)
     {

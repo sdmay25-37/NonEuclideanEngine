@@ -7,9 +7,8 @@ class PQTile : public HypMesh
 {
 public:
     PQTile() = default;
-    PQTile(int p, int q);
-    PQTile(int p = 4, int q = 5, const Color &color = COLOR::RED);
-    ~PQTile();
+    PQTile(int p = 4, int q = 5);
+    ~PQTile() = default;
 
     bool recalc_uvs = false;
 

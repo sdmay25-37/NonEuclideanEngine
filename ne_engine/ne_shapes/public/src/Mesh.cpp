@@ -3,11 +3,6 @@
 #include <cassert>
 #include <iostream>
 
-Mesh::Mesh(const Color &color)
-    : color(color)
-{
-}
-
 void Mesh::gen_poly_mesh()
 {
 }
@@ -193,11 +188,6 @@ unsigned int Mesh::data_size()
 void *Mesh::data_offset()
 {
     return (void *)((intptr_t)(&(poly_mesh[0].x)) - (intptr_t)(&(poly_mesh[0])));
-}
-
-void *Mesh::color_offset()
-{
-    return (void *)((intptr_t)(&(poly_mesh[0].color)) - (intptr_t)(&(poly_mesh[0])));
 }
 
 void *Mesh::uv_offset()
