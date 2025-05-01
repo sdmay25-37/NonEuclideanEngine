@@ -55,22 +55,20 @@ void RendererHyp::Init() {
 	// Setting up the buffer for the PQ shaders
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Point), (void *) offsetof(Point, x));
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Point), (void *) offsetof(Point, color));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Point), (void *) offsetof(Point, uv));
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Point), (void *) offsetof(Point, uv));
-	glEnableVertexAttribArray(2);
 
 	// sprite texture coords attribute
 	glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
 
-	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) 0);
-	glEnableVertexAttribArray(3);
-	glVertexAttribDivisor(3, 1); // THIS IS WHAT CAUSED MY PAIN FOR LIKE 8 HOURS
+	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) 0);
+	glEnableVertexAttribArray(2);
+	glVertexAttribDivisor(2, 1); // THIS IS WHAT CAUSED MY PAIN FOR LIKE 8 HOURS
 
 	// BIND TO NEW BUFFER TODO
 	glBindBuffer(GL_ARRAY_BUFFER, UV_VBO2);
-	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 1 * sizeof(float), (void *) 0);
-	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 1 * sizeof(float), (void *) 0);
+	glEnableVertexAttribArray(3);
 	glVertexAttribDivisor(3, 1);
 
 	// "../ne_engine/shaders/pq_test.vert",
