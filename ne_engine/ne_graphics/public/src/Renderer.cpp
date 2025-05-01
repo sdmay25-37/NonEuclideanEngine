@@ -78,8 +78,8 @@ void Renderer::Init() {
 
 	// build and compile our shader program
 	auto shader_result = ShaderProgram::create(
-			"../shaders/sprite.vert",
-			"../shaders/sprite.frag"
+			"../ne_engine/shaders/sprite.vert",
+			"../ne_engine/shaders/sprite.frag"
 	);
 
 	if(shader_result.is_error()) {

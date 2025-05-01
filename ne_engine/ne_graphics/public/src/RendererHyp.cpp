@@ -79,8 +79,8 @@ void RendererHyp::Init() {
 	// 	"../ne_engine/ne_math/shaders/pq_color.frag");
 	// Load shaders
 	auto shader_result = ShaderProgram::create(
-		"../ne_engine/shaders/pq_test.vert",
-		"../ne_engine/shaders/pq_color.frag");
+		"../ne_engine/shaders/pq_tile.vert",
+		"../ne_engine/shaders/pq_tile.frag");
 	if(shader_result.is_error()) {
 		std::cerr << "Failed to create shader program: " << shader_result.error() << std::endl;
 		return;
@@ -162,77 +162,6 @@ void RendererHyp::Render(entt::registry &registry, Resource<Camera> camera) cons
 
 		// Draw the batch with instanced rendering
 		glDrawElementsInstanced(GL_TRIANGLES, sample_tile.indices_size(), GL_UNSIGNED_INT, 0, tiles.size());
-	}
-
-	renderCharacter(registry);
-}
-
-void RendererHyp::renderCharacter(entt::registry &registry) const {
-	// Don't clear depth buffer again, as it's already cleared in Render()
-
-	// Setup the rotation matrix for character rendering
-	HypRotate r_uniform_matrix = HypRotate(true);
-
-	// Set uniforms for shader
-	_shader_program->setUniform1i("texture_atlas", 0);
-	_shader_program->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
-
-	// Create a view of all Character entities in the registry
-	auto character_view = registry.view<Character>();
-
-	// Setup batching logic for character meshes
-	using MeshAtlasKey = std::pair<const void *, unsigned int>;
-	std::unordered_map<MeshAtlasKey, std::vector<Character *>, MeshAtlasKeyHash> batched_tiles;
-
-	// Batch characters by mesh and atlas ID
-	for(auto [entity, currentCharacter]: character_view.each()) {
-		auto mesh_ptr = static_cast<const void *>(currentCharacter.tile.data());
-		auto atlas_id = currentCharacter.texture.atlas_id;
-
-		// Add to the batched tiles map
-		batched_tiles[{mesh_ptr, atlas_id}].push_back(&currentCharacter);
-	}
-
-	// Draw each batch of characters
-	for(auto &[key, characters]: batched_tiles) {
-		const auto &[mesh_key, atlas_id] = key;
-		auto &sample_tile = characters[0]->tile;
-
-		// Bind buffers and load data
-		glBindBuffer(GL_ARRAY_BUFFER, VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(Point) * sample_tile.data_size(), sample_tile.data(), GL_DYNAMIC_DRAW);
-
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, VE0);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * sample_tile.indices_size(),
-		             sample_tile.indices_data(), GL_STATIC_DRAW);
-
-		std::vector<glm::vec4> uv_ranges;
-		std::vector<float> zindexVector;
-
-		// Collect UV ranges and z-index values for the character
-		for(auto *character: characters) {
-			const auto &tex = character->texture;
-			uv_ranges.emplace_back(tex.uv_min.x, tex.uv_min.y, tex.uv_max.x, tex.uv_max.y);
-			zindexVector.emplace_back(1.0); // Character z-index is 1 (opaque)
-		}
-
-		glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ARRAY_BUFFER, UV_VBO2);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * zindexVector.size(), zindexVector.data(), GL_STATIC_DRAW);
-
-		// Activate texture unit and bind the texture atlas for character
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, atlas_id);
-
-		// Always render the character in front of tiles
-		glEnable(GL_DEPTH_TEST); // Enable depth testing for the character (opaque)
-		glEnable(GL_BLEND); // Enable blending
-		glDepthMask(GL_TRUE); // Enable depth writing for opaque character
-
-		// Draw the batch with instanced rendering for the character
-		glDrawElementsInstanced(GL_TRIANGLES, sample_tile.indices_size(), GL_UNSIGNED_INT, 0, characters.size());
 	}
 }
 

@@ -2,7 +2,6 @@
 #version 330 core
 
 uniform sampler2D texture_atlas;
-uniform vec2 uv;
 
 in vec2 frag_uv;
 

@@ -23,6 +23,7 @@ add_library(
         "${GRAPHICS_SRC_DIR}/App.cpp"
         "${GRAPHICS_SRC_DIR}/Image.cpp"
         "${GRAPHICS_SRC_DIR}/RendererHyp.cpp"
+        "${GRAPHICS_SRC_DIR}/RenderHypPlugin.cpp"
         "${GRAPHICS_SRC_DIR}/Renderer.cpp"
         "${GRAPHICS_SRC_DIR}/RenderPlugin.cpp"
         "${GRAPHICS_SRC_DIR}/ShaderProgram.cpp"

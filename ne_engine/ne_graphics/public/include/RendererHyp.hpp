@@ -41,7 +41,6 @@ public:
 	void Bind();
 	void Clear(); // NOT USED
 	void renderTiles(entt::registry &registry) const;
-	void renderCharacter(entt::registry &registry) const;
 	static constexpr int N_INDICES = 6;
 
 private:

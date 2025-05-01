@@ -21,6 +21,8 @@
 
 #include <queue>
 
+#include "RenderHypPlugin.hpp"
+
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
 #define rendDist 5
 
@@ -32,9 +34,8 @@ class WorldPlugin final : public Plugin {
 public:
 	void Build(App &app) override {
 		app
-				.AddSystems(ScheduleLabel::STARTUP,
-				            std::move(SystemSet(CreateTiles3).After(LoadTextures).After(LoadTiles).After(BindInput)))
-				.AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(MoveCamera)));
+			.AddSystems(ScheduleLabel::STARTUP,std::move(SystemSet(BindInput).Then(LoadTiles).Then(LoadTextures).Then(CreateTiles3)))
+		.AddSystems(ScheduleLabel::UPDATE, std::move(SystemSet(MoveCamera)));
 	}
 
 private:
@@ -437,7 +438,8 @@ int main() {
 	ImGui::CreateContext();
 	App()
 			.InsertResourceBase<Window, GLFWWindow>(1080, 1080)
-			.AddPlugin<DefaultPlugins>()
+			.AddPlugin<InputPlugin>()
+			.AddPlugin<RenderHypPlugin>()
 			.AddPlugin<WorldPlugin>()
 			.InsertResource<TextureManager>()
 			.InsertResource<TileMap>()
