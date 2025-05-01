@@ -4,7 +4,6 @@
 #include "HypMesh.hpp"
 
 #define CENTER_INDEX 0
-// #define DEFAULT_ARC_POINTS 500
 
 HypMesh::HypMesh(unsigned int points_per_arc)
     : points_per_arc(points_per_arc) {}
@@ -54,34 +53,41 @@ void HypMesh::gen_poly_mesh()
         Point diff1 = point1 - circle_centers[i];
         Point diff2 = point2 - circle_centers[i];
 
-        float THETA_START = std::atan2(diff2.y, diff2.x);
-        float THETA_END = std::atan2(diff1.y, diff1.x);
-        if (THETA_END < THETA_START)
-            THETA_END += 2 * M_PI;
+        float THETA_START = std::atan2(diff1.y, diff1.x);
+        float THETA_END = std::atan2(diff2.y, diff2.x);
+        if (THETA_START < THETA_END)
+            THETA_START += 2 * M_PI;
 
-        float theta_diff = THETA_END - THETA_START;
-        float THETA_INCR = theta_diff / points_per_arc;
+        float theta_diff = THETA_START - THETA_END;
+        float THETA_INCR = theta_diff / (points_per_arc - 1);
 
         float theta = THETA_START;
 
-        for (int j = 0; j < points_per_arc; j++)
+        for (int j = 0; j < points_per_arc-1; j++)
         {
-            Point mesh_point = Point(PointType::POINCARE);
             float x = std::cos(theta) * circle_radii[i] + circle_centers[i].x;
             float y = std::sin(theta) * circle_radii[i] + circle_centers[i].y;
 
-            mesh_point.x = x;
-            mesh_point.y = y;
+            Point mesh_point = Point(x, y, 0.0f, PointType::POINCARE);
 
             arc_points.emplace_back(mesh_point);
 
             // Set up indices immediately
             poly_indices.emplace_back(CENTER_INDEX);
             poly_indices.emplace_back(point_index);
-            poly_indices.emplace_back((point_index + 1) % mesh_size == 0 ? 1 : (point_index + 1));
+            if(point_index == (mesh_size - 1))
+            {
+                poly_indices.emplace_back(1);
+            }
+            else
+            {
+                poly_indices.emplace_back((point_index + 1));
+            }
+
+            // poly_indices.emplace_back((point_index + 1) % mesh_size == 0 ? 1 : (point_index + 1));
             point_index++;
 
-            theta += THETA_INCR;
+            theta -= THETA_INCR;
         }
     }
 
@@ -112,7 +118,7 @@ void HypMesh::gen_poly_mesh()
 void HypMesh::init_poly_mesh()
 {
     // reserve space for all edge points and center point
-    mesh_size = (poly_vertices.size() * (points_per_arc)) + 1;
+    mesh_size = (poly_vertices.size() * (points_per_arc - 1)) + 1;
     poly_mesh.reserve(mesh_size);
 
     Point poly_center = Point(PointType::POINCARE);
