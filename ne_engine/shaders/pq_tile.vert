@@ -11,7 +11,6 @@ layout(location = 1) in vec2 vert_uv;
 
 // Per-instance attributes
 layout(location = 2) in vec4 sprite_uv;
-layout(location = 3) in float zindex;
 
 // Outputs to fragment shader
 out vec2 frag_uv;
@@ -24,7 +23,7 @@ void main() {
     // Hyperbolic Weierstrass -> Poincaré disk projection
     position.x /= (1.0 + position.z);
     position.y /= (1.0 + position.z);
-    position.z = -zindex;
+    position.z = 0.0;
 
     gl_Position = position;
 

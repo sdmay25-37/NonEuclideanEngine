@@ -26,7 +26,6 @@ RendererHyp::~RendererHyp() {
 	glDeleteBuffers(1, &EBO);
 	glDeleteBuffers(1, &VE0);
 	glDeleteBuffers(1, &UV_VBO);
-	glDeleteBuffers(1, &UV_VBO2);
 }
 
 void RendererHyp::Init() {
@@ -36,7 +35,6 @@ void RendererHyp::Init() {
 	glGenBuffers(1, &EBO);
 	glGenBuffers(1, &VE0);
 	glGenBuffers(1, &UV_VBO);
-	glGenBuffers(1, &UV_VBO2);
 
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
@@ -64,12 +62,6 @@ void RendererHyp::Init() {
 	glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void *) 0);
 	glEnableVertexAttribArray(2);
 	glVertexAttribDivisor(2, 1); // THIS IS WHAT CAUSED MY PAIN FOR LIKE 8 HOURS
-
-	// BIND TO NEW BUFFER TODO
-	glBindBuffer(GL_ARRAY_BUFFER, UV_VBO2);
-	glVertexAttribPointer(3, 4, GL_FLOAT, GL_FALSE, 1 * sizeof(float), (void *) 0);
-	glEnableVertexAttribArray(3);
-	glVertexAttribDivisor(3, 1);
 
 	// "../ne_engine/shaders/pq_test.vert",
 	// 		"../ne_engine/shaders/pq_color.frag"
@@ -147,9 +139,6 @@ void RendererHyp::Render(entt::registry &registry, Resource<Camera> camera) cons
 
 		glBindBuffer(GL_ARRAY_BUFFER, UV_VBO);
 		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec4) * uv_ranges.size(), uv_ranges.data(), GL_STATIC_DRAW);
-
-		glBindBuffer(GL_ARRAY_BUFFER, UV_VBO2);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(float) * zindexVector.size(), zindexVector.data(), GL_STATIC_DRAW);
 
 		// Activate texture unit and bind the texture atlas
 		glActiveTexture(GL_TEXTURE0);
