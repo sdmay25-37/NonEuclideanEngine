@@ -96,7 +96,7 @@ private:
     static void CreateTiles3(entt::registry &registry, Resource<TextureManager> texture_manager, Resource<TileMap> tilemap)
     {
         Tile currentTile = tilemap->getTileByID(25);
-
+        std::cout << glGetString(GL_VERSION);
         std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist + 1);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = currentTile;

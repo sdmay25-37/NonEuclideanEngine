@@ -71,7 +71,7 @@ void Renderer::Init()
 	glBindBuffer(GL_ARRAY_BUFFER, UV_VBO2);
 	glVertexAttribPointer(4, 4, GL_FLOAT, GL_FALSE, 1 * sizeof(float), (void *)0);
 	glEnableVertexAttribArray(4);
-	glVertexAttribDivisor(3, 1);
+	glVertexAttribDivisor(4, 1);
 
 	// "../ne_engine/shaders/pq_test.vert",
 	// 		"../ne_engine/shaders/pq_color.frag"
