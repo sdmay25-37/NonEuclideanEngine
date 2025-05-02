@@ -22,10 +22,10 @@
 #include <queue>
 
 // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-#define rendDist 6
+#define rendDist 8
 
-// static float Theta = 27.0 * M_PI / 80.0f;
-static float Theta = 1.3;
+static float Theta = 27.0 * M_PI / 80.0f;
+// static float Theta = 1.3;
 // BRO TRUST THIS IS IMPORTANT
 static float timeSinceLastMove = 0.0f;
 

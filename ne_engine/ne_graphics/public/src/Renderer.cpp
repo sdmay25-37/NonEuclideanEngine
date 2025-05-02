@@ -40,6 +40,8 @@ void Renderer::Init()
 	glGenBuffers(1, &UV_VBO);
 	glGenBuffers(1, &UV_VBO2);
 	glEnable(GL_DEPTH_TEST);
+	glDepthMask(GL_TRUE);
+	glDepthFunc(GL_LESS);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	// glBlendFunc(GL_SRC_ALPHA, GL_ONE); // or glBlendFunc(GL_ONE, GL_ONE);
@@ -102,7 +104,6 @@ void Renderer::Render(entt::registry &registry, Resource<Camera> camera) const
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	// Enable depth testing for opaque objects
-	glEnable(GL_DEPTH_TEST);
 
 	// Setup the rotation matrix
 	HypRotate r_uniform_matrix = HypRotate(true);
@@ -233,11 +234,6 @@ void Renderer::renderCharacter(entt::registry &registry) const
 		// Activate texture unit and bind the texture atlas for character
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, atlas_id);
-
-		// Always render the character in front of tiles
-		glEnable(GL_DEPTH_TEST); // Enable depth testing for the character (opaque)
-		glEnable(GL_BLEND);		 // Enable blending
-		glDepthMask(GL_TRUE);	 // Enable depth writing for opaque character
 
 		// Draw the batch with instanced rendering for the character
 		glDrawElementsInstanced(GL_TRIANGLES, sample_tile.indices_size(), GL_UNSIGNED_INT, 0, characters.size());

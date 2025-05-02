@@ -3,7 +3,7 @@
 
 #include "Mesh.hpp"
 
-#define DEFAULT_ARC_POINTS 100
+#define DEFAULT_ARC_POINTS 25
 
 class HypMesh : public Mesh
 {
