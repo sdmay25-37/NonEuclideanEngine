@@ -29,6 +29,7 @@ std::vector<glm::vec4> square_points;
 
 int main()
 {
+
     GLFWWindow test = GLFWWindow(SCREEN_WIDTH, SCREEN_HEIGHT);
     GLFWwindow *window = static_cast<GLFWwindow *>(test.get());
 
@@ -137,7 +138,7 @@ int main()
     // glEnableVertexAttribArray(3);
     // glVertexAttribDivisor(3, 1);
     // For debugging, you might uncomment the following to see wireframes
-    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
     while (!glfwWindowShouldClose(window))
     {
@@ -184,7 +185,8 @@ int main()
     return 0;
 }
 
-float Theta = M_PI / 3.0f;
+// float Theta = M_PI / 3.0f;
+float Theta = 2.0 * M_PI / 5.0f;
 std::vector<PQTile> processInput(GLFWwindow *window, std::vector<PQTile> tiles)
 {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -202,7 +204,7 @@ std::vector<PQTile> processInput(GLFWwindow *window, std::vector<PQTile> tiles)
         PQTile tile4 = PQTile(4, 5, COLOR::RED);
         PQTile tile5 = PQTile(4, 5, COLOR::WHITE);
 
-        Theta += 0.01;
+        Theta += 0.0001;
         std::cout << "THETA:  " << Theta << "\n";
         // Convert tiles to Poincare representation
         tile.to_weirstrass();
@@ -232,7 +234,7 @@ std::vector<PQTile> processInput(GLFWwindow *window, std::vector<PQTile> tiles)
         PQTile tile4 = PQTile(4, 5, COLOR::RED);
         PQTile tile5 = PQTile(4, 5, COLOR::WHITE);
 
-        Theta -= 0.01;
+        Theta -= 0.0001;
         std::cout << "THETA:  " << Theta << "\n";
         // Convert tiles to Poincare representation
         tile.to_weirstrass();
@@ -274,7 +276,75 @@ std::vector<PQTile> processInput(GLFWwindow *window, std::vector<PQTile> tiles)
         PQTile tile3 = PQTile(4, 5, COLOR::GREEN);
         PQTile tile4 = PQTile(4, 5, COLOR::RED);
         PQTile tile5 = PQTile(4, 5, COLOR::WHITE);
+        Theta = 27.0 * M_PI / 80.0f;
+
+        std::cout << "THETA:  " << Theta << "\n";
+        // Convert tiles to Poincare representation
+        tile.to_weirstrass();
+        tile2.to_weirstrass();
+        tile3.to_weirstrass();
+        tile4.to_weirstrass();
+        tile5.to_weirstrass();
+
+        tile2.rotateXHyperbolic(Theta);
+        tile3.rotateYHyperbolic(-Theta);
+        tile4.rotateXHyperbolic(Theta);
+        tile4.rotateYHyperbolic(-Theta);
+        tile5.rotateYHyperbolic(-Theta);
+        tile5.rotateXHyperbolic(Theta);
+
+        // Offset individual tiles via their mesh data
+
+        return {tile, tile2, tile3, tile4, tile5};
+        // x = 0;
+        // y = 0;
+        // r_uniform_matrix = HypRotate(true);
+        // shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
+    }
+    else if (glfwGetKey(window, GLFW_KEY_T))
+    {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        PQTile tile = PQTile(4, 5, COLOR::WHITE);
+        PQTile tile2 = PQTile(4, 5, COLOR::BLUE);
+        PQTile tile3 = PQTile(4, 5, COLOR::GREEN);
+        PQTile tile4 = PQTile(4, 5, COLOR::RED);
+        PQTile tile5 = PQTile(4, 5, COLOR::WHITE);
         Theta = M_PI / 3.0f;
+
+        std::cout << "THETA:  " << Theta << "\n";
+        // Convert tiles to Poincare representation
+        tile.to_weirstrass();
+        tile2.to_weirstrass();
+        tile3.to_weirstrass();
+        tile4.to_weirstrass();
+        tile5.to_weirstrass();
+
+        tile2.rotateXHyperbolic(Theta);
+        tile3.rotateYHyperbolic(-Theta);
+        tile4.rotateXHyperbolic(Theta);
+        tile4.rotateYHyperbolic(-Theta);
+        tile5.rotateYHyperbolic(-Theta);
+        tile5.rotateXHyperbolic(Theta);
+
+        // Offset individual tiles via their mesh data
+
+        return {tile, tile2, tile3, tile4, tile5};
+        // x = 0;
+        // y = 0;
+        // r_uniform_matrix = HypRotate(true);
+        // shader_ptr->setUniformMat4("r_matrix", r_uniform_matrix.getRotation());
+    }
+    else if (glfwGetKey(window, GLFW_KEY_Y))
+    {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        PQTile tile = PQTile(4, 5, COLOR::WHITE);
+        PQTile tile2 = PQTile(4, 5, COLOR::BLUE);
+        PQTile tile3 = PQTile(4, 5, COLOR::GREEN);
+        PQTile tile4 = PQTile(4, 5, COLOR::RED);
+        PQTile tile5 = PQTile(4, 5, COLOR::WHITE);
+        Theta = 22.0 * M_PI / 65.0f;
 
         std::cout << "THETA:  " << Theta << "\n";
         // Convert tiles to Poincare representation

@@ -42,6 +42,12 @@ struct Character
 	PQTile tile;
 	AtlasedTexture texture;
 };
+
+struct Rock
+{
+	PQTile tile;
+	AtlasedTexture texture;
+};
 struct AtlasPQtile
 {
 	PQTile tile;
@@ -60,6 +66,8 @@ public:
 	void Clear(); // NOT USED
 	void renderTiles(entt::registry &registry) const;
 	void renderCharacter(entt::registry &registry) const;
+	void renderRock(entt::registry &registry) const;
+
 	static constexpr int N_INDICES = 6;
 
 private:
