@@ -62,7 +62,7 @@ private:
         }
 
         // TODO INCREASE RENDER DIST TO 4 BUT I USE 3 FOR LESSS LAG
-        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist + 1);
+        std::vector<Tile> nearTiles = tilemap->getNearTiles(tilemap->currentTile, rendDist + 3);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = tilemap->currentTile;
         SpriteTile.to_weirstrass();
@@ -98,7 +98,7 @@ private:
     {
         Tile currentTile = tilemap->getTileByID(25);
         std::cout << glGetString(GL_VERSION);
-        std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist + 1);
+        std::vector<Tile> nearTiles2 = tilemap->getNearTiles(currentTile, rendDist + 3);
         PQTile SpriteTile = PQTile(4, 5, COLOR::WHITE);
         Tile root_tile = currentTile;
         SpriteTile.to_weirstrass();
@@ -144,7 +144,25 @@ private:
                 AtlasedTexture texture = texture_result.value();
                 PQTile root_tile_copy = Sprite_tile; // Make a modifiable copy
                 root_tile_copy.recalculate_uvs();
-                registry.emplace<AtlasPQtile>(entity, root_tile_copy, texture, 0.0f);
+
+                if (texturePath != "grass1.png" | texturePath != "grass2.png" | texturePath != "grass3.png" | texturePath != "grass4.png")
+                {
+                    auto texture_result2 = texture_manager->getTexture("grass1.png");
+                    if (texture_result2)
+                    {
+                        AtlasedTexture texture2 = texture_result2.value();
+                        const auto entity2 = registry.create();
+                        registry.emplace<AtlasPQtile>(entity2, root_tile_copy, texture2, (float)0.0);
+                    }
+                    root_tile_copy.recalculate_uvs2();
+
+                    registry.emplace<Rock>(entity, root_tile_copy, texture);
+                }
+                else
+                {
+                    registry.emplace<AtlasPQtile>(entity, root_tile_copy, texture, (float)0.0);
+                }
+                // registry.emplace<AtlasPQtile>(entity, root_tile_copy, texture, 0.0f);
                 // std::cout << "Added root tile ID: " << root_tile._tileId << "\n";
             }
         }
@@ -177,11 +195,32 @@ private:
                         // Add to registry
                         auto entity = registry.create();
                         auto texture_result = texture_manager->getTexture(left_tile.sprite);
+
                         if (texture_result)
                         {
                             AtlasedTexture texture = texture_result.value();
                             rotated_left_tile.recalculate_uvs();
-                            registry.emplace<AtlasPQtile>(entity, rotated_left_tile, texture, 0.0f);
+
+                            if (texturePath != "grass1.png" | texturePath != "grass2.png" | texturePath != "grass3.png" | texturePath != "grass4.png")
+                            {
+                                auto texture_result2 = texture_manager->getTexture("grass1.png");
+                                if (texture_result2)
+                                {
+                                    AtlasedTexture texture2 = texture_result2.value();
+                                    const auto entity2 = registry.create();
+                                    registry.emplace<AtlasPQtile>(entity2, rotated_left_tile, texture2, (float)0.0);
+                                }
+
+                                rotated_left_tile.recalculate_uvs2();
+
+                                registry.emplace<Rock>(entity, rotated_left_tile, texture);
+                            }
+                            else
+                            {
+                                registry.emplace<AtlasPQtile>(entity, rotated_left_tile, texture, (float)0.0);
+                            }
+
+                            // registry.emplace<AtlasPQtile>(entity, rotated_left_tile, texture, 0.0f);
                             // std::cout << "Added left tile ID: " << left_tile._tileId << " at relation " << currentRelation << "\n";
                         }
 
@@ -213,7 +252,25 @@ private:
                         {
                             AtlasedTexture texture = texture_result.value();
                             rotated_right_tile.recalculate_uvs();
-                            registry.emplace<AtlasPQtile>(entity, rotated_right_tile, texture, 0.0f);
+
+                            if (texturePath != "grass1.png" | texturePath != "grass2.png" | texturePath != "grass3.png" | texturePath != "grass4.png")
+                            {
+                                auto texture_result2 = texture_manager->getTexture("grass1.png");
+                                if (texture_result2)
+                                {
+                                    AtlasedTexture texture2 = texture_result2.value();
+                                    const auto entity2 = registry.create();
+                                    registry.emplace<AtlasPQtile>(entity2, rotated_right_tile, texture2, (float)0.0);
+                                }
+                                rotated_right_tile.recalculate_uvs2();
+
+                                registry.emplace<Rock>(entity, rotated_right_tile, texture);
+                            }
+                            else
+                            {
+                                registry.emplace<AtlasPQtile>(entity, rotated_right_tile, texture, (float)0.0);
+                            }
+                            // registry.emplace<AtlasPQtile>(entity, rotated_right_tile, texture, 0.0f);
                             // std::cout << "Added right tile ID: " << right_tile._tileId << " at relation " << currentRelation << "\n";
                         }
 
@@ -245,7 +302,25 @@ private:
                         {
                             AtlasedTexture texture = texture_result.value();
                             rotated_up_tile.recalculate_uvs();
-                            registry.emplace<AtlasPQtile>(entity, rotated_up_tile, texture, 0.0f);
+
+                            if (texturePath != "grass1.png" | texturePath != "grass2.png" | texturePath != "grass3.png" | texturePath != "grass4.png")
+                            {
+                                auto texture_result2 = texture_manager->getTexture("grass1.png");
+                                if (texture_result2)
+                                {
+                                    AtlasedTexture texture2 = texture_result2.value();
+                                    const auto entity2 = registry.create();
+                                    registry.emplace<AtlasPQtile>(entity2, rotated_up_tile, texture2, (float)0.0);
+                                }
+                                rotated_up_tile.recalculate_uvs2();
+
+                                registry.emplace<Rock>(entity, rotated_up_tile, texture);
+                            }
+                            else
+                            {
+                                registry.emplace<AtlasPQtile>(entity, rotated_up_tile, texture, (float)0.0);
+                            }
+                            // registry.emplace<AtlasPQtile>(entity, rotated_up_tile, texture, 0.0f);
                             // std::cout << "Added up tile ID: " << up_tile._tileId << " at relation " << currentRelation << "\n";
                         }
 
@@ -277,7 +352,25 @@ private:
                         {
                             AtlasedTexture texture = texture_result.value();
                             rotated_down_tile.recalculate_uvs();
-                            registry.emplace<AtlasPQtile>(entity, rotated_down_tile, texture, 0.0f);
+
+                            if (texturePath != "grass1.png" | texturePath != "grass2.png" | texturePath != "grass3.png" | texturePath != "grass4.png")
+                            {
+                                auto texture_result2 = texture_manager->getTexture("grass1.png");
+                                if (texture_result2)
+                                {
+                                    AtlasedTexture texture2 = texture_result2.value();
+                                    const auto entity2 = registry.create();
+                                    registry.emplace<AtlasPQtile>(entity2, rotated_down_tile, texture2, (float)0.0);
+                                }
+                                rotated_down_tile.recalculate_uvs2();
+
+                                registry.emplace<Rock>(entity, rotated_down_tile, texture);
+                            }
+                            else
+                            {
+                                registry.emplace<AtlasPQtile>(entity, rotated_down_tile, texture, (float)0.0);
+                            }
+                            // registry.emplace<AtlasPQtile>(entity, rotated_down_tile, texture, 0.0f);
                             // std::cout << "Added down tile ID: " << down_tile._tileId << " at relation " << currentRelation << "\n";
                         }
 
@@ -387,7 +480,7 @@ private:
     static void LoadTiles(Resource<TileMap> tileMap)
     {
         // Where Tiles are loaded from
-        tileMap->loadTiles("../tests/json/forest_test_small2.json");
+        tileMap->loadTiles("../tests/json/forest_test_small3.json");
     }
 
     static void MoveCamera(Resource<Camera> camera, Resource<Input> input, Resource<TileMap> tilemap, entt::registry &registry, Resource<TextureManager> texture_manager, Resource<Renderer> renderer, Resource<Window> window)
@@ -399,7 +492,7 @@ private:
         if (timeSinceLastMove < moveCooldown)
             return;
 
-        else if (input->wasKeyPressed(GLFW_KEY_W))
+        else if (input->isKeyPressed(GLFW_KEY_W))
         {
             if (tilemap->currentTile._upTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._upTileId), tilemap))
             {
@@ -408,7 +501,7 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->wasKeyPressed(GLFW_KEY_A))
+        else if (input->isKeyPressed(GLFW_KEY_A))
         {
             if (tilemap->currentTile._leftTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._leftTileId), tilemap))
             {
@@ -417,7 +510,7 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->wasKeyPressed(GLFW_KEY_S))
+        else if (input->isKeyPressed(GLFW_KEY_S))
         {
             if (tilemap->currentTile._downTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._downTileId), tilemap))
             {
@@ -426,7 +519,7 @@ private:
                 timeSinceLastMove = 0.0f;
             }
         }
-        else if (input->wasKeyPressed(GLFW_KEY_D))
+        else if (input->isKeyPressed(GLFW_KEY_D))
         {
             if (tilemap->currentTile._rightTileId != -1 && isValidTileToMove(tilemap->getTileInRenderedList(tilemap->currentTile._rightTileId), tilemap))
             {

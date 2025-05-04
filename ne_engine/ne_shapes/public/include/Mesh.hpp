@@ -39,6 +39,7 @@ public:
     void rotateYHyperbolic(float theta);
     void rotateXYHyperbolic(float thetaX, float thetaY);
     void recalculate_uvs();
+    void recalculate_uvs2();
 
     unsigned int *indices_data() override;
     unsigned int indices_size() override;
