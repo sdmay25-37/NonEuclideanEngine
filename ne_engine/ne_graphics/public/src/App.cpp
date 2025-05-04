@@ -1,5 +1,9 @@
 #include "App.hpp"
+
+#include <iostream>
+
 #include "Renderer.hpp"
+#include "GLFW/glfw3.h"
 
 void App::Run() {
 
@@ -16,6 +20,8 @@ void App::Run() {
 }
 
 void App::Startup() {
+	std::cout << "NE_ENGINE::STARTUP" << std::endl;
+
 	_executor = SystemExecutor::Create(SystemExecutor::Type::SingleThreaded, _registry, _resource_manager);
 
 	_executor->Execute(_schedules[ScheduleLabel::PRE_STARTUP]);
@@ -24,12 +30,6 @@ void App::Startup() {
 
 void App::Update() {
 	_executor->Execute(_schedules[ScheduleLabel::UPDATE]);
-
-	// TODO: remove all references of window as it is now an optional plugin
-	// auto window = _resource_manager.Get<Window>();
-	// if(window->ShouldClose()) {
-	// 	_resource_manager.Insert<AppClose>(true);
-	// }
 }
 
 void App::Render() {
@@ -39,5 +39,9 @@ void App::Render() {
 
 void App::Cleanup() {
 	_executor->Execute(_schedules[ScheduleLabel::CLEANUP]);
+
+	_resource_manager.~ResourceManager();
+
+	glfwTerminate();
 }
 

@@ -21,6 +21,7 @@ set(SOURCES
     "SpriteTesting.cpp"
     "ResourceManagerTesting.cpp"
     "GuiTesting.cpp"
+    "engine_example.cpp"
 )
 
 set(VS_DEBUGGER_WORKING_DIRECTORY "..")

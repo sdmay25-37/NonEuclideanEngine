@@ -29,7 +29,7 @@ public:
 	}
 
 	template<typename F>
-	SystemSet& Before(F&& system) {
+	SystemSet& Then(F&& system) {
 		SystemId id = _dependency_graph.AddNode(std::move(CreateSystem(system)));
 
 		// Create dependency edges from current systems to this system
@@ -41,18 +41,18 @@ public:
 		return *this;
 	}
 
-	template<typename F>
-	SystemSet& After(F&& system) {
-		SystemId id = _dependency_graph.AddNode(std::move(CreateSystem(system)));
-
-		// Create dependency edges from this system to current systems
-		for(SystemId sys_id : _system_ids) {
-			_dependency_graph.AddEdge(id, sys_id);
-		}
-
-		_system_ids.push_back(id);
-		return *this;
-	}
+	// template<typename F>
+	// SystemSet& After(F&& system) {
+	// 	SystemId id = _dependency_graph.AddNode(std::move(CreateSystem(system)));
+	//
+	// 	// Create dependency edges from this system to current systems
+	// 	for(SystemId sys_id : _system_ids) {
+	// 		_dependency_graph.AddEdge(id, sys_id);
+	// 	}
+	//
+	// 	_system_ids.push_back(id);
+	// 	return *this;
+	// }
 
 	// TODO: implement ordering of system sets, which will require a dynamic 'Runnable' type for both Systems and SystemSets
 	// SystemSet& Before(SystemSet&& system);
